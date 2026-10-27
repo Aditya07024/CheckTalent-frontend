@@ -1,8 +1,8 @@
-# Proof of Skill
+# TalentLens
 
-**Don’t Just Claim Skills. Prove Them.**
+**Explainable Candidate Evaluation Through Code Analysis and Technical Interviews**
 
-An AI-powered developer intelligence and technical skill verification platform that transforms repositories, projects, and structured technical assessments into inspectable skill profiles recruiters can trust.
+An AI-powered developer intelligence and candidate evaluation platform that transforms repositories, code analysis, and technical interviews into explainable candidate evaluations recruiters can trust.
 
 ---
 
@@ -15,7 +15,7 @@ This repository enforces a **branch-only management workflow**. Direct feature w
 | `main` | Protected production baseline | Receives verified merges only from staging branches |
 | `staging-1` | Primary QA & integration testing branch | Receives PRs from feature branches (`landing-page`, `feat/*`) |
 | `staging-2` | Secondary pre-production / UAT verification branch | Used for parallel test cohorts & release sign-off before `main` |
-| `landing-page` | Complete Proof of Skill desktop-first product landing page | Feature branch containing the Next.js App Router frontend |
+| `landing-page` | Complete TalentLens desktop-first product landing page | Feature branch containing the Next.js App Router frontend |
 
 See [`BRANCHING.md`](./BRANCHING.md) for exact Git promotion commands and workflow conventions.
 

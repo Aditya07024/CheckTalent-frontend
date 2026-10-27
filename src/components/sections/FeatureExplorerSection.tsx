@@ -145,10 +145,10 @@ export function FeatureExplorerSection() {
                 aria-controls={`category-panel-${category.id}`}
                 onClick={() => handleCategoryChange(category.id)}
                 className={cn(
-                  "flex flex-col justify-between rounded-xl border border-b-4 p-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                  "flex flex-col justify-between rounded-xl border-2 p-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
                   isSelected
-                    ? "border-orange-500 border-b-red-600 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50/70 shadow-[0_10px_28px_rgba(234,88,12,0.16)] -translate-y-1"
-                    : "border-orange-200/80 border-b-orange-300 bg-white/95 hover:-translate-y-0.5 hover:border-orange-400 hover:bg-amber-50/45"
+                    ? "border-orange-500 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50/70 shadow-[0_10px_28px_rgba(234,88,12,0.16)] -translate-y-1"
+                    : "border-orange-200/80 bg-white/95 hover:-translate-y-0.5 hover:border-orange-400 hover:bg-amber-50/45"
                 )}
               >
                 <div className="flex w-full items-center justify-between gap-2">

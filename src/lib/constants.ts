@@ -1,9 +1,9 @@
 export const PRODUCT_METADATA = {
-  name: "Proof of Skill",
-  tagline: "Don’t Just Claim Skills. Prove Them.",
+  name: "TalentLens",
+  tagline: "Explainable Candidate Evaluation Through Code Analysis and Technical Interviews",
   supportingMessage:
-    "An AI-powered developer intelligence platform that transforms repositories, projects, and technical assessments into evidence-backed skill profiles recruiters can trust.",
-  domainLabel: "DEVELOPER INTELLIGENCE · SKILL VERIFICATION",
+    "An AI-powered developer intelligence platform that transforms repositories, code analysis, and technical interviews into explainable candidate evaluations recruiters can trust.",
+  domainLabel: "DEVELOPER INTELLIGENCE · CANDIDATE EVALUATION",
   copyrightYear: 2026,
 } as const;
 

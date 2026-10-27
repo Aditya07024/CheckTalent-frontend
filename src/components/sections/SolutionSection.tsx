@@ -118,7 +118,7 @@ export function SolutionSection() {
         <div className="mt-12">
           <div
             role="tablist"
-            aria-label="Proof of Skill verification pipeline stages"
+            aria-label="TalentLens verification pipeline stages"
             className="flex flex-col xl:flex-row xl:items-stretch"
           >
             {SOLUTION_SECTION_CONTENT.stages.map((stage, index) => {
@@ -136,10 +136,10 @@ export function SolutionSection() {
                     onClick={() => setActiveStageId(stage.id)}
                     onMouseEnter={() => setActiveStageId(stage.id)}
                     className={cn(
-                      "group relative flex flex-1 flex-col justify-between rounded-xl border border-b-4 p-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                      "group relative flex flex-1 flex-col justify-between rounded-xl border-2 p-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
                       isSelected
-                        ? `${palette.activeCard} border-b-orange-600 -translate-y-1.5`
-                        : "border-orange-200/80 border-b-orange-300 bg-white/95 hover:-translate-y-0.5 hover:border-orange-400 hover:bg-amber-50/45"
+                        ? `${palette.activeCard} border-orange-600 -translate-y-1.5`
+                        : "border-orange-200/80 bg-white/95 hover:-translate-y-0.5 hover:border-orange-400 hover:bg-amber-50/45"
                     )}
                   >
                     <div>
@@ -216,9 +216,6 @@ export function SolutionSection() {
                     {activeStage.isAiAssisted && <Sparkles className="h-3 w-3" />}
                     STAGE {activeStage.stepNumber} · {activeStage.title.toUpperCase()}
                   </Badge>
-                  <span className="font-mono text-xs text-ink-muted">
-                    Click or hover any pipeline stage above to inspect its artifact contract
-                  </span>
                 </div>
                 <p className="pt-1 text-sm text-ink-secondary">
                   {activeStage.shortDescription}

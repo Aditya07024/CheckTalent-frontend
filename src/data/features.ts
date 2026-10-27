@@ -4,7 +4,7 @@ export const FEATURE_EXPLORER_HEADER = {
   eyebrow: "PLATFORM CAPABILITIES · 38 SYSTEM MODULES ACROSS 6 DOMAINS",
   heading: "Every layer required to verify, explain, and act on technical skill.",
   subheading:
-    "Explore the complete Proof of Skill system architecture. Select a capability domain below, then inspect any module to view its engineering workflow, value proposition, and illustrative artifact preview.",
+    "Explore the complete TalentLens system architecture. Select a capability domain below, then inspect any module to view its engineering workflow, value proposition, and illustrative artifact preview.",
   previewDisclaimer:
     "Illustrative module inspector: Previews depict representative system structures and mock engineering artifacts.",
 } as const;
@@ -1567,7 +1567,7 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
           state: "Enforced",
         },
       ],
-      auditNote: "Proof of Skill informs human engineering reviewers—it never replaces them.",
+      auditNote: "TalentLens informs human engineering reviewers—it never replaces them.",
     },
   },
 ];

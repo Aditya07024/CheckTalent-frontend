@@ -2,7 +2,7 @@
   "name": "proof-of-skill",
   "version": "0.1.0",
   "private": true,
-  "description": "Proof of Skill — AI-Powered Developer Intelligence & Skill Verification Platform",
+  "description": "TalentLens — Explainable Candidate Evaluation Through Code Analysis and Technical Interviews",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

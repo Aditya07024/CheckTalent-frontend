@@ -4,7 +4,7 @@ export const FAQ_SECTION_CONTENT = {
   eyebrow: "FREQUENTLY ASKED QUESTIONS",
   heading: "Clear answers on methodology, boundaries, and trust.",
   subheading:
-    "How Proof of Skill evaluates technical evidence, protects candidate work, and keeps hiring decisions accountable to people.",
+    "How TalentLens evaluates technical evidence, protects candidate work, and keeps hiring decisions accountable to people.",
 } as const;
 
 export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
@@ -12,9 +12,9 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     id: "faq-what-is",
     index: "01",
     category: "Platform",
-    question: "What is Proof of Skill?",
+    question: "What is TalentLens?",
     answer:
-      "Proof of Skill is an AI-powered developer intelligence and technical skill verification platform. It transforms source repositories, project artifacts, and structured technical assessments into inspectable Skill Proof Cards—allowing candidates to substantiate what they know and helping recruiters evaluate verifiable engineering evidence alongside resumes.",
+      "TalentLens is an AI-powered developer intelligence and technical skill verification platform. It transforms source repositories, project artifacts, and structured technical assessments into inspectable Skill Proof Cards—allowing candidates to substantiate what they know and helping recruiters evaluate verifiable engineering evidence alongside resumes.",
   },
   {
     id: "faq-different-from-scanner",
@@ -22,7 +22,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Platform",
     question: "How is it different from an AI resume scanner?",
     answer:
-      "Traditional ATS and AI resume scanners score how well a document matches job-description keywords or formatting conventions. Proof of Skill inspects underlying engineering artifacts—such as component structure, error-handling patterns, API boundaries, and test coverage—and pairs static findings with an interactive technical viva where candidates explain their own implementation choices.",
+      "Traditional ATS and AI resume scanners score how well a document matches job-description keywords or formatting conventions. TalentLens inspects underlying engineering artifacts—such as component structure, error-handling patterns, API boundaries, and test coverage—and pairs static findings with an interactive technical viva where candidates explain their own implementation choices.",
   },
   {
     id: "faq-github-required",
@@ -30,7 +30,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Verification",
     question: "Do candidates need a GitHub account?",
     answer:
-      "No. While connecting GitHub is a fast way to submit public or explicitly authorized repositories, many capable engineers have worked primarily on private enterprise codebases, academic coursework, or local projects. Proof of Skill is designed with an Alternative Evidence Path that uses guided project submissions and targeted technical assessments when public repositories are unavailable.",
+      "No. While connecting GitHub is a fast way to submit public or explicitly authorized repositories, many capable engineers have worked primarily on private enterprise codebases, academic coursework, or local projects. TalentLens is designed with an Alternative Evidence Path that uses guided project submissions and targeted technical assessments when public repositories are unavailable.",
   },
   {
     id: "faq-commit-authorship",
@@ -38,7 +38,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Verification",
     question: "Does repository analysis prove who wrote the code?",
     answer:
-      "No—static repository inspection and Git commit history alone are never treated as conclusive proof of authorship. Commit metadata can be squashed, pair-authored, migrated, or copied. That is why Proof of Skill pairs static repository evidence with an interactive AI Technical Viva and code-defense questions that test whether the candidate genuinely understands the architecture, trade-offs, and implementation details.",
+      "No—static repository inspection and Git commit history alone are never treated as conclusive proof of authorship. Commit metadata can be squashed, pair-authored, migrated, or copied. That is why TalentLens pairs static repository evidence with an interactive AI Technical Viva and code-defense questions that test whether the candidate genuinely understands the architecture, trade-offs, and implementation details.",
   },
   {
     id: "faq-how-viva-works",
@@ -70,7 +70,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Privacy & Fairness",
     question: "How does the platform protect candidate information?",
     answer:
-      "Proof of Skill is designed around explicit consent scopes, minimal data collection, controlled-access verification links, and clear separation between raw source code and shared assessment artifacts. Candidates decide which repositories or assessments are included in their shareable profile and can revoke shared verification access.",
+      "TalentLens is designed around explicit consent scopes, minimal data collection, controlled-access verification links, and clear separation between raw source code and shared assessment artifacts. Candidates decide which repositories or assessments are included in their shareable profile and can revoke shared verification access.",
   },
   {
     id: "faq-appeals",
@@ -86,7 +86,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Privacy & Fairness",
     question: "Does the platform automatically reject candidates?",
     answer:
-      "No. Proof of Skill is built strictly as decision-support tooling, not an autonomous hiring gatekeeper. Similarly, tutorial-clone similarity analysis reports structural overlap alongside supporting evidence and uncertainty—it never automatically accuses a candidate of plagiarism or disqualifies an applicant. Human recruiters and hiring managers remain responsible for all hiring decisions.",
+      "No. TalentLens is built strictly as decision-support tooling, not an autonomous hiring gatekeeper. Similarly, tutorial-clone similarity analysis reports structural overlap alongside supporting evidence and uncertainty—it never automatically accuses a candidate of plagiarism or disqualifies an applicant. Human recruiters and hiring managers remain responsible for all hiring decisions.",
   },
   {
     id: "faq-ranking",
@@ -100,7 +100,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     id: "faq-colleges",
     index: "12",
     category: "Adoption",
-    question: "Can colleges use Proof of Skill?",
+    question: "Can colleges use TalentLens?",
     answer:
       "Yes. College placement cells, faculty coordinators, and technical training programs can help students turn capstone repositories and coursework into evidence-backed skill profiles, identify practical skill gaps prior to placement season, and present employers with verifiable engineering substance beyond GPA or institution reputation.",
   },

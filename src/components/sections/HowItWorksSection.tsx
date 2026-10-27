@@ -121,7 +121,7 @@ export function HowItWorksSection() {
             <TiltCard3D
               key={step.stepNumber}
               data-workflow-step
-              className="flex flex-col justify-between rounded-2xl border border-orange-200/90 border-b-4 border-b-orange-400 bg-white/95 p-6 shadow-[0_10px_28px_rgba(234,88,12,0.08)]"
+              className="flex flex-col justify-between rounded-2xl border-2 border-orange-400 bg-white/95 p-6 shadow-[0_10px_28px_rgba(234,88,12,0.08)]"
             >
               <div>
                 <div className="flex items-center justify-between border-b border-hairline pb-4">

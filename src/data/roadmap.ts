@@ -4,7 +4,7 @@ export const ROADMAP_SECTION_CONTENT = {
   eyebrow: "PRODUCT ROADMAP · PLANNED EVOLUTION",
   heading: "Deliberate architecture from core verification to hiring workflows.",
   subheading:
-    "Proof of Skill is structured in four progressive phases. Phase 1 defines the foundational verification architecture; Phases 2 through 4 represent planned capabilities that are not yet live.",
+    "TalentLens is structured in four progressive phases. Phase 1 defines the foundational verification architecture; Phases 2 through 4 represent planned capabilities that are not yet live.",
   statusLegendNote:
     "Transparency notice: Planned phases describe architectural direction and upcoming milestones—not currently deployed production features.",
 } as const;

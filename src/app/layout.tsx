@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: `${PRODUCT_METADATA.name} — ${PRODUCT_METADATA.tagline}`,
   description: PRODUCT_METADATA.supportingMessage,
   openGraph: {
-    title: `${PRODUCT_METADATA.name} — Developer Intelligence & Skill Verification`,
+    title: `${PRODUCT_METADATA.name} — ${PRODUCT_METADATA.tagline}`,
     description: PRODUCT_METADATA.supportingMessage,
     type: "website",
   },

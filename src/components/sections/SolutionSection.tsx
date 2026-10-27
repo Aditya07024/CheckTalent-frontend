@@ -107,9 +107,9 @@ export function SolutionSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.solution}
-      className="border-b border-orange-200/70 bg-gradient-to-b from-transparent via-yellow-50/40 to-orange-50/40 py-16 lg:py-24"
+      className="relative overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-transparent via-yellow-50/40 to-orange-50/40 py-16 lg:py-24"
     >
-      <div className="container">
+      <div className="container relative z-10">
         {/* Section Header */}
         <div data-animate-header className="max-w-3xl space-y-3">
           <span className="inline-block rounded-full border border-orange-300 bg-orange-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-orange-800">
@@ -123,10 +123,10 @@ export function SolutionSection() {
           </p>
         </div>
 
-        {/* Two-Column Layout: Pipeline Stages on Left, 3D Verification Engine Lattice on Right */}
-        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
-          {/* Left Column: 6 Stages Stack + Active Detail Card */}
-          <div className="space-y-4 lg:col-span-7">
+        {/* 50% / 50% Screen Split: Pipeline Stages on Left, Open-Air Floating 3D on Right */}
+        <div className="mt-10 flex flex-col lg:flex-row lg:items-center lg:gap-12 xl:gap-16">
+          {/* Left Column: 50% width */}
+          <div className="w-full lg:w-1/2 space-y-4">
             {/* Stage Selector Grid */}
             <div
               role="tablist"
@@ -239,14 +239,19 @@ export function SolutionSection() {
             </div>
           </div>
 
-          {/* Right Column: Interactive 3D Verification Engine Lattice */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24">
-            <div className="rounded-2xl border-2 border-orange-200/90 bg-gradient-to-b from-white/90 to-amber-50/50 p-2 shadow-[0_12px_36px_rgba(234,88,12,0.12)]">
-              <PipelineEngine3D
-                activeStageIndex={activeStageIndex}
-                onSelectStage={(stageId) => setActiveStageId(stageId)}
-              />
-            </div>
+          {/* Right Column: 50% width — Open-air floating 3D Pipeline Stack (NO box) */}
+          <div className="relative w-full lg:w-1/2 flex items-center justify-center">
+            {/* Ambient Warm Glow behind the floating 3D stack */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute h-[420px] w-[420px] rounded-full bg-gradient-to-tr from-yellow-300/25 via-orange-300/20 to-red-300/15 blur-3xl transform-gpu will-change-transform"
+            />
+
+            {/* Unboxed 3D Canvas */}
+            <PipelineEngine3D
+              activeStageIndex={activeStageIndex}
+              className="relative z-10"
+            />
           </div>
         </div>
       </div>

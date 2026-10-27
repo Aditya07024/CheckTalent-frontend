@@ -2,6 +2,8 @@
 const ORBIT_EXTENT = 3.25;
 const BASE_DISTANCE = 8.3;
 const DESKTOP_MIN_WIDTH = 1024;
+/** How far (world units) to pull the desktop orbit left from the right edge. */
+const LEFT_NUDGE = 0.7;
 
 /**
  * Computes camera distance and horizontal anchor so the hero orbit
@@ -21,6 +23,7 @@ export function fitOrbitCamera(
   }
 
   const halfWidth = BASE_DISTANCE * tanHalf * aspect;
-  const offsetX = Math.max(0, Math.min(halfWidth * 0.5, halfWidth - ORBIT_EXTENT));
+  const rightAnchor = Math.min(halfWidth * 0.5, halfWidth - ORBIT_EXTENT);
+  const offsetX = Math.max(0, rightAnchor - LEFT_NUDGE);
   return { distance: BASE_DISTANCE, offsetX };
 }

@@ -114,31 +114,31 @@ function createHighResTextPlate(
   // Stage Number Badge on the left
   ctx.fillStyle = colorHex;
   ctx.beginPath();
-  ctx.roundRect(40, 50, 110, 80, 16);
+  ctx.roundRect(36, 40, 130, 176, 20);
   ctx.fill();
 
   ctx.fillStyle = "#120B08";
-  ctx.font = "bold 58px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.font = "bold 82px ui-monospace, SFMono-Regular, Menlo, monospace";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(stageCode, 95, 90);
+  ctx.fillText(stageCode, 101, 128);
 
   // Stage Title
   ctx.fillStyle = "#FFFFFF";
-  ctx.font = "bold 52px system-ui, -apple-system, sans-serif";
+  ctx.font = "bold 58px system-ui, -apple-system, sans-serif";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.fillText(title, 180, 88);
+  ctx.fillText(title, 195, 96);
 
   // Tag Badge on bottom
-  ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.18)";
   ctx.beginPath();
-  ctx.roundRect(180, 142, 280, 48, 10);
+  ctx.roundRect(195, 142, 360, 56, 12);
   ctx.fill();
 
   ctx.fillStyle = colorHex;
-  ctx.font = "bold 26px ui-monospace, SFMono-Regular, Menlo, monospace";
-  ctx.fillText(`• ${tag}`, 198, 166);
+  ctx.font = "bold 30px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.fillText(`• ${tag}`, 216, 171);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -150,17 +150,72 @@ function createHighResTextPlate(
   return texture;
 }
 
+/**
+ * Creates high-res 1024x128 front console screen for the bottom chassis bar.
+ */
+function createBaseConsoleTexture(): THREE.CanvasTexture {
+  const width = 1024;
+  const height = 128;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  const grad = ctx.createLinearGradient(0, 0, width, height);
+  grad.addColorStop(0, "#19110D");
+  grad.addColorStop(1, "#0E0907");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, width, height);
+
+  // Border frame
+  ctx.strokeStyle = "#F59E0B";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(4, 4, width - 8, height - 8);
+
+  // Status LED circle
+  ctx.fillStyle = "#F59E0B";
+  ctx.beginPath();
+  ctx.arc(36, 64, 9, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Status text
+  ctx.fillStyle = "#F59E0B";
+  ctx.font = "bold 26px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText("CHASSIS // BASE", 58, 64);
+
+  // Center title
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 28px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("TALENTLENS VERIFICATION PIPELINE", width / 2, 64);
+
+  // Right telemetry
+  ctx.fillStyle = "#FBBF24";
+  ctx.font = "bold 24px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.textAlign = "right";
+  ctx.fillText("STAGES 01–06 • ACTIVE", width - 24, 64);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  texture.needsUpdate = true;
+  return texture;
+}
+
 export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const rootGroup = new THREE.Group();
   const disposables: Array<{ dispose: () => void }> = [];
 
-  // Compact dimensions: reduced vertical spacing and slab size so entire stack fits comfortably
-  const slabWidth = 2.7;
-  const slabHeight = 0.10;
-  const slabDepth = 1.7;
-  const ySpacing = 0.38; // Super compact vertical spacing
+  // Proportions: Straight front-facing server stack with balanced vertical height
+  const slabWidth = 2.8;
+  const slabHeight = 0.20;
+  const slabDepth = 1.35;
+  const ySpacing = 0.48; // Balanced vertical length
   const totalStages = 6;
-  const topY = ((totalStages - 1) * ySpacing) / 2; // (5 * 0.38) / 2 = 0.95
+  const topY = ((totalStages - 1) * ySpacing) / 2; // (5 * 0.48) / 2 = 1.20
 
   const slabGeometry = new THREE.BoxGeometry(slabWidth, slabHeight, slabDepth);
   const slabEdgesGeometry = new THREE.EdgesGeometry(slabGeometry);
@@ -183,9 +238,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       metalness: 0.1,
       transmission: 0.45,
       ior: 1.5,
-      thickness: 0.35,
+      thickness: 0.4,
       emissive: meta.color,
-      emissiveIntensity: 0.22,
+      emissiveIntensity: 0.2,
       transparent: true,
       opacity: 0.96,
     });
@@ -204,7 +259,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     stageGroup.add(edgeLine);
     disposables.push(edgeMaterial);
 
-    // Front label plate
+    // Front label plate — fits cleanly across the front face
     const labelTexture = createHighResTextPlate(
       meta.code,
       meta.label.replace(`STAGE ${meta.code} · `, ""),
@@ -219,7 +274,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     });
     disposables.push(labelMaterial);
 
-    const labelPlaneGeo = new THREE.PlaneGeometry(1.5, 0.34);
+    const labelPlaneGeo = new THREE.PlaneGeometry(2.35, 0.185);
     disposables.push(labelPlaneGeo);
     const labelPlane = new THREE.Mesh(labelPlaneGeo, labelMaterial);
     labelPlane.position.set(0, 0, slabDepth / 2 + 0.012);
@@ -256,12 +311,12 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
       disposables.push(nodeGeo, nodeMat);
       const coords: Array<[number, number, number]> = [
-        [0, 0.14, 0],
-        [-0.35, 0.07, -0.16],
-        [0.35, 0.07, -0.16],
-        [-0.55, 0.02, 0.18],
-        [0, 0.02, 0.2],
-        [0.55, 0.02, 0.18],
+        [0, 0.12, 0],
+        [-0.35, 0.06, -0.14],
+        [0.35, 0.06, -0.14],
+        [-0.55, 0.02, 0.15],
+        [0, 0.02, 0.18],
+        [0.55, 0.02, 0.15],
       ];
       coords.forEach(([x, y, z]) => {
         const node = new THREE.Mesh(nodeGeo, nodeMat);
@@ -270,7 +325,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
     } else if (idx === 2) {
       // Stage 03: Technical Viva — Pulsing 3D voice frequency spectrum bars
-      const barGeo = new THREE.BoxGeometry(0.055, 0.18, 0.055);
+      const barGeo = new THREE.BoxGeometry(0.055, 0.16, 0.055);
       const barMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -283,7 +338,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
         const bar = new THREE.Mesh(barGeo, barMat);
         const heightScale = Math.sin((b + 4) * 0.4) * 0.8 + 0.35;
         bar.scale.y = heightScale;
-        bar.position.set(b * 0.11, (heightScale * 0.18) / 2, 0);
+        bar.position.set(b * 0.11, (heightScale * 0.16) / 2, 0);
         featureGroup.add(bar);
       }
     } else if (idx === 3) {
@@ -306,7 +361,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       }
     } else if (idx === 4) {
       // Stage 05: Skill Proof Card — Holographic diamond crest
-      const prismGeo = new THREE.OctahedronGeometry(0.19, 0);
+      const prismGeo = new THREE.OctahedronGeometry(0.18, 0);
       const prismMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -316,11 +371,11 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
       disposables.push(prismGeo, prismMat);
       const prism = new THREE.Mesh(prismGeo, prismMat);
-      prism.position.set(0, 0.14, 0);
+      prism.position.set(0, 0.12, 0);
       featureGroup.add(prism);
     } else if (idx === 5) {
       // Stage 06: Human Review — Architectural review gate
-      const gateGeo = new THREE.BoxGeometry(0.68, 0.16, 0.09);
+      const gateGeo = new THREE.BoxGeometry(0.68, 0.14, 0.08);
       const gateMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.2,
@@ -330,7 +385,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
       disposables.push(gateGeo, gateMat);
       const gate = new THREE.Mesh(gateGeo, gateMat);
-      gate.position.set(0, 0.11, 0);
+      gate.position.set(0, 0.1, 0);
       featureGroup.add(gate);
     }
 
@@ -353,18 +408,134 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     });
   });
 
-  // 4 Corner Architectural Pillars
-  const guidePillars = new THREE.Group();
-  const pillarHeight = totalStages * ySpacing + 0.3; // ~2.58 units total
-  const pillarGeo = new THREE.CylinderGeometry(0.018, 0.018, pillarHeight, 16);
-  const pillarMat = new THREE.MeshStandardMaterial({
+  // =========================================================================
+  // ARCHITECTURAL MULTI-TIER BOTTOM BAR & FOUNDATION CHASSIS
+  // =========================================================================
+  const baseBarGroup = new THREE.Group();
+
+  const mainBarWidth = slabWidth + 0.45; // 3.25
+  const mainBarHeight = 0.20;
+  const mainBarDepth = slabDepth + 0.35; // 1.70
+  const mainBarY = -topY - slabHeight / 2 - 0.20 - mainBarHeight / 2; // ~ -1.60
+  const baseBarTopY = mainBarY + mainBarHeight / 2; // ~ -1.50
+  baseBarGroup.position.set(0, mainBarY, 0);
+
+  // Tier 1: Sub-Base Footing Plinth (Wider, beveled foundation plate)
+  const plinthWidth = mainBarWidth + 0.35; // 3.60
+  const plinthHeight = 0.08;
+  const plinthDepth = mainBarDepth + 0.25; // 1.95
+  const plinthGeo = new THREE.BoxGeometry(plinthWidth, plinthHeight, plinthDepth);
+  const plinthEdgesGeo = new THREE.EdgesGeometry(plinthGeo);
+  disposables.push(plinthGeo, plinthEdgesGeo);
+
+  const plinthMat = new THREE.MeshStandardMaterial({
+    color: 0x140d0a,
+    roughness: 0.3,
+    metalness: 0.9,
+    emissive: 0x78350f,
+    emissiveIntensity: 0.2,
+  });
+  disposables.push(plinthMat);
+  const plinthMesh = new THREE.Mesh(plinthGeo, plinthMat);
+  plinthMesh.position.set(0, -mainBarHeight / 2 - plinthHeight / 2, 0);
+  baseBarGroup.add(plinthMesh);
+
+  const plinthEdgeMat = new THREE.LineBasicMaterial({
+    color: 0xd97706,
+    transparent: true,
+    opacity: 0.6,
+  });
+  disposables.push(plinthEdgeMat);
+  const plinthEdgeLine = new THREE.LineSegments(plinthEdgesGeo, plinthEdgeMat);
+  plinthEdgeLine.position.copy(plinthMesh.position);
+  baseBarGroup.add(plinthEdgeLine);
+
+  // Tier 2: Main Machined Chassis Bar
+  const mainBarGeo = new THREE.BoxGeometry(mainBarWidth, mainBarHeight, mainBarDepth);
+  const mainBarEdgesGeo = new THREE.EdgesGeometry(mainBarGeo);
+  disposables.push(mainBarGeo, mainBarEdgesGeo);
+
+  const mainBarMat = new THREE.MeshStandardMaterial({
+    color: 0x1f1713,
+    roughness: 0.2,
+    metalness: 0.92,
+    emissive: 0xd97706,
+    emissiveIntensity: 0.15,
+  });
+  disposables.push(mainBarMat);
+  const mainBarMesh = new THREE.Mesh(mainBarGeo, mainBarMat);
+  baseBarGroup.add(mainBarMesh);
+
+  // Luminous Perimeter Edges for the Main Chassis Bar
+  const mainBarEdgeMat = new THREE.LineBasicMaterial({
+    color: 0xf59e0b,
+    transparent: true,
+    opacity: 0.85,
+    linewidth: 2,
+  });
+  disposables.push(mainBarEdgeMat);
+  const mainBarEdgeLine = new THREE.LineSegments(mainBarEdgesGeo, mainBarEdgeMat);
+  baseBarGroup.add(mainBarEdgeLine);
+
+  // Front Console Screen with High-Res Texture
+  const consoleTexture = createBaseConsoleTexture();
+  disposables.push(consoleTexture);
+  const consoleMat = new THREE.MeshBasicMaterial({
+    map: consoleTexture,
+    transparent: true,
+  });
+  disposables.push(consoleMat);
+  const consoleGeo = new THREE.PlaneGeometry(mainBarWidth - 0.25, mainBarHeight - 0.05);
+  disposables.push(consoleGeo);
+  const consolePlane = new THREE.Mesh(consoleGeo, consoleMat);
+  consolePlane.position.set(0, 0, mainBarDepth / 2 + 0.012);
+  baseBarGroup.add(consolePlane);
+
+  // Left & Right Flank Cooling Heat Sink Fins (Precision industrial detail)
+  const finGeo = new THREE.BoxGeometry(0.02, mainBarHeight - 0.04, 0.08);
+  const finMat = new THREE.MeshStandardMaterial({
     color: 0xd97706,
     metalness: 0.95,
-    roughness: 0.15,
-    emissive: 0x92400e,
-    emissiveIntensity: 0.45,
+    roughness: 0.2,
   });
-  disposables.push(pillarGeo, pillarMat);
+  disposables.push(finGeo, finMat);
+  for (let f = -4; f <= 4; f++) {
+    // Left side fins
+    const leftFin = new THREE.Mesh(finGeo, finMat);
+    leftFin.position.set(-mainBarWidth / 2 - 0.01, 0, f * 0.12);
+    baseBarGroup.add(leftFin);
+
+    // Right side fins
+    const rightFin = new THREE.Mesh(finGeo, finMat);
+    rightFin.position.set(mainBarWidth / 2 + 0.01, 0, f * 0.12);
+    baseBarGroup.add(rightFin);
+  }
+
+  // Tier 3: Top Inset Collar Tray
+  const trayGeo = new THREE.BoxGeometry(mainBarWidth - 0.2, 0.025, mainBarDepth - 0.2);
+  const trayMat = new THREE.MeshStandardMaterial({
+    color: 0x2b1e17,
+    roughness: 0.25,
+    metalness: 0.9,
+    emissive: 0xb45309,
+    emissiveIntensity: 0.25,
+  });
+  disposables.push(trayGeo, trayMat);
+  const trayMesh = new THREE.Mesh(trayGeo, trayMat);
+  trayMesh.position.set(0, mainBarHeight / 2 + 0.012, 0);
+  baseBarGroup.add(trayMesh);
+
+  // 4 Heavy Machined Flanged Pillar Sockets
+  const socketBaseGeo = new THREE.CylinderGeometry(0.065, 0.075, 0.035, 16);
+  const socketCollarGeo = new THREE.CylinderGeometry(0.042, 0.048, 0.055, 16);
+  const socketMat = new THREE.MeshStandardMaterial({
+    color: 0xf59e0b,
+    metalness: 0.95,
+    roughness: 0.15,
+    emissive: 0xd97706,
+    emissiveIntensity: 0.35,
+  });
+  disposables.push(socketBaseGeo, socketCollarGeo, socketMat);
 
   const cornerOffsets: Array<[number, number]> = [
     [-slabWidth / 2 + 0.08, -slabDepth / 2 + 0.08],
@@ -374,8 +545,38 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   ];
 
   cornerOffsets.forEach(([cx, cz]) => {
+    // Socket Base Flange
+    const socketBase = new THREE.Mesh(socketBaseGeo, socketMat);
+    socketBase.position.set(cx, mainBarHeight / 2 + 0.02, cz);
+    baseBarGroup.add(socketBase);
+
+    // Upper Socket Collar
+    const socketCollar = new THREE.Mesh(socketCollarGeo, socketMat);
+    socketCollar.position.set(cx, mainBarHeight / 2 + 0.055, cz);
+    baseBarGroup.add(socketCollar);
+  });
+
+  rootGroup.add(baseBarGroup);
+
+  // 4 Guide Pillars that stand firmly on top of the bottom bar sockets
+  const pillarTopY = topY + slabHeight / 2 + 0.18; // ~ 1.48
+  const pillarHeight = pillarTopY - baseBarTopY; // ~ 2.98 units
+  const pillarCenterY = (pillarTopY + baseBarTopY) / 2; // ~ -0.01
+
+  const guidePillars = new THREE.Group();
+  const pillarGeo = new THREE.CylinderGeometry(0.02, 0.02, pillarHeight, 16);
+  const pillarMat = new THREE.MeshStandardMaterial({
+    color: 0xd97706,
+    metalness: 0.95,
+    roughness: 0.15,
+    emissive: 0x92400e,
+    emissiveIntensity: 0.45,
+  });
+  disposables.push(pillarGeo, pillarMat);
+
+  cornerOffsets.forEach(([cx, cz]) => {
     const pillar = new THREE.Mesh(pillarGeo, pillarMat);
-    pillar.position.set(cx, 0, cz);
+    pillar.position.set(cx, pillarCenterY, cz);
     guidePillars.add(pillar);
   });
   rootGroup.add(guidePillars);
@@ -436,9 +637,10 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const dataPulses = new THREE.Points(particleGeo, particleMat);
   rootGroup.add(dataPulses);
 
-  // Fixed Isometric angle
-  rootGroup.rotation.y = -0.42;
-  rootGroup.rotation.x = 0.22;
+  // Completely straight front-facing alignment
+  rootGroup.rotation.y = 0;
+  rootGroup.rotation.x = 0;
+  rootGroup.rotation.z = 0;
 
   const dispose = () => {
     disposables.forEach((d) => d.dispose());

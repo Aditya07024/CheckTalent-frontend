@@ -123,10 +123,10 @@ export function SolutionSection() {
           </p>
         </div>
 
-        {/* 50% / 50% Screen Split: Pipeline Stages on Left, Open-Air Floating 3D on Right */}
-        <div className="mt-10 flex flex-col lg:flex-row lg:items-center lg:gap-12 xl:gap-16">
-          {/* Left Column: 50% width */}
-          <div className="w-full lg:w-1/2 space-y-4">
+        {/* 60% / 40% Screen Split: Pipeline Stages on Left (60%), Open-Air Floating 3D Stack on Right (40%) */}
+        <div className="mt-10 flex flex-col lg:flex-row lg:items-center lg:gap-10 xl:gap-14">
+          {/* Left Column: 60% width */}
+          <div className="w-full lg:w-[60%] space-y-4">
             {/* Stage Selector Grid */}
             <div
               role="tablist"
@@ -239,8 +239,8 @@ export function SolutionSection() {
             </div>
           </div>
 
-          {/* Right Column: 50% width — Open-air floating 3D Pipeline Stack (NO box) */}
-          <div className="relative w-full lg:w-1/2 flex items-center justify-center">
+          {/* Right Column: 40% width — Open-air floating 3D Pipeline Stack (NO box) */}
+          <div className="relative w-full lg:w-[40%] flex items-center justify-center">
             {/* Ambient Warm Glow behind the floating 3D stack */}
             <div
               aria-hidden="true"

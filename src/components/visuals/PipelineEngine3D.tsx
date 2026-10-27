@@ -50,32 +50,37 @@ export function PipelineEngine3D({
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
-    // Adjusted camera with generous framing to ensure the entire stack fits comfortably
-    camera.position.set(2.4, 0.35, 5.0);
-    camera.lookAt(0, 0, 0);
+    // Centered framing covering the 6 stages, guide pillars, and bottom foundation bar
+    camera.position.set(0, -0.05, 5.0);
+    camera.lookAt(0, -0.05, 0);
 
     attachSolarLighting(scene, 22);
 
     const accentLight = new THREE.DirectionalLight(0xffedd5, 1.5);
-    accentLight.position.set(-4, 3, 2);
+    accentLight.position.set(-3, 3, 3);
     scene.add(accentLight);
+
+    const frontFillLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    frontFillLight.position.set(0, 0, 4);
+    scene.add(frontFillLight);
 
     const pipeline = buildPipelineStackScene();
     scene.add(pipeline.rootGroup);
 
-    // Fixed isometric rotation
-    pipeline.rootGroup.rotation.y = -0.42;
-    pipeline.rootGroup.rotation.x = 0.22;
+    // Completely straight alignment
+    pipeline.rootGroup.rotation.y = 0;
+    pipeline.rootGroup.rotation.x = 0;
+    pipeline.rootGroup.rotation.z = 0;
 
     const resize = () => {
       const w = container.clientWidth || 380;
-      const h = container.clientHeight || 500;
+      const h = container.clientHeight || 540;
       renderer.setSize(w, h);
       camera.aspect = w / h;
-      camera.position.z = w < 540 ? 5.8 : 5.0;
-      camera.position.x = w < 540 ? 1.6 : 2.4;
-      camera.position.y = 0.35;
-      camera.lookAt(0, 0, 0);
+      camera.position.x = 0;
+      camera.position.y = -0.05;
+      camera.position.z = w < 540 ? 5.6 : 5.0;
+      camera.lookAt(0, -0.05, 0);
       camera.updateProjectionMatrix();
     };
     resize();
@@ -106,16 +111,16 @@ export function PipelineEngine3D({
           pipeline.scannerLight.intensity = 2.4 + Math.sin(t * 3.8) * 0.8;
         }
 
-        // 2. Animate each stage slab in the stack
+        // 2. Animate each stage slab in the stack (straight front-facing, active projects forward in Z)
         pipeline.slabs.forEach((slab, i) => {
           const isActive = i === currentActive;
 
-          // Forward offset in Z for active slab (projects slightly toward viewer)
-          const targetZ = isActive ? 0.26 : 0;
+          // Forward offset in Z for active slab (projects straight toward viewer)
+          const targetZ = isActive ? 0.28 : 0;
           slab.group.position.z += (targetZ - slab.group.position.z) * 0.09;
 
           // Subtle breathing wave
-          const wave = Math.sin(t * 1.5 + i * 0.7) * 0.012;
+          const wave = Math.sin(t * 1.5 + i * 0.7) * 0.008;
           slab.group.position.y = slab.yPosition + wave;
 
           // Emissive glow highlighting
@@ -152,7 +157,7 @@ export function PipelineEngine3D({
             const currentY = arr[idxY];
             if (typeof currentY === "number") {
               const newY = currentY + 0.012;
-              arr[idxY] = newY > 1.3 ? -1.3 : newY;
+              arr[idxY] = newY > 1.5 ? -1.5 : newY;
             }
           }
           posAttr.needsUpdate = true;
@@ -212,11 +217,11 @@ export function PipelineEngine3D({
   return (
     <div
       className={cn(
-        "relative w-full h-[460px] sm:h-[500px] lg:h-[540px] pointer-events-none select-none",
+        "relative w-full h-[520px] sm:h-[560px] lg:h-[600px] pointer-events-none select-none",
         className
       )}
     >
-      {/* Pure, borderless, fixed open-air WebGL Canvas fully containing the stack */}
+      {/* Pure, borderless, straight front-facing WebGL Canvas with bottom foundation bar */}
       <div
         ref={containerRef}
         aria-hidden="true"

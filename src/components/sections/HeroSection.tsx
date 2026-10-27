@@ -25,11 +25,7 @@ const LanguageOrbit3D = dynamic(
     ),
   {
     ssr: false,
-    loading: () => (
-      <div className="flex h-[430px] sm:h-[510px] lg:h-[570px] w-full items-center justify-center font-mono text-xs text-orange-700">
-        Loading 3D Orbit...
-      </div>
-    ),
+    loading: () => null,
   }
 );
 
@@ -57,14 +53,23 @@ export function HeroSection() {
     <section
       id={SECTION_IDS.hero}
       ref={sectionRef}
-      className="relative overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 py-14 sm:py-20 lg:py-24"
+      className="relative flex min-h-[640px] items-center overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 py-16 sm:min-h-[700px] lg:min-h-[calc(100vh-4rem)]"
     >
       <GridBackground density="fine" showRadialGlow />
 
-      <div className="container relative z-10">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8">
-          {/* Left Column: Clean Title + Minimal Core Components */}
-          <div className="lg:col-span-6 space-y-7">
+      {/* Warm glow behind the orbit (right on desktop, centered on mobile) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-yellow-300/30 via-orange-300/25 to-red-300/20 blur-3xl lg:left-[68%]"
+      />
+
+      {/* Full-bleed background 3D Orbit — text sits on top of it */}
+      <LanguageOrbit3D className="z-0 opacity-40 sm:opacity-60 lg:opacity-100" />
+
+      <div className="container relative z-10 w-full">
+        <div className="max-w-xl">
+          {/* Title + Minimal Core Components (overlaying the orbit) */}
+          <div className="space-y-7">
             <div
               data-hero-copy
               className="inline-flex items-center gap-2.5 rounded-full border border-orange-300 border-b-[3px] border-b-orange-400 bg-white/90 px-4 py-1.5 shadow-sm"
@@ -134,11 +139,6 @@ export function HeroSection() {
                 Human Oversight
               </span>
             </div>
-          </div>
-
-          {/* Right Column: Floating Open-Air 3D Orbit Only (No Box Background) */}
-          <div className="lg:col-span-6">
-            <LanguageOrbit3D />
           </div>
         </div>
       </div>

@@ -17,11 +17,11 @@ export const HERO_CONTENT = {
     "TalentLens analyzes real repositories, tests technical understanding, and turns project evidence into skill profiles recruiters can actually evaluate.",
   primaryCta: {
     label: "Explore the Platform",
-    href: `#${SECTION_IDS.features}`,
+    href: `#${SECTION_IDS.solution}`,
   },
   secondaryCta: {
-    label: "See How It Works",
-    href: `#${SECTION_IDS.howItWorks}`,
+    label: "View Proof Card",
+    href: `#${SECTION_IDS.proofCard}`,
   },
   supportingLine:
     "Built for candidates who can do the work—and recruiters who want to see the proof.",
@@ -329,8 +329,8 @@ export const RECRUITERS_SECTION_CONTENT = {
   heading: "Evaluate evidence. Make better-informed decisions.",
   subheading:
     "Move past surface-level resume claims and uncalibrated screening calls. Inspect verifiable code evidence, comprehension outcomes, and explicit gaps before committing engineering interview hours.",
-  ctaLabel: "Explore Recruiter Features",
-  ctaHref: `#${SECTION_IDS.features}`,
+  ctaLabel: "Request Recruiter Access",
+  ctaHref: `#${SECTION_IDS.earlyAccess}`,
   benefits: [
     {
       id: "rec-1",
@@ -475,8 +475,8 @@ export const CTA_SECTION_CONTENT = {
   supportingText:
     "Build a clearer picture of what you can do—and give recruiters the evidence to see it.",
   primaryCtaLabel: "Get Early Access",
-  secondaryCtaLabel: "Explore the Platform",
-  secondaryCtaHref: `#${SECTION_IDS.features}`,
+  secondaryCtaLabel: "View Proof Card",
+  secondaryCtaHref: `#${SECTION_IDS.proofCard}`,
   formHeading: "Request Early Access",
   formSubheading:
     "Tell us your role so we can share relevant platform updates as verification workflows roll out.",

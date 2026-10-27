@@ -117,7 +117,7 @@ export function CTASection() {
                 {CTA_SECTION_CONTENT.eyebrow}
               </span>
 
-              <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[44px] leading-[1.08]">
+              <h2 className="aldrich-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl lg:text-[44px] leading-[1.08]">
                 {CTA_SECTION_CONTENT.headline}
               </h2>
 

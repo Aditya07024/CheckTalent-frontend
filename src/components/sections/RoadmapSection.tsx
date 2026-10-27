@@ -24,7 +24,7 @@ export function RoadmapSection() {
             <span className="font-mono text-xs uppercase tracking-widest text-lime">
               {ROADMAP_SECTION_CONTENT.eyebrow}
             </span>
-            <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+            <h2 className="aldrich-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
               {ROADMAP_SECTION_CONTENT.heading}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">

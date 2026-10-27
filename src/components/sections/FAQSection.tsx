@@ -50,7 +50,7 @@ export function FAQSection() {
             <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-300 bg-gradient-to-r from-yellow-100 to-orange-100 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-orange-900">
               {FAQ_SECTION_CONTENT.eyebrow}
             </span>
-            <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl leading-[1.12]">
+            <h2 className="graduate-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl leading-[1.12]">
               {FAQ_SECTION_CONTENT.heading}
             </h2>
             <p className="text-sm sm:text-base leading-relaxed text-ink-secondary">

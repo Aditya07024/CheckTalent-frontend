@@ -28,7 +28,7 @@ export function RepoShowcaseSection() {
               </span>
             </div>
 
-            <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl leading-[1.12]">
+            <h2 className="aldrich-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl leading-[1.12]">
               From source files directly to code-defense questions.
             </h2>
 

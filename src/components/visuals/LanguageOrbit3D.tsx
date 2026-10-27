@@ -56,12 +56,13 @@ export function LanguageOrbit3D({ className }: LanguageOrbit3DProps) {
       const h = container.clientHeight;
       if (w === 0 || h === 0) return;
       renderer.setSize(w, h);
-      const { distance, offsetX } = fitOrbitCamera(w, h, camera.fov);
+      const { distance, offsetX, offsetY } = fitOrbitCamera(w, h, camera.fov);
       camera.aspect = w / h;
       camera.position.set(0, 1.2, distance);
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
       anchor.position.x = offsetX;
+      anchor.position.y = offsetY;
     };
     resize();
 

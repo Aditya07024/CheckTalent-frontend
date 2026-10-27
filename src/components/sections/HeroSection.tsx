@@ -104,7 +104,7 @@ export function HeroSection() {
 
             <p
               data-hero-copy
-              className="max-w-lg text-base sm:text-lg leading-relaxed text-ink-secondary"
+              className="max-w-xl text-base sm:text-lg lg:text-[19px] leading-relaxed text-ink-secondary font-quantico italic quantico-regular-italic tracking-wide"
             >
               Inspect real repositories, run adaptive AI technical vivas, and
               share evidence-backed Skill Proof Cards with human oversight.

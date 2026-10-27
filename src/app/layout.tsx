@@ -36,6 +36,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Londrina+Shadow&display=swap"
           rel="stylesheet"
         />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Quantico:ital@1&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
         <a

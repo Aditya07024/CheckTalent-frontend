@@ -103,11 +103,11 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
         </div>
 
         {/* Value Proposition Callout */}
-        <div className="mt-4 rounded-lg border border-hairline bg-canvas-elevated/80 p-3.5">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-lime">
+        <div className="mt-4 rounded-lg border border-orange-200 bg-gradient-to-r from-yellow-50/90 via-amber-50/80 to-orange-50/90 p-3.5">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-orange-800">
             Why It Matters
           </p>
-          <p className="mt-1 text-xs sm:text-sm leading-relaxed text-ink">
+          <p className="mt-1 text-xs sm:text-sm font-medium leading-relaxed text-ink">
             {feature.valueProposition}
           </p>
         </div>
@@ -156,25 +156,26 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
                 <span className="truncate text-ink-secondary">{preview.filePath}</span>
                 <span>{preview.language}</span>
               </div>
-              <div className="overflow-x-auto rounded border border-hairline bg-canvas-secondary p-2.5 font-mono text-xs">
+              <div className="overflow-x-auto rounded-lg border border-orange-900/30 bg-[#1F1510] p-3 font-mono text-xs text-amber-50 shadow-inner">
                 {preview.lines.map((line) => (
                   <div
                     key={line.lineNumber}
                     className={cn(
                       "px-2 py-1 rounded-sm",
-                      line.highlight === "lime" && "bg-lime-dim/70 border-l-2 border-lime",
+                      line.highlight === "lime" &&
+                        "bg-orange-500/20 border-l-2 border-yellow-400",
                       line.highlight === "violet" &&
-                        "bg-violet-dim/70 border-l-2 border-violet"
+                        "bg-red-500/20 border-l-2 border-red-400"
                     )}
                   >
                     <div className="flex gap-3">
-                      <span className="w-6 shrink-0 select-none text-right text-ink-muted">
+                      <span className="w-6 shrink-0 select-none text-right text-amber-200/45">
                         {line.lineNumber}
                       </span>
-                      <code className="whitespace-pre text-ink">{line.code}</code>
+                      <code className="whitespace-pre text-amber-50">{line.code}</code>
                     </div>
                     {line.annotation && (
-                      <p className="mt-1 pl-9 text-[11px] text-lime">
+                      <p className="mt-1 pl-9 text-[11px] text-yellow-300">
                         ↳ {line.annotation}
                       </p>
                     )}

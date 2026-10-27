@@ -13,7 +13,7 @@ export function RecruitersSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.recruiters}
-      className="border-b border-hairline bg-canvas-secondary/45 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-red-50/40 via-orange-50/40 to-yellow-50/50 py-20 lg:py-28"
     >
       <div className="container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
@@ -23,7 +23,7 @@ export function RecruitersSection() {
               <div
                 key={benefit.id}
                 data-animate-item
-                className="rounded-xl border border-hairline bg-canvas p-5 transition-colors hover:border-hairline-strong"
+                className="rounded-xl border border-orange-200/85 bg-white p-5 shadow-[0_6px_20px_rgba(220,38,38,0.05)] transition-all hover:-translate-y-0.5 hover:border-red-400"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[11px] text-ink-muted">

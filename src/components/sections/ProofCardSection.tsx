@@ -7,7 +7,7 @@ export function ProofCardSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.proofCard}
-      className="border-b border-hairline py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/55 via-[#FAF7F2] to-red-50/35 py-20 lg:py-28"
     >
       <div className="container">
         {/* Section Heading */}

@@ -19,36 +19,33 @@ function DefaultVisualFallback({ minHeightClass }: { minHeightClass: string }) {
       role="status"
       aria-label="Loading visual demonstration"
       className={cn(
-        "flex w-full flex-col justify-between rounded-lg border border-hairline bg-canvas-secondary p-6",
+        "flex w-full flex-col justify-between rounded-xl border border-orange-200 bg-white p-6",
         minHeightClass
       )}
     >
-      <div className="flex items-center justify-between border-b border-hairline pb-4">
-        <div className="h-3 w-36 rounded bg-canvas-elevated" />
-        <div className="h-3 w-20 rounded bg-canvas-elevated" />
+      <div className="flex items-center justify-between border-b border-orange-100 pb-4">
+        <div className="h-3 w-36 rounded bg-amber-100" />
+        <div className="h-3 w-20 rounded bg-orange-100" />
       </div>
       <div className="space-y-3 py-8">
-        <div className="h-4 w-3/4 rounded bg-canvas-elevated" />
-        <div className="h-4 w-1/2 rounded bg-canvas-elevated" />
-        <div className="h-24 w-full rounded border border-hairline bg-canvas/60" />
+        <div className="h-36 w-full rounded-lg bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50" />
+        <div className="h-24 w-full rounded-lg border border-orange-100 bg-amber-50/40" />
       </div>
-      <div className="h-3 w-48 rounded bg-canvas-elevated" />
+      <div className="h-3 w-48 rounded bg-orange-100" />
     </div>
   );
 }
 
 /**
- * Stable visual boundary container.
- * Currently hosts structured HTML/CSS/SVG product demonstrations while
- * reserving deterministic responsive geometry, Suspense fallback handling,
- * and reduced-motion signaling so an isolated client scene can replace
- * child visuals in a future release without altering page layouts.
+ * Multi-layered VisualStage container hosting interactive WebGL Three.js 3D
+ * visuals and structured repository intelligence previews inside a vibrant
+ * yellow-orange-red frame.
  */
 export function VisualStage({
   children,
   fallback,
-  stageLabel = "Interactive Product Stage",
-  minHeightClass = "min-h-[520px]",
+  stageLabel = "Interactive 3D & Repository Product Stage",
+  minHeightClass = "min-h-[540px]",
   className,
   framed = true,
 }: VisualStageProps) {
@@ -63,34 +60,17 @@ export function VisualStage({
         "relative w-full",
         minHeightClass,
         framed &&
-          "rounded-xl border border-hairline-strong bg-canvas-secondary/85 p-1.5 sm:p-2 shadow-[0_20px_56px_rgba(15,23,42,0.09),0_2px_8px_rgba(15,23,42,0.04)]",
+          "rounded-2xl bg-gradient-to-br from-yellow-400/80 via-orange-500/75 to-red-500/80 p-[2px] shadow-[0_24px_64px_rgba(234,88,12,0.18),0_8px_24px_rgba(239,68,68,0.12)]",
         className
       )}
     >
-      {framed && (
-        <>
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -left-px -top-px h-3 w-3 border-l-2 border-t-2 border-lime/60 rounded-tl-[2px]"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-px -top-px h-3 w-3 border-r-2 border-t-2 border-lime/60 rounded-tr-[2px]"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-px -left-px h-3 w-3 border-b-2 border-l-2 border-hairline-strong rounded-bl-[2px]"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-px -right-px h-3 w-3 border-b-2 border-r-2 border-hairline-strong rounded-br-[2px]"
-          />
-        </>
-      )}
-
-      <Suspense fallback={fallback ?? <DefaultVisualFallback minHeightClass={minHeightClass} />}>
-        {children}
-      </Suspense>
+      <div className="h-full w-full rounded-[14px] bg-white/95 p-2.5 sm:p-3 backdrop-blur-md">
+        <Suspense
+          fallback={fallback ?? <DefaultVisualFallback minHeightClass={minHeightClass} />}
+        >
+          {children}
+        </Suspense>
+      </div>
     </div>
   );
 }

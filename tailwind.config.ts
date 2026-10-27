@@ -25,30 +25,32 @@ const config: Config = {
     extend: {
       colors: {
         canvas: {
-          DEFAULT: "#F8F9FB",
-          secondary: "#F1F4F8",
+          DEFAULT: "#FAF7F2",
+          secondary: "#F3ECE1",
           elevated: "#FFFFFF",
-          hover: "#E8ECF3",
+          hover: "#EAE0D1",
         },
         ink: {
-          DEFAULT: "#0B0F17",
-          secondary: "#424C5E",
-          muted: "#647084",
+          DEFAULT: "#1C1613",
+          secondary: "#4E433B",
+          muted: "#786A5E",
         },
+        // Remapped primary accent -> Warm Terracotta / Solar Orange (Zero green/blue/violet)
         lime: {
-          DEFAULT: "#236B00",
-          bright: "#B8F533",
-          dim: "rgba(101, 189, 21, 0.12)",
-          border: "rgba(35, 107, 0, 0.28)",
-          hover: "#A9E922",
+          DEFAULT: "#D9481E",
+          bright: "#FF6B35",
+          dim: "rgba(234, 88, 12, 0.11)",
+          border: "rgba(217, 72, 30, 0.30)",
+          hover: "#C23B14",
         },
+        // Remapped secondary accent -> Pure Crimson / Scarlet Red (Zero green/blue/violet)
         violet: {
-          DEFAULT: "#5538EE",
-          dim: "rgba(85, 56, 238, 0.08)",
-          border: "rgba(85, 56, 238, 0.24)",
+          DEFAULT: "#DC2626",
+          dim: "rgba(220, 38, 38, 0.10)",
+          border: "rgba(220, 38, 38, 0.28)",
         },
-        hairline: "rgba(15, 23, 42, 0.09)",
-        "hairline-strong": "rgba(15, 23, 42, 0.18)",
+        hairline: "rgba(28, 22, 19, 0.10)",
+        "hairline-strong": "rgba(28, 22, 19, 0.19)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -103,8 +105,8 @@ const config: Config = {
         },
         "scan-sweep": {
           "0%": { transform: "translateY(-100%)", opacity: "0" },
-          "20%": { opacity: "0.75" },
-          "80%": { opacity: "0.75" },
+          "20%": { opacity: "0.8" },
+          "80%": { opacity: "0.8" },
           "100%": { transform: "translateY(420%)", opacity: "0" },
         },
         "pulse-subtle": {

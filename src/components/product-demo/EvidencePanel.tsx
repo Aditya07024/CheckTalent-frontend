@@ -163,7 +163,7 @@ export function EvidencePanel({ skill, compact = false }: EvidencePanelProps) {
             <p className="mb-2.5 text-xs text-ink-secondary">
               {skill.codeReference.caption}
             </p>
-            <pre className="overflow-x-auto rounded border border-hairline bg-canvas-secondary p-3 font-mono text-xs leading-relaxed text-ink">
+            <pre className="overflow-x-auto rounded-lg border border-orange-900/30 bg-[#1F1510] p-3.5 font-mono text-xs leading-relaxed text-amber-50 shadow-inner">
               <code>{skill.codeReference.snippet}</code>
             </pre>
           </div>

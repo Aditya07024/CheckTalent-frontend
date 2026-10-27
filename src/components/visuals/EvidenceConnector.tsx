@@ -27,7 +27,7 @@ export function EvidenceConnector({
   const pulseRef = useRef<SVGLineElement | null>(null);
   const { prefersReducedMotion } = useAnimationContext();
 
-  const strokeColor = accent === "violet" ? "#5538EE" : "#236B00";
+  const strokeColor = accent === "violet" ? "#DC2626" : "#EA580C";
 
   useGSAP(
     () => {

@@ -80,15 +80,15 @@ export function HowItWorksSection() {
     <section
       id={SECTION_IDS.howItWorks}
       ref={sectionRef}
-      className="border-b border-hairline bg-canvas-secondary/45 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-orange-50/50 via-amber-50/35 to-[#FAF7F2] py-20 lg:py-28"
     >
       <div className="container">
         {/* Heading */}
         <div className="max-w-3xl space-y-4">
-          <span className="font-mono text-xs uppercase tracking-widest text-lime">
+          <span className="inline-block rounded-full border border-amber-300 bg-yellow-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-amber-900">
             {HOW_IT_WORKS_CONTENT.eyebrow}
           </span>
-          <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
             {HOW_IT_WORKS_CONTENT.heading}
           </h2>
           <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">
@@ -98,14 +98,14 @@ export function HowItWorksSection() {
 
         {/* Scroll-Linked Progress Indicator Rail */}
         <div className="mt-10 hidden lg:block">
-          <div className="flex items-center justify-between font-mono text-[11px] text-ink-muted mb-2">
+          <div className="flex items-center justify-between font-mono text-[11px] font-semibold text-orange-800 mb-2">
             <span>VERIFICATION SEQUENCE</span>
             <span>01 → 02 → 03 → 04</span>
           </div>
-          <div className="h-1 w-full overflow-hidden rounded-full bg-canvas-elevated">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-orange-100">
             <div
               ref={progressBarRef}
-              className="h-full w-full origin-left rounded-full bg-gradient-to-r from-lime via-lime to-violet"
+              className="h-full w-full origin-left rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600"
             />
           </div>
         </div>
@@ -116,7 +116,7 @@ export function HowItWorksSection() {
             <article
               key={step.stepNumber}
               data-workflow-step
-              className="flex flex-col justify-between rounded-xl border border-hairline bg-canvas p-6 transition-colors hover:border-hairline-strong"
+              className="flex flex-col justify-between rounded-2xl border border-orange-200/85 bg-white p-6 shadow-[0_8px_24px_rgba(234,88,12,0.06)] transition-all hover:-translate-y-1 hover:border-orange-400"
             >
               <div>
                 <div className="flex items-center justify-between border-b border-hairline pb-4">

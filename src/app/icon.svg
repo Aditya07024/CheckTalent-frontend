@@ -1,7 +1,7 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="7" fill="#08090D"/>
-  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="6.25" stroke="#C5FF4A" stroke-opacity="0.4" stroke-width="1.5"/>
-  <path d="M10.5 9.5L5.5 16L10.5 22.5" stroke="#F5F7FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M21.5 9.5L26.5 16L21.5 22.5" stroke="#F5F7FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M12.6 16.5L15.1 19L19.8 13.2" stroke="#C5FF4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="32" height="32" rx="7" fill="#1C1613"/>
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="6.25" stroke="#F97316" stroke-opacity="0.55" stroke-width="1.5"/>
+  <path d="M10.5 9.5L5.5 16L10.5 22.5" stroke="#FAF7F2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21.5 9.5L26.5 16L21.5 22.5" stroke="#FAF7F2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12.6 16.5L15.1 19L19.8 13.2" stroke="#F59E0B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

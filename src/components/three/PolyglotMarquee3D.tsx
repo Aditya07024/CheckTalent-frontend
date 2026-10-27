@@ -69,7 +69,7 @@ export function PolyglotMarquee3D() {
       className="relative z-[2] overflow-hidden border-b border-orange-200/80 bg-gradient-to-r from-yellow-100/55 via-amber-50/65 to-orange-100/55 py-6 backdrop-blur-[2px]"
     >
       <div className="space-y-3.5" style={{ perspective: "1100px" }}>
-        <KeycapTrack items={MARQUEE_ROW_ONE} />
+        {/* <KeycapTrack items={MARQUEE_ROW_ONE} /> */}
         <KeycapTrack items={MARQUEE_ROW_TWO} reverse />
       </div>
     </div>

@@ -5,24 +5,25 @@ import { SECTION_IDS } from "@/lib/constants";
 import type { IconKey } from "@/types/platform";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { TiltCard3D } from "@/components/visuals/TiltCard3D";
+import { cn } from "@/lib/utils";
 
 const CARD_WARM_STYLES = [
   {
-    topBorder: "border-t-4 border-t-yellow-500",
-    iconBox: "border-yellow-300 bg-yellow-100 text-yellow-800",
-    cardTint: "from-yellow-50/75 via-white to-amber-50/40 border-yellow-200/90",
+    border: "border-2 border-amber-400 shadow-[0_12px_32px_rgba(245,158,11,0.12)]",
+    iconBox: "border border-amber-300 bg-yellow-100 text-yellow-800",
+    cardTint: "from-yellow-50/80 via-white to-amber-50/50",
     glow: "rgba(234, 179, 8, 0.16)",
   },
   {
-    topBorder: "border-t-4 border-t-orange-500",
-    iconBox: "border-orange-300 bg-orange-100 text-orange-800",
-    cardTint: "from-orange-50/75 via-white to-amber-50/40 border-orange-200/90",
+    border: "border-2 border-orange-400 shadow-[0_12px_32px_rgba(234,88,12,0.12)]",
+    iconBox: "border border-orange-300 bg-orange-100 text-orange-800",
+    cardTint: "from-orange-50/80 via-white to-amber-50/50",
     glow: "rgba(249, 115, 22, 0.16)",
   },
   {
-    topBorder: "border-t-4 border-t-red-500",
-    iconBox: "border-red-300 bg-red-100 text-red-800",
-    cardTint: "from-red-50/75 via-white to-orange-50/40 border-red-200/90",
+    border: "border-2 border-red-400 shadow-[0_12px_32px_rgba(220,38,38,0.12)]",
+    iconBox: "border border-red-300 bg-red-100 text-red-800",
+    cardTint: "from-red-50/80 via-white to-orange-50/50",
     glow: "rgba(239, 68, 68, 0.16)",
   },
 ] as const;
@@ -68,7 +69,11 @@ export function ProblemSection() {
                 key={problem.id}
                 glowColor={theme.glow}
                 data-animate-item
-                className={`flex flex-col justify-between rounded-2xl border border-b-4 border-b-orange-300 bg-gradient-to-br p-6 shadow-[0_12px_32px_rgba(234,88,12,0.08)] ${theme.cardTint} ${theme.topBorder}`}
+                className={cn(
+                  "flex flex-col justify-between rounded-2xl bg-gradient-to-br p-6 transition-all",
+                  theme.border,
+                  theme.cardTint
+                )}
               >
                 <div>
                   {/* Top Card Telemetry */}

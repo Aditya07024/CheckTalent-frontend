@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "pos-stamp-button inline-flex items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "pos-stamp-button inline-flex items-center justify-center whitespace-nowrap font-sans font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -20,10 +20,10 @@ const buttonVariants = cva(
           "bg-[#DC2626] [&_.pos-stamp-inner]:bg-[#FEF3C7] [&_.pos-stamp-inner]:text-[#1C1613] hover:[&_.pos-stamp-inner]:bg-[#FFFFFF]",
       },
       size: {
-        default: "[&_.pos-stamp-inner]:h-10 [&_.pos-stamp-inner]:px-4 [&_.pos-stamp-inner]:py-1.5 text-base",
-        sm: "[&_.pos-stamp-inner]:h-8.5 [&_.pos-stamp-inner]:px-3 [&_.pos-stamp-inner]:py-1 text-sm",
-        lg: "[&_.pos-stamp-inner]:h-11 [&_.pos-stamp-inner]:px-6 [&_.pos-stamp-inner]:py-2 text-lg",
-        xl: "[&_.pos-stamp-inner]:h-12 [&_.pos-stamp-inner]:px-7 [&_.pos-stamp-inner]:py-2.5 text-xl font-bold",
+        default: "[&_.pos-stamp-inner]:h-10 [&_.pos-stamp-inner]:px-4 [&_.pos-stamp-inner]:py-2 text-sm",
+        sm: "[&_.pos-stamp-inner]:h-8.5 [&_.pos-stamp-inner]:px-3 [&_.pos-stamp-inner]:py-1 text-xs",
+        lg: "[&_.pos-stamp-inner]:h-11 [&_.pos-stamp-inner]:px-6 [&_.pos-stamp-inner]:py-2 text-sm",
+        xl: "[&_.pos-stamp-inner]:h-12 [&_.pos-stamp-inner]:px-7 [&_.pos-stamp-inner]:py-2.5 text-base",
         icon: "[&_.pos-stamp-inner]:h-9 [&_.pos-stamp-inner]:w-9 [&_.pos-stamp-inner]:p-0",
       },
     },

@@ -72,7 +72,7 @@ export function HeroSection() {
       <LanguageOrbit3D className="z-0 opacity-40 sm:opacity-60 lg:opacity-100" />
 
       <div className="container relative z-10 w-full">
-        <div className="max-w-xl lg:max-w-3xl">
+        <div className="max-w-xl lg:max-w-3xl xl:max-w-4xl">
           {/* Title + Minimal Core Components (overlaying the orbit) */}
           <div className="space-y-7">
             <div
@@ -87,7 +87,7 @@ export function HeroSection() {
 
             <h1
               data-hero-copy
-              className="text-4xl font-bold tracking-[-0.03em] text-ink sm:text-5xl lg:text-[52px] xl:text-[58px] leading-[1.08]"
+              className="font-londrina font-normal londrina-shadow-regular text-5xl tracking-wide text-ink sm:text-[54px] lg:text-[62px] xl:text-[68px] leading-[1.06]"
             >
               {/* Line 1 on desktop: "Your code tells a better" */}
               <span className="lg:block lg:whitespace-nowrap">

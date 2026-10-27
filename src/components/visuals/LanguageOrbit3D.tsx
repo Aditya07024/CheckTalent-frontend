@@ -37,7 +37,7 @@ export function LanguageOrbit3D({ className }: LanguageOrbit3DProps) {
       return;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     container.innerHTML = "";
     container.appendChild(renderer.domElement);
@@ -81,17 +81,13 @@ export function LanguageOrbit3D({ className }: LanguageOrbit3DProps) {
     window.addEventListener("pointermove", onPointerMove, { passive: true });
 
     let isVisible = true;
-    const io = new IntersectionObserver((entries) => {
-      isVisible = entries[0]?.isIntersecting ?? true;
-    });
-    io.observe(container);
-
+    let isRunning = false;
     let frameId = 0;
     const clock = new THREE.Clock();
 
-    const renderScene = () => {
-      frameId = window.requestAnimationFrame(renderScene);
-      if (!isVisible) return;
+    const tick = () => {
+      if (!isRunning) return;
+      frameId = window.requestAnimationFrame(tick);
       const t = clock.getElapsedTime();
 
       if (!prefersReducedMotion) {
@@ -120,12 +116,47 @@ export function LanguageOrbit3D({ className }: LanguageOrbit3DProps) {
 
       renderer.render(scene, camera);
     };
-    renderScene();
+
+    const startLoop = () => {
+      if (isRunning || !isVisible || document.hidden) return;
+      isRunning = true;
+      clock.start();
+      tick();
+    };
+
+    const stopLoop = () => {
+      if (!isRunning) return;
+      isRunning = false;
+      window.cancelAnimationFrame(frameId);
+      clock.stop();
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      isVisible = entries[0]?.isIntersecting ?? false;
+      if (isVisible) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
+    });
+    io.observe(container);
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (isVisible) {
+        startLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    startLoop();
 
     return () => {
-      window.cancelAnimationFrame(frameId);
+      stopLoop();
       resizeObserver.disconnect();
       io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("pointermove", onPointerMove);
       orbit.dispose();
       renderer.dispose();

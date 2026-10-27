@@ -28,7 +28,7 @@ export function PageCanvas3D() {
       return;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     container.innerHTML = "";
@@ -80,9 +80,13 @@ export function PageCanvas3D() {
     window.addEventListener("resize", onResize);
 
     let frameId = 0;
+    let isRunning = true;
     const clock = new THREE.Clock();
 
     const animate = () => {
+      if (!isRunning) return;
+      frameId = window.requestAnimationFrame(animate);
+
       const elapsed = clock.getElapsedTime();
       camera.position.y += (targetCamY - camera.position.y) * 0.08;
       lights.orangeLight.position.y = camera.position.y + 2;
@@ -93,7 +97,10 @@ export function PageCanvas3D() {
         camera.rotation.y = -pointerX * 0.03;
         camera.rotation.x = -pointerY * 0.02;
 
+        const camY = camera.position.y;
         world.items.forEach(({ group, mesh, cage, spec }, idx) => {
+          // Only update matrix calculations for objects in viewport vicinity
+          if (Math.abs(spec.y - camY) > 14) return;
           mesh.rotation.x = elapsed * spec.rotSpeedX + scrollProgress * 4.2;
           mesh.rotation.y = elapsed * spec.rotSpeedY + scrollProgress * 5.0;
           cage.rotation.x = -elapsed * spec.rotSpeedX * 0.5;
@@ -105,13 +112,27 @@ export function PageCanvas3D() {
       }
 
       renderer.render(scene, camera);
-      frameId = window.requestAnimationFrame(animate);
     };
 
     animate();
 
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        isRunning = false;
+        window.cancelAnimationFrame(frameId);
+        clock.stop();
+      } else if (!isRunning) {
+        isRunning = true;
+        clock.start();
+        animate();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     return () => {
+      isRunning = false;
       window.cancelAnimationFrame(frameId);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("scroll", updateScroll);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("resize", onResize);

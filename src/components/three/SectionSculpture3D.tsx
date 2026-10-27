@@ -31,10 +31,12 @@ export function SectionSculpture3D({
 
     let renderer: THREE.WebGLRenderer | null = null;
     let frameId = 0;
+    let isRunning = false;
+    let isVisible = false;
     let disposeGeometry: (() => void) | null = null;
     let detachPointer: (() => void) | null = null;
 
-    const mount = () => {
+    const setupScene = () => {
       if (renderer || !container) return;
       try {
         renderer = new THREE.WebGLRenderer({
@@ -48,7 +50,7 @@ export function SectionSculpture3D({
 
       const w = container.clientWidth || 200;
       const h = container.clientHeight || 200;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
       renderer.setSize(w, h);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       container.innerHTML = "";
@@ -83,7 +85,8 @@ export function SectionSculpture3D({
 
       const clock = new THREE.Clock();
       const tick = () => {
-        if (!renderer) return;
+        if (!renderer || !isRunning) return;
+        frameId = window.requestAnimationFrame(tick);
         const t = clock.getElapsedTime();
         if (!prefersReducedMotion) {
           sculpture.mainMesh.rotation.y = t * 0.65;
@@ -97,31 +100,61 @@ export function SectionSculpture3D({
           sculpture.group.position.y = Math.sin(t * 1.4) * 0.08;
         }
         renderer.render(scene, camera);
-        frameId = window.requestAnimationFrame(tick);
       };
-      tick();
+
+      return { tick, clock };
     };
 
-    const unmount = () => {
+    let loopControls: ReturnType<typeof setupScene>;
+
+    const startLoop = () => {
+      if (isRunning || !isVisible || document.hidden) return;
+      if (!loopControls) {
+        loopControls = setupScene();
+      }
+      if (!loopControls) return;
+      isRunning = true;
+      loopControls.clock.start();
+      loopControls.tick();
+    };
+
+    const stopLoop = () => {
+      if (!isRunning) return;
+      isRunning = false;
       window.cancelAnimationFrame(frameId);
-      detachPointer?.();
-      detachPointer = null;
-      disposeGeometry?.();
-      disposeGeometry = null;
-      renderer?.dispose();
-      renderer = null;
-      if (container) container.innerHTML = "";
+      loopControls?.clock.stop();
     };
 
     const io = new IntersectionObserver(
-      (entries) => (entries[0]?.isIntersecting ? mount() : unmount()),
-      { rootMargin: "260px" }
+      (entries) => {
+        isVisible = entries[0]?.isIntersecting ?? false;
+        if (isVisible) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { rootMargin: "60px" }
     );
     io.observe(container);
 
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (isVisible) {
+        startLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     return () => {
+      stopLoop();
       io.disconnect();
-      unmount();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      detachPointer?.();
+      disposeGeometry?.();
+      renderer?.dispose();
+      if (container) container.innerHTML = "";
     };
   }, [variant, prefersReducedMotion]);
 

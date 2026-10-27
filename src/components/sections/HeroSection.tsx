@@ -65,7 +65,7 @@ export function HeroSection() {
       {/* Warm glow behind the orbit (right on desktop, centered on mobile) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[55%] h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-yellow-300/30 via-orange-300/25 to-red-300/20 blur-3xl lg:left-[68%]"
+        className="pointer-events-none absolute left-1/2 top-[55%] h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-yellow-300/30 via-orange-300/25 to-red-300/20 blur-2xl transform-gpu will-change-transform lg:left-[68%]"
       />
 
       {/* Full-bleed background 3D Orbit — text sits on top of it */}

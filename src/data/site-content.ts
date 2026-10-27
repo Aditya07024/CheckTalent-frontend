@@ -331,6 +331,8 @@ export const RECRUITERS_SECTION_CONTENT = {
     "Move past surface-level resume claims and uncalibrated screening calls. Inspect verifiable code evidence, comprehension outcomes, and explicit gaps before committing engineering interview hours.",
   ctaLabel: "Request Recruiter Access",
   ctaHref: `#${SECTION_IDS.earlyAccess}`,
+  secondaryCtaLabel: "View Sample Proof Card",
+  secondaryCtaHref: `#${SECTION_IDS.proofCard}`,
   benefits: [
     {
       id: "rec-1",

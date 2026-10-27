@@ -19,37 +19,10 @@ export function RecruitersSection() {
     >
       <div className="container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
-          {/* Left Column: Eight 3D Recruiter Capabilities */}
-          <div className="order-2 lg:order-1 lg:col-span-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {RECRUITERS_SECTION_CONTENT.benefits.map((benefit, idx) => (
-              <TiltCard3D
-                key={benefit.id}
-                data-animate-item
-                glowColor="rgba(220, 38, 38, 0.14)"
-                className="rounded-xl border-2 border-red-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(220,38,38,0.06)]"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] text-ink-muted">
-                    REC // 0{idx + 1}
-                  </span>
-                  <span className="flex h-5 w-5 items-center justify-center rounded border border-lime/30 bg-lime-dim">
-                    <Check className="h-3 w-3 text-lime" />
-                  </span>
-                </div>
-                <h3 className="mt-3 text-base font-semibold text-ink leading-snug">
-                  {benefit.title}
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-secondary">
-                  {benefit.detail}
-                </p>
-              </TiltCard3D>
-            ))}
-          </div>
-
-          {/* Right Column: Recruiter Pitch + Decision-Support Snapshot + CTA */}
+          {/* Left Column on desktop: Recruiter Pitch + Decision-Support Snapshot + CTA */}
           <div
             data-animate-header
-            className="order-1 lg:order-2 lg:col-span-5 space-y-6 lg:sticky lg:top-24"
+            className="order-1 lg:order-1 lg:col-span-5 space-y-6 lg:sticky lg:top-24"
           >
             <div className="flex items-center gap-3.5">
               <Floating3DCube label="HIRE" tone="crimson" size={44} />
@@ -120,7 +93,7 @@ export function RecruitersSection() {
                 size="lg"
                 onClick={() =>
                   scrollToSection(RECRUITERS_SECTION_CONTENT.ctaHref, {
-                    selectCategory: "recruiter-intelligence",
+                    preselectRole: "Recruiter",
                   })
                 }
               >
@@ -133,14 +106,39 @@ export function RecruitersSection() {
                 variant="outline"
                 size="lg"
                 onClick={() =>
-                  scrollToSection(`#${SECTION_IDS.earlyAccess}`, {
-                    preselectRole: "Recruiter",
-                  })
+                  scrollToSection(RECRUITERS_SECTION_CONTENT.secondaryCtaHref)
                 }
               >
-                Request Recruiter Access
+                {RECRUITERS_SECTION_CONTENT.secondaryCtaLabel}
               </Button>
             </div>
+          </div>
+
+          {/* Right Column on desktop: Four 3D Recruiter Capabilities */}
+          <div className="order-2 lg:order-2 lg:col-span-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {RECRUITERS_SECTION_CONTENT.benefits.map((benefit, idx) => (
+              <TiltCard3D
+                key={benefit.id}
+                data-animate-item
+                glowColor="rgba(220, 38, 38, 0.14)"
+                className="rounded-xl border-2 border-red-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(220,38,38,0.06)]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] text-ink-muted">
+                    REC // 0{idx + 1}
+                  </span>
+                  <span className="flex h-5 w-5 items-center justify-center rounded border border-lime/30 bg-lime-dim">
+                    <Check className="h-3 w-3 text-lime" />
+                  </span>
+                </div>
+                <h3 className="mt-3 text-base font-semibold text-ink leading-snug">
+                  {benefit.title}
+                </h3>
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-secondary">
+                  {benefit.detail}
+                </p>
+              </TiltCard3D>
+            ))}
           </div>
         </div>
       </div>

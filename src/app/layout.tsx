@@ -8,10 +8,29 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: `${PRODUCT_METADATA.name} — ${PRODUCT_METADATA.tagline}`,
   description: PRODUCT_METADATA.supportingMessage,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { url: "/icon.png", type: "image/png", sizes: "96x96" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
     title: `${PRODUCT_METADATA.name} — ${PRODUCT_METADATA.tagline}`,
     description: PRODUCT_METADATA.supportingMessage,
     type: "website",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1024,
+        height: 1024,
+        alt: `${PRODUCT_METADATA.name} Logo`,
+      },
+    ],
   },
 };
 
@@ -36,6 +55,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Londrina+Shadow&family=Quantico:ital@1&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
         <a

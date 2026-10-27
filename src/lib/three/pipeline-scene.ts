@@ -154,12 +154,13 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const rootGroup = new THREE.Group();
   const disposables: Array<{ dispose: () => void }> = [];
 
-  const slabWidth = 3.6;
-  const slabHeight = 0.22;
-  const slabDepth = 2.2;
-  const ySpacing = 0.95;
+  // Compact dimensions: reduced vertical spacing and height
+  const slabWidth = 3.2;
+  const slabHeight = 0.14;
+  const slabDepth = 2.0;
+  const ySpacing = 0.52; // Compact vertical spacing
   const totalStages = 6;
-  const topY = ((totalStages - 1) * ySpacing) / 2;
+  const topY = ((totalStages - 1) * ySpacing) / 2; // (5 * 0.52) / 2 = 1.30
 
   const slabGeometry = new THREE.BoxGeometry(slabWidth, slabHeight, slabDepth);
   const slabEdgesGeometry = new THREE.EdgesGeometry(slabGeometry);
@@ -175,14 +176,14 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
 
     const hexString = `#${meta.color.toString(16).padStart(6, "0")}`;
 
-    // Slab body: High quality MeshPhysicalMaterial with clearcoat and transmission
+    // Slab body: High quality MeshPhysicalMaterial
     const slabMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
       roughness: 0.15,
       metalness: 0.1,
       transmission: 0.45,
       ior: 1.5,
-      thickness: 0.5,
+      thickness: 0.4,
       emissive: meta.color,
       emissiveIntensity: 0.22,
       transparent: true,
@@ -192,7 +193,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     stageGroup.add(slabMesh);
     disposables.push(slabMaterial);
 
-    // Razor-sharp glowing slab edges
+    // Glowing slab edges
     const edgeMaterial = new THREE.LineBasicMaterial({
       color: meta.color,
       transparent: true,
@@ -203,7 +204,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     stageGroup.add(edgeLine);
     disposables.push(edgeMaterial);
 
-    // High-res Front label plate
+    // Front label plate
     const labelTexture = createHighResTextPlate(
       meta.code,
       meta.label.replace(`STAGE ${meta.code} · `, ""),
@@ -218,19 +219,19 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     });
     disposables.push(labelMaterial);
 
-    const labelPlaneGeo = new THREE.PlaneGeometry(2.0, 0.5);
+    const labelPlaneGeo = new THREE.PlaneGeometry(1.8, 0.42);
     disposables.push(labelPlaneGeo);
     const labelPlane = new THREE.Mesh(labelPlaneGeo, labelMaterial);
-    labelPlane.position.set(0, 0, slabDepth / 2 + 0.015);
+    labelPlane.position.set(0, 0, slabDepth / 2 + 0.012);
     stageGroup.add(labelPlane);
 
-    // Miniature 3D architectural feature on top of each slab
+    // Compact 3D architectural feature on top of each slab
     const featureGroup = new THREE.Group();
-    featureGroup.position.set(0, slabHeight / 2 + 0.05, 0);
+    featureGroup.position.set(0, slabHeight / 2 + 0.03, 0);
 
     if (idx === 0) {
-      // Stage 01: Intake — Sleek stacked document / repo cards
-      const docGeo = new THREE.BoxGeometry(0.9, 0.05, 1.1);
+      // Stage 01: Intake — Stacked document / repo cards
+      const docGeo = new THREE.BoxGeometry(0.7, 0.035, 0.85);
       const docMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.3,
@@ -239,13 +240,13 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       disposables.push(docGeo, docMat);
       for (let d = 0; d < 3; d++) {
         const doc = new THREE.Mesh(docGeo, docMat);
-        doc.position.set((d - 1) * 0.22, d * 0.06, (d - 1) * 0.1);
-        doc.rotation.y = (d - 1) * 0.15;
+        doc.position.set((d - 1) * 0.16, d * 0.04, (d - 1) * 0.07);
+        doc.rotation.y = (d - 1) * 0.12;
         featureGroup.add(doc);
       }
     } else if (idx === 1) {
-      // Stage 02: Repo Intel — AST nodes hierarchy with metallic links
-      const nodeGeo = new THREE.BoxGeometry(0.16, 0.16, 0.16);
+      // Stage 02: Repo Intel — AST nodes hierarchy
+      const nodeGeo = new THREE.BoxGeometry(0.12, 0.12, 0.12);
       const nodeMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -255,12 +256,12 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
       disposables.push(nodeGeo, nodeMat);
       const coords: Array<[number, number, number]> = [
-        [0, 0.28, 0],
-        [-0.55, 0.14, -0.25],
-        [0.55, 0.14, -0.25],
-        [-0.9, 0.04, 0.3],
-        [0, 0.04, 0.35],
-        [0.9, 0.04, 0.3],
+        [0, 0.18, 0],
+        [-0.45, 0.09, -0.2],
+        [0.45, 0.09, -0.2],
+        [-0.7, 0.02, 0.22],
+        [0, 0.02, 0.26],
+        [0.7, 0.02, 0.22],
       ];
       coords.forEach(([x, y, z]) => {
         const node = new THREE.Mesh(nodeGeo, nodeMat);
@@ -269,7 +270,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
     } else if (idx === 2) {
       // Stage 03: Technical Viva — Pulsing 3D voice frequency spectrum bars
-      const barGeo = new THREE.BoxGeometry(0.09, 0.38, 0.09);
+      const barGeo = new THREE.BoxGeometry(0.07, 0.24, 0.07);
       const barMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -278,16 +279,16 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
         metalness: 0.7,
       });
       disposables.push(barGeo, barMat);
-      for (let b = -5; b <= 5; b++) {
+      for (let b = -4; b <= 4; b++) {
         const bar = new THREE.Mesh(barGeo, barMat);
-        const heightScale = Math.sin((b + 5) * 0.35) * 0.85 + 0.35;
+        const heightScale = Math.sin((b + 4) * 0.4) * 0.8 + 0.35;
         bar.scale.y = heightScale;
-        bar.position.set(b * 0.18, (heightScale * 0.38) / 2, 0);
+        bar.position.set(b * 0.14, (heightScale * 0.24) / 2, 0);
         featureGroup.add(bar);
       }
     } else if (idx === 3) {
-      // Stage 04: Validation — Verification rubric grid with bevels
-      const gridBoxGeo = new THREE.BoxGeometry(0.24, 0.06, 0.24);
+      // Stage 04: Validation — Verification rubric grid
+      const gridBoxGeo = new THREE.BoxGeometry(0.18, 0.04, 0.18);
       const gridBoxMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.25,
@@ -299,13 +300,13 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       for (let gx = -1; gx <= 1; gx++) {
         for (let gz = -1; gz <= 1; gz++) {
           const gbox = new THREE.Mesh(gridBoxGeo, gridBoxMat);
-          gbox.position.set(gx * 0.45, 0.05, gz * 0.45);
+          gbox.position.set(gx * 0.35, 0.03, gz * 0.35);
           featureGroup.add(gbox);
         }
       }
     } else if (idx === 4) {
       // Stage 05: Skill Proof Card — Holographic diamond crest
-      const prismGeo = new THREE.OctahedronGeometry(0.36, 0);
+      const prismGeo = new THREE.OctahedronGeometry(0.25, 0);
       const prismMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -315,11 +316,11 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
       disposables.push(prismGeo, prismMat);
       const prism = new THREE.Mesh(prismGeo, prismMat);
-      prism.position.set(0, 0.28, 0);
+      prism.position.set(0, 0.18, 0);
       featureGroup.add(prism);
     } else if (idx === 5) {
-      // Stage 06: Human Review — Architectural human review gate
-      const gateGeo = new THREE.BoxGeometry(1.1, 0.35, 0.16);
+      // Stage 06: Human Review — Architectural review gate
+      const gateGeo = new THREE.BoxGeometry(0.85, 0.22, 0.12);
       const gateMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.2,
@@ -329,7 +330,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
       disposables.push(gateGeo, gateMat);
       const gate = new THREE.Mesh(gateGeo, gateMat);
-      gate.position.set(0, 0.22, 0);
+      gate.position.set(0, 0.14, 0);
       featureGroup.add(gate);
     }
 
@@ -352,10 +353,10 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     });
   });
 
-  // 4 Corner Architectural Pillars (Polished bronze/gold rails)
+  // 4 Corner Architectural Pillars (scaled down to compact height)
   const guidePillars = new THREE.Group();
-  const pillarHeight = totalStages * ySpacing + 0.8;
-  const pillarGeo = new THREE.CylinderGeometry(0.028, 0.028, pillarHeight, 16);
+  const pillarHeight = totalStages * ySpacing + 0.4; // ~3.5 units
+  const pillarGeo = new THREE.CylinderGeometry(0.022, 0.022, pillarHeight, 16);
   const pillarMat = new THREE.MeshStandardMaterial({
     color: 0xd97706,
     metalness: 0.95,
@@ -366,10 +367,10 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   disposables.push(pillarGeo, pillarMat);
 
   const cornerOffsets: Array<[number, number]> = [
-    [-slabWidth / 2 + 0.12, -slabDepth / 2 + 0.12],
-    [slabWidth / 2 - 0.12, -slabDepth / 2 + 0.12],
-    [-slabWidth / 2 + 0.12, slabDepth / 2 - 0.12],
-    [slabWidth / 2 - 0.12, slabDepth / 2 - 0.12],
+    [-slabWidth / 2 + 0.1, -slabDepth / 2 + 0.1],
+    [slabWidth / 2 - 0.1, -slabDepth / 2 + 0.1],
+    [-slabWidth / 2 + 0.1, slabDepth / 2 - 0.1],
+    [slabWidth / 2 - 0.1, slabDepth / 2 - 0.1],
   ];
 
   cornerOffsets.forEach(([cx, cz]) => {
@@ -382,9 +383,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   // Active Laser Scanner Carriage
   const scannerBar = new THREE.Group();
   const scannerFrameGeo = new THREE.BoxGeometry(
-    slabWidth + 0.35,
-    0.07,
-    slabDepth + 0.35
+    slabWidth + 0.28,
+    0.05,
+    slabDepth + 0.28
   );
   const scannerFrameMat = new THREE.MeshStandardMaterial({
     color: 0xf97316,
@@ -398,27 +399,27 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   scannerBar.add(scannerMesh);
 
   // Intense central laser beam
-  const laserBeamGeo = new THREE.BoxGeometry(slabWidth + 0.3, 0.025, 0.025);
+  const laserBeamGeo = new THREE.BoxGeometry(slabWidth + 0.24, 0.02, 0.02);
   const laserBeamMat = new THREE.MeshBasicMaterial({ color: 0xffedd5 });
   disposables.push(laserBeamGeo, laserBeamMat);
   const laserBeam = new THREE.Mesh(laserBeamGeo, laserBeamMat);
   laserBeam.position.set(0, 0, 0);
   scannerBar.add(laserBeam);
 
-  const scannerLight = new THREE.PointLight(0xf97316, 3.2, 4.5);
-  scannerLight.position.set(0, 0.2, 0);
+  const scannerLight = new THREE.PointLight(0xf97316, 2.8, 3.5);
+  scannerLight.position.set(0, 0.15, 0);
   scannerBar.add(scannerLight);
 
   scannerBar.position.set(0, topY - ySpacing, 0);
   rootGroup.add(scannerBar);
 
   // Ambient Data Stream Particles
-  const particleCount = 75;
+  const particleCount = 50;
   const particlePositions = new Float32Array(particleCount * 3);
   for (let i = 0; i < particleCount; i++) {
-    particlePositions[i * 3] = (Math.random() - 0.5) * (slabWidth + 0.8);
+    particlePositions[i * 3] = (Math.random() - 0.5) * (slabWidth + 0.6);
     particlePositions[i * 3 + 1] = (Math.random() - 0.5) * pillarHeight;
-    particlePositions[i * 3 + 2] = (Math.random() - 0.5) * (slabDepth + 0.8);
+    particlePositions[i * 3 + 2] = (Math.random() - 0.5) * (slabDepth + 0.6);
   }
   const particleGeo = new THREE.BufferGeometry();
   particleGeo.setAttribute(
@@ -427,7 +428,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   );
   const particleMat = new THREE.PointsMaterial({
     color: 0xf59e0b,
-    size: 0.055,
+    size: 0.045,
     transparent: true,
     opacity: 0.75,
   });
@@ -435,9 +436,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const dataPulses = new THREE.Points(particleGeo, particleMat);
   rootGroup.add(dataPulses);
 
-  // Default Isometric tilt angle
+  // Fixed Isometric angle: permanently set and stable
   rootGroup.rotation.y = -0.42;
-  rootGroup.rotation.x = 0.24;
+  rootGroup.rotation.x = 0.22;
 
   const dispose = () => {
     disposables.forEach((d) => d.dispose());

@@ -49,13 +49,13 @@ export function PipelineEngine3D({
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 60);
-    camera.position.set(3.2, 1.4, 6.2);
+    const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 50);
+    // Adjusted camera for compact vertical height
+    camera.position.set(2.6, 0.7, 4.6);
     camera.lookAt(0, 0, 0);
 
     attachSolarLighting(scene, 22);
 
-    // Extra warm accent directional light for metallic sheen
     const accentLight = new THREE.DirectionalLight(0xffedd5, 1.5);
     accentLight.position.set(-4, 3, 2);
     scene.add(accentLight);
@@ -63,13 +63,17 @@ export function PipelineEngine3D({
     const pipeline = buildPipelineStackScene();
     scene.add(pipeline.rootGroup);
 
+    // Fixed isometric rotation (no cursor tracking)
+    pipeline.rootGroup.rotation.y = -0.42;
+    pipeline.rootGroup.rotation.x = 0.22;
+
     const resize = () => {
-      const w = container.clientWidth || 400;
-      const h = container.clientHeight || 650;
+      const w = container.clientWidth || 380;
+      const h = container.clientHeight || 480;
       renderer.setSize(w, h);
       camera.aspect = w / h;
-      camera.position.z = w < 540 ? 7.8 : 6.2;
-      camera.position.x = w < 540 ? 2.2 : 3.2;
+      camera.position.z = w < 540 ? 5.6 : 4.6;
+      camera.position.x = w < 540 ? 1.8 : 2.6;
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
     };
@@ -77,28 +81,6 @@ export function PipelineEngine3D({
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
-
-    // Subtle isometric mouse tilt tracking
-    let targetRotY = -0.42;
-    let targetRotX = 0.24;
-    const baseRotY = -0.42;
-    const baseRotX = 0.24;
-
-    const onPointerMove = (e: PointerEvent) => {
-      const r = container.getBoundingClientRect();
-      const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
-      const ny = ((e.clientY - r.top) / r.height) * 2 - 1;
-      targetRotY = baseRotY + nx * 0.3;
-      targetRotX = baseRotX + ny * 0.18;
-    };
-
-    const onPointerLeave = () => {
-      targetRotY = baseRotY;
-      targetRotX = baseRotX;
-    };
-
-    container.addEventListener("pointermove", onPointerMove, { passive: true });
-    container.addEventListener("pointerleave", onPointerLeave, { passive: true });
 
     let isVisible = true;
     let isRunning = false;
@@ -120,23 +102,23 @@ export function PipelineEngine3D({
             (targetY - pipeline.scannerBar.position.y) * 0.085;
 
           // Pulse scanner light intensity
-          pipeline.scannerLight.intensity = 2.8 + Math.sin(t * 3.8) * 1.0;
+          pipeline.scannerLight.intensity = 2.6 + Math.sin(t * 3.8) * 0.8;
         }
 
-        // 2. Animate each stage slab in the stack
+        // 2. Animate each stage slab in the stack (fixed orientation, subtle forward projection)
         pipeline.slabs.forEach((slab, i) => {
           const isActive = i === currentActive;
 
-          // Target forward offset in Z for active slab (projects out toward viewer)
-          const targetZ = isActive ? 0.38 : 0;
+          // Forward offset in Z for active slab (projects slightly toward viewer)
+          const targetZ = isActive ? 0.32 : 0;
           slab.group.position.z += (targetZ - slab.group.position.z) * 0.09;
 
-          // Gentle floating wave
-          const wave = Math.sin(t * 1.6 + i * 0.75) * 0.025;
+          // Subtle breathing wave
+          const wave = Math.sin(t * 1.5 + i * 0.7) * 0.015;
           slab.group.position.y = slab.yPosition + wave;
 
           // Emissive glow highlighting
-          const targetEmissive = isActive ? 0.7 : 0.15;
+          const targetEmissive = isActive ? 0.65 : 0.15;
           slab.slabMaterial.emissiveIntensity = THREE.MathUtils.lerp(
             slab.slabMaterial.emissiveIntensity,
             targetEmissive,
@@ -153,7 +135,7 @@ export function PipelineEngine3D({
 
           // Subtle spin on the 3D feature on the active slab
           if (isActive && slab.featureGroup) {
-            slab.featureGroup.rotation.y = Math.sin(t * 1.4) * 0.2;
+            slab.featureGroup.rotation.y = Math.sin(t * 1.2) * 0.15;
           }
         });
 
@@ -168,17 +150,12 @@ export function PipelineEngine3D({
             const idxY = p * 3 + 1;
             const currentY = arr[idxY];
             if (typeof currentY === "number") {
-              const newY = currentY + 0.018;
-              arr[idxY] = newY > 3.2 ? -3.2 : newY;
+              const newY = currentY + 0.014;
+              arr[idxY] = newY > 1.8 ? -1.8 : newY;
             }
           }
           posAttr.needsUpdate = true;
         }
-
-        // 4. Smooth root group tilt to mouse pointer
-        const root = pipeline.rootGroup;
-        root.rotation.y += (targetRotY - root.rotation.y) * 0.06;
-        root.rotation.x += (targetRotX - root.rotation.x) * 0.06;
       }
 
       renderer.render(scene, camera);
@@ -224,8 +201,6 @@ export function PipelineEngine3D({
       resizeObserver.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      container.removeEventListener("pointermove", onPointerMove);
-      container.removeEventListener("pointerleave", onPointerLeave);
       pipeline.dispose();
       renderer.dispose();
     };
@@ -234,12 +209,17 @@ export function PipelineEngine3D({
   if (!webglSupported) return null;
 
   return (
-    <div className={cn("relative w-full h-full min-h-[520px] sm:min-h-[600px] lg:min-h-[700px]", className)}>
-      {/* Pure, borderless, open-air WebGL Canvas floating on screen */}
+    <div
+      className={cn(
+        "relative w-full h-[440px] sm:h-[480px] lg:h-[520px] pointer-events-none select-none",
+        className
+      )}
+    >
+      {/* Pure, borderless, fixed open-air WebGL Canvas */}
       <div
         ref={containerRef}
         aria-hidden="true"
-        className="w-full h-full min-h-[520px] sm:min-h-[600px] lg:min-h-[700px] cursor-grab active:cursor-grabbing"
+        className="w-full h-full pointer-events-none"
       />
     </div>
   );

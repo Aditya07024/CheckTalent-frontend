@@ -9,13 +9,13 @@ import {
 
 const TONE_CARD: Record<MarqueeKeycapSpec["tone"], string> = {
   yellow:
-    "border-yellow-400 border-b-[5px] border-b-amber-500 bg-gradient-to-br from-yellow-50 via-white to-amber-50 text-amber-950",
+    "border-2 border-yellow-400 bg-gradient-to-br from-yellow-50 via-white to-amber-50 text-amber-950",
   amber:
-    "border-amber-400 border-b-[5px] border-b-orange-500 bg-gradient-to-br from-amber-50 via-white to-orange-50 text-orange-950",
+    "border-2 border-amber-400 bg-gradient-to-br from-amber-50 via-white to-orange-50 text-orange-950",
   orange:
-    "border-orange-400 border-b-[5px] border-b-red-600 bg-gradient-to-br from-orange-50 via-white to-red-50/70 text-orange-950",
+    "border-2 border-orange-400 bg-gradient-to-br from-orange-50 via-white to-red-50/70 text-orange-950",
   red:
-    "border-red-400 border-b-[5px] border-b-red-700 bg-gradient-to-br from-red-50 via-white to-orange-50 text-red-950",
+    "border-2 border-red-400 bg-gradient-to-br from-red-50 via-white to-orange-50 text-red-950",
 };
 
 const TONE_BADGE: Record<MarqueeKeycapSpec["tone"], string> = {
@@ -69,7 +69,7 @@ export function PolyglotMarquee3D() {
       className="relative z-[2] overflow-hidden border-b border-orange-200/80 bg-gradient-to-r from-yellow-100/55 via-amber-50/65 to-orange-100/55 py-6 backdrop-blur-[2px]"
     >
       <div className="space-y-3.5" style={{ perspective: "1100px" }}>
-        <KeycapTrack items={MARQUEE_ROW_ONE} />
+        {/* <KeycapTrack items={MARQUEE_ROW_ONE} /> */}
         <KeycapTrack items={MARQUEE_ROW_TWO} reverse />
       </div>
     </div>

@@ -64,7 +64,7 @@ export function UseCasesSection() {
             <TiltCard3D
               key={item.id}
               data-animate-item
-              className="flex flex-col justify-between rounded-2xl border border-orange-200/85 border-b-4 border-b-orange-400 bg-white/95 p-6 shadow-[0_10px_28px_rgba(234,88,12,0.07)] hover:border-orange-400"
+              className="flex flex-col justify-between rounded-2xl border-2 border-orange-400 bg-white/95 p-6 shadow-[0_10px_28px_rgba(234,88,12,0.07)] hover:border-orange-500"
             >
               <div>
                 <div className="flex items-center justify-between gap-2">

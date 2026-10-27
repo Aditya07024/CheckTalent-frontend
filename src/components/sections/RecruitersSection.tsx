@@ -26,7 +26,7 @@ export function RecruitersSection() {
                 key={benefit.id}
                 data-animate-item
                 glowColor="rgba(220, 38, 38, 0.14)"
-                className="rounded-xl border border-orange-200/85 border-b-4 border-b-red-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(220,38,38,0.06)]"
+                className="rounded-xl border-2 border-red-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(220,38,38,0.06)]"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[11px] text-ink-muted">

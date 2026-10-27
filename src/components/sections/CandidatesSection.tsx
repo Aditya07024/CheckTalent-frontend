@@ -100,7 +100,7 @@ export function CandidatesSection() {
               <TiltCard3D
                 key={benefit.id}
                 data-animate-item
-                className="flex flex-col justify-between rounded-xl border border-orange-200/85 border-b-4 border-b-amber-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(234,88,12,0.06)]"
+                className="flex flex-col justify-between rounded-xl border-2 border-amber-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(234,88,12,0.06)]"
               >
                 <div>
                   <div className="flex items-center justify-between">

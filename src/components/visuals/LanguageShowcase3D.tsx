@@ -133,17 +133,10 @@ export function LanguageShowcase3D() {
     <div className="mt-10 rounded-2xl border border-orange-200/90 bg-gradient-to-br from-yellow-50/75 via-orange-50/55 to-red-50/55 p-5 sm:p-7 shadow-[0_14px_40px_rgba(234,88,12,0.08)]">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-orange-700">
-            <Code2 className="h-3.5 w-3.5 text-red-600" />
-            3D POLYGLOT LANGUAGE ADAPTER DOCK
-          </span>
           <h3 className="mt-1 text-lg sm:text-xl font-bold text-ink">
-            Inspect how Proof of Skill analyzes real code across languages
+            Inspect how TalentLens analyzes real code across languages
           </h3>
         </div>
-        <span className="font-mono text-xs text-ink-muted">
-          Select a 3D language cube to inspect adapter signals
-        </span>
       </div>
 
       {/* 8 Interactive 3D Extruded Language Tiles */}

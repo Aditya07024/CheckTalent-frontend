@@ -33,7 +33,7 @@ export function RepoShowcaseSection() {
             </h2>
 
             <p className="text-base leading-relaxed text-ink-secondary">
-              Proof of Skill indexes modular boundaries, API error handling, and
+              TalentLens indexes modular boundaries, API error handling, and
               test coverage—then generates targeted technical viva prompts tied
               to exact file lines.
             </p>

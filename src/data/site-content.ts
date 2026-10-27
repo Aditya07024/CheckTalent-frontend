@@ -14,7 +14,7 @@ export const HERO_CONTENT = {
   headlineAccent: "better story",
   headlineTail: " than your resume.",
   supportingParagraph:
-    "Proof of Skill analyzes real repositories, tests technical understanding, and turns project evidence into skill profiles recruiters can actually evaluate.",
+    "TalentLens analyzes real repositories, tests technical understanding, and turns project evidence into skill profiles recruiters can actually evaluate.",
   primaryCta: {
     label: "Explore the Platform",
     href: `#${SECTION_IDS.features}`,
@@ -151,10 +151,10 @@ export const PROBLEM_SECTION_CONTENT = {
 } as const;
 
 export const SOLUTION_SECTION_CONTENT = {
-  eyebrow: "THE PROOF OF SKILL ARCHITECTURE",
+  eyebrow: "THE TALENTLENS ARCHITECTURE",
   heading: "Turn technical claims into inspectable evidence.",
   subheading:
-    "Proof of Skill replaces opaque resume scoring with an auditable verification pipeline—connecting source artifacts, adaptive technical questioning, and explicit rubrics into a structured Skill Proof Card.",
+    "TalentLens replaces opaque resume scoring with an auditable verification pipeline—connecting source artifacts, adaptive technical questioning, and explicit rubrics into a structured Skill Proof Card.",
   stages: [
     {
       id: "stage-inputs",
@@ -297,7 +297,7 @@ export const CANDIDATES_SECTION_CONTENT = {
   eyebrow: "FOR CANDIDATES · MERIT OVER BUZZWORDS",
   heading: "Let your work speak for itself.",
   subheading:
-    "Whether you are self-taught, graduating from a lesser-known college, or building serious side projects, Proof of Skill turns genuine engineering effort into structured proof recruiters can inspect.",
+    "Whether you are self-taught, graduating from a lesser-known college, or building serious side projects, TalentLens turns genuine engineering effort into structured proof recruiters can inspect.",
   ctaLabel: "Build Your Skill Profile",
   ctaHref: `#${SECTION_IDS.earlyAccess}`,
   benefits: [
@@ -409,9 +409,9 @@ export const TRUST_SECTION_CONTENT = {
   eyebrow: "FAIRNESS, PRIVACY & ACCOUNTABILITY",
   heading: "Evidence should be inspectable. Decisions should be accountable.",
   subheading:
-    "Automated technical assessment carries real responsibility. Proof of Skill is architected around inspectable provenance, strict consent boundaries, bias-aware design, and human decision ownership.",
+    "Automated technical assessment carries real responsibility. TalentLens is architected around inspectable provenance, strict consent boundaries, bias-aware design, and human decision ownership.",
   methodologicalDisclaimer:
-    "Methodological note: Proof of Skill does not claim guaranteed accuracy, zero bias, or automated legal compliance. Confidence indicators represent qualitative evidence consistency and are meaningful only when supported by an appropriate evaluation methodology and human review.",
+    "Methodological note: TalentLens does not claim guaranteed accuracy, zero bias, or automated legal compliance. Confidence indicators represent qualitative evidence consistency and are meaningful only when supported by an appropriate evaluation methodology and human review.",
   pillars: [
     {
       id: "trust-explainability",
@@ -474,7 +474,7 @@ export const USE_CASES_CONTENT = {
   eyebrow: "APPLICATIONS · WHERE EVIDENCE MATTERS MOST",
   heading: "Designed for real technical evaluation workflows.",
   subheading:
-    "From early-stage engineering teams to campus placement cohorts, Proof of Skill adapts to wherever practical capability needs to be demonstrated and inspected.",
+    "From early-stage engineering teams to campus placement cohorts, TalentLens adapts to wherever practical capability needs to be demonstrated and inspected.",
   items: [
     {
       id: "uc-startups",

@@ -89,6 +89,8 @@ const config: Config = {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
         londrina: ["'Londrina Shadow'", "sans-serif"],
+        quantico: ["'Quantico'", "sans-serif"],
+        gochi: ["'Gochi Hand'", "cursive"],
       },
       borderRadius: {
         lg: "var(--radius)",

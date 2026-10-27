@@ -58,7 +58,7 @@ export function HeroSection() {
     <section
       id={SECTION_IDS.hero}
       ref={sectionRef}
-      className="relative flex min-h-[640px] items-start overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 pb-16 pt-8 sm:min-h-[700px] sm:pt-10 lg:min-h-[calc(100vh-4rem)] lg:pt-14"
+      className="relative flex min-h-[620px] items-start overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 pb-12 pt-12 sm:min-h-[660px] sm:pt-14 lg:min-h-[calc(100vh-4rem)] lg:pt-16"
     >
       <GridBackground density="fine" showRadialGlow />
 
@@ -74,10 +74,10 @@ export function HeroSection() {
       <div className="container relative z-10 w-full">
         <div className="max-w-xl lg:max-w-4xl xl:max-w-5xl">
           {/* Title + Minimal Core Components (overlaying the orbit) */}
-          <div className="space-y-7">
+          <div className="space-y-4 sm:space-y-5">
             <div
               data-hero-copy
-              className="inline-flex items-center gap-2.5 rounded-full border border-orange-300 border-b-[3px] border-b-orange-400 bg-white/90 px-4 py-1.5 shadow-sm"
+              className="inline-flex items-center gap-2.5 rounded-full border-2 border-orange-300 bg-white/90 px-4 py-1.5 shadow-sm"
             >
               <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 ring-4 ring-amber-200/80" />
               <span className="font-mono text-[11px] font-bold tracking-wider text-orange-900">
@@ -104,7 +104,7 @@ export function HeroSection() {
 
             <p
               data-hero-copy
-              className="max-w-lg text-base sm:text-lg leading-relaxed text-ink-secondary"
+              className="max-w-xl text-base sm:text-lg lg:text-[19px] leading-relaxed text-ink-secondary font-quantico italic quantico-regular-italic tracking-wide"
             >
               Inspect real repositories, run adaptive AI technical vivas, and
               share evidence-backed Skill Proof Cards with human oversight.
@@ -135,17 +135,17 @@ export function HeroSection() {
               </Button>
             </div>
 
-            {/* Compact 3D Extruded Pillar Chips */}
-            <div data-hero-copy className="flex flex-wrap items-center gap-2.5 pt-2">
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-yellow-400 border-b-[3px] border-b-amber-500 bg-yellow-50/90 px-3 py-1.5 font-mono text-xs font-bold text-amber-950 shadow-sm">
+            {/* Stacked 3D Extruded Pillar Chips */}
+            <div data-hero-copy className="flex flex-col items-start gap-2.5 pt-2">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border-2 border-yellow-400 bg-yellow-50/90 px-3 py-1.5 font-mono text-xs font-bold text-amber-950 shadow-sm">
                 <TerminalSquare className="h-3.5 w-3.5 text-amber-600" />
                 Repo Intelligence
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-orange-400 border-b-[3px] border-b-orange-600 bg-orange-50/90 px-3 py-1.5 font-mono text-xs font-bold text-orange-950 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border-2 border-orange-400 bg-orange-50/90 px-3 py-1.5 font-mono text-xs font-bold text-orange-950 shadow-sm">
                 <Sparkles className="h-3.5 w-3.5 text-orange-600" />
                 AI Technical Viva
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-red-400 border-b-[3px] border-b-red-600 bg-red-50/90 px-3 py-1.5 font-mono text-xs font-bold text-red-950 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border-2 border-red-400 bg-red-50/90 px-3 py-1.5 font-mono text-xs font-bold text-red-950 shadow-sm">
                 <ShieldCheck className="h-3.5 w-3.5 text-red-600" />
                 Human Oversight
               </span>

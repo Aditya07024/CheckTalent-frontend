@@ -11,22 +11,22 @@ import { TiltCard3D } from "@/components/visuals/TiltCard3D";
 
 const PILLAR_STYLES = [
   {
-    topBar: "border-t-4 border-t-yellow-500 border-b-4 border-b-yellow-400",
+    topBar: "border-2 border-yellow-400",
     iconBox: "bg-yellow-100 border-yellow-300 text-yellow-800",
     dot: "bg-yellow-500",
   },
   {
-    topBar: "border-t-4 border-t-amber-500 border-b-4 border-b-amber-400",
+    topBar: "border-2 border-amber-400",
     iconBox: "bg-amber-100 border-amber-300 text-amber-800",
     dot: "bg-amber-500",
   },
   {
-    topBar: "border-t-4 border-t-orange-500 border-b-4 border-b-orange-400",
+    topBar: "border-2 border-orange-400",
     iconBox: "bg-orange-100 border-orange-300 text-orange-800",
     dot: "bg-orange-500",
   },
   {
-    topBar: "border-t-4 border-t-red-500 border-b-4 border-b-red-400",
+    topBar: "border-2 border-red-400",
     iconBox: "bg-red-100 border-red-300 text-red-800",
     dot: "bg-red-500",
   },
@@ -77,7 +77,7 @@ export function TrustSection() {
               <TiltCard3D
                 key={pillar.id}
                 data-animate-item
-                className={`flex flex-col justify-between rounded-2xl border border-orange-200/85 bg-white/95 p-6 shadow-[0_10px_26px_rgba(234,88,12,0.07)] ${theme.topBar}`}
+                className={`flex flex-col justify-between rounded-2xl bg-white/95 p-6 shadow-[0_10px_26px_rgba(234,88,12,0.07)] ${theme.topBar}`}
               >
                 <div>
                   <div className="flex items-center justify-between border-b border-orange-100 pb-4">

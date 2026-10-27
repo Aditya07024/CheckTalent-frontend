@@ -51,10 +51,10 @@ export function RoadmapSection() {
               key={phase.id}
               data-animate-item
               className={cn(
-                "relative flex flex-col justify-between rounded-2xl border border-b-4 p-6",
+                "relative flex flex-col justify-between rounded-2xl border-2 p-6",
                 phase.isCurrentFocus
-                  ? "border-orange-500 border-b-red-600 bg-gradient-to-br from-yellow-50 via-orange-50/85 to-white shadow-[0_18px_48px_rgba(234,88,12,0.16)]"
-                  : "border-orange-200/85 border-b-orange-300 bg-white/95 shadow-[0_6px_20px_rgba(28,22,19,0.04)]"
+                  ? "border-orange-500 bg-gradient-to-br from-yellow-50 via-orange-50/85 to-white shadow-[0_18px_48px_rgba(234,88,12,0.16)]"
+                  : "border-orange-200/85 bg-white/95 shadow-[0_6px_20px_rgba(28,22,19,0.04)]"
               )}
             >
               <div>

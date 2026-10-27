@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   Award,
@@ -8,14 +8,12 @@ import {
   GitBranch,
   MessageSquareCode,
   ShieldCheck,
-  Sparkles,
   UserCheck,
 } from "lucide-react";
 import { SOLUTION_SECTION_CONTENT } from "@/data/site-content";
 import { SECTION_IDS } from "@/lib/constants";
-import type { IconKey, PipelineStageItem } from "@/types/platform";
+import type { IconKey } from "@/types/platform";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const PipelineEngine3D = dynamic(
@@ -91,18 +89,36 @@ function StageIcon({ icon }: { icon: IconKey }) {
 }
 
 export function SolutionSection() {
-  const [activeStageId, setActiveStageId] = useState<string>(
-    SOLUTION_SECTION_CONTENT.stages[1]?.id ?? "stage-repo-intel"
-  );
+  const [activeStageIndex, setActiveStageIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const resumeTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const activeStageIndex = Math.max(
-    0,
-    SOLUTION_SECTION_CONTENT.stages.findIndex((s) => s.id === activeStageId)
-  );
+  const stages = SOLUTION_SECTION_CONTENT.stages;
+  const totalStages = stages.length;
 
-  const activeStage: PipelineStageItem =
-    SOLUTION_SECTION_CONTENT.stages[activeStageIndex] ??
-    SOLUTION_SECTION_CONTENT.stages[0]!;
+  // Auto-cycle through each floor/stage step-by-step
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setActiveStageIndex((prev) => (prev + 1) % totalStages);
+    }, 1800);
+
+    return () => clearInterval(interval);
+  }, [isPaused, totalStages]);
+
+  const handleStageSelect = (index: number) => {
+    setActiveStageIndex(index);
+    setIsPaused(true);
+
+    if (resumeTimerRef.current) {
+      clearTimeout(resumeTimerRef.current);
+    }
+    // Resume auto-cycle after 4 seconds of idle
+    resumeTimerRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, 4000);
+  };
 
   return (
     <AnimatedSection
@@ -131,10 +147,12 @@ export function SolutionSection() {
             <div
               role="tablist"
               aria-label="TalentLens verification pipeline stages"
-              className="grid grid-cols-1 gap-2.5 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
             >
-              {SOLUTION_SECTION_CONTENT.stages.map((stage, index) => {
-                const isSelected = stage.id === activeStage.id;
+              {stages.map((stage, index) => {
+                const isSelected = index === activeStageIndex;
                 const palette = STAGE_PALETTE[index % STAGE_PALETTE.length]!;
 
                 return (
@@ -144,19 +162,19 @@ export function SolutionSection() {
                     role="tab"
                     aria-selected={isSelected}
                     data-animate-item
-                    onClick={() => setActiveStageId(stage.id)}
+                    onClick={() => handleStageSelect(index)}
                     className={cn(
-                      "group flex flex-col justify-between rounded-xl border-2 p-3.5 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                      "group relative flex flex-col justify-between rounded-xl border-2 p-4 text-left transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
                       isSelected
-                        ? `${palette.activeCard} border-orange-600 -translate-y-0.5`
-                        : "border-orange-200/80 bg-white/95 hover:border-orange-400 hover:bg-amber-50/45"
+                        ? `${palette.activeCard} border-orange-600 -translate-y-1 shadow-[0_12px_28px_rgba(234,88,12,0.18)] ring-1 ring-orange-500/30 scale-[1.02]`
+                        : "border-orange-200/80 bg-white/95 hover:border-orange-400 hover:bg-amber-50/45 opacity-80 hover:opacity-100"
                     )}
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
                         <span
                           className={cn(
-                            "font-mono text-[11px] font-bold",
+                            "font-mono text-[11px] font-bold tracking-wider",
                             isSelected ? palette.stepColor : "text-ink-muted"
                           )}
                         >
@@ -164,8 +182,9 @@ export function SolutionSection() {
                         </span>
                         <div
                           className={cn(
-                            "flex h-7 w-7 items-center justify-center rounded-lg border",
-                            palette.iconBox
+                            "flex h-7 w-7 items-center justify-center rounded-lg border transition-transform duration-300",
+                            palette.iconBox,
+                            isSelected && "scale-110 shadow-sm"
                           )}
                         >
                           <StageIcon icon={stage.icon} />
@@ -187,55 +206,16 @@ export function SolutionSection() {
                       </span>
                       <span
                         className={cn(
-                          "h-2 w-2 shrink-0 rounded-full transition-colors",
-                          isSelected ? palette.dot : "bg-orange-200"
+                          "h-2 w-2 shrink-0 rounded-full transition-all duration-300",
+                          isSelected
+                            ? `${palette.dot} scale-125 ring-2 ring-orange-400 animate-pulse`
+                            : "bg-orange-200"
                         )}
                       />
                     </div>
                   </button>
                 );
               })}
-            </div>
-
-            {/* Active Stage Deep-Dive Card */}
-            <div
-              aria-live="polite"
-              className="rounded-2xl border-2 border-orange-300/80 bg-white p-5 shadow-[0_8px_24px_rgba(234,88,12,0.08)]"
-            >
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Badge variant={activeStage.isAiAssisted ? "violet" : "default"}>
-                    {activeStage.isAiAssisted && <Sparkles className="h-3 w-3" />}
-                    STAGE {activeStage.stepNumber} · {activeStage.title.toUpperCase()}
-                  </Badge>
-                  <span className="font-mono text-xs text-orange-800">
-                    {activeStage.verificationSignal}
-                  </span>
-                </div>
-
-                <p className="text-sm leading-relaxed text-ink-secondary">
-                  {activeStage.shortDescription}
-                </p>
-
-                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 pt-1">
-                  <div className="rounded-xl border border-amber-300 bg-gradient-to-br from-yellow-50 to-amber-50/70 p-3">
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-amber-900">
-                      Stage Input
-                    </span>
-                    <p className="mt-0.5 font-mono text-xs font-medium text-ink">
-                      {activeStage.inputArtifact}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-orange-300 bg-gradient-to-br from-orange-50 to-red-50/70 p-3">
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-orange-900">
-                      Verified Output
-                    </span>
-                    <p className="mt-0.5 font-mono text-xs font-medium text-ink">
-                      {activeStage.outputArtifact}
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 

@@ -87,15 +87,19 @@ export function HeroSection() {
 
             <h1
               data-hero-copy
-              className="font-londrina font-normal londrina-shadow-regular text-5xl tracking-wide text-ink sm:text-[54px] lg:text-[62px] xl:text-[68px] leading-[1.06]"
+              className="font-londrina font-normal londrina-shadow-regular tracking-wide text-ink"
             >
-              {/* Line 1 on desktop: "Your code tells a better" */}
-              <span className="lg:block lg:whitespace-nowrap">
+              {/* Line 1: Bigger statement */}
+              <span className="block text-5xl sm:text-6xl lg:text-[68px] xl:text-[76px] leading-[1.02] lg:whitespace-nowrap">
                 {HERO_CONTENT.headlineLead}
                 <span className={ACCENT_CLASS}>{accentFirst}</span>
-              </span>{" "}
-              <span className={ACCENT_CLASS}>{accentRest}</span>
-              {HERO_CONTENT.headlineTail}
+              </span>
+
+              {/* Line 2: Smaller than Line 1 */}
+              <span className="block mt-2 sm:mt-2.5 text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] leading-[1.08] text-ink">
+                <span className={ACCENT_CLASS}>{accentRest}</span>
+                {HERO_CONTENT.headlineTail}
+              </span>
             </h1>
 
             <p

@@ -19,33 +19,50 @@ export function CandidatesSection() {
     >
       <div className="container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
-          {/* Left Column on desktop: Four Structured 3D Candidate Benefits */}
-          <div className="order-2 lg:order-1 lg:col-span-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {CANDIDATES_SECTION_CONTENT.benefits.map((benefit, idx) => (
-              <TiltCard3D
-                key={benefit.id}
-                data-animate-item
-                className="flex flex-col justify-between rounded-xl border-2 border-amber-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(234,88,12,0.06)]"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] text-lime">
-                      0{idx + 1}
-                    </span>
-                    <CheckCircle2 className="h-4 w-4 text-lime/80" />
+          {/* Left Column on desktop: Four Structured 3D Candidate Benefits + Button on Left */}
+          <div className="order-2 lg:order-1 lg:col-span-7 flex flex-col gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {CANDIDATES_SECTION_CONTENT.benefits.map((benefit, idx) => (
+                <TiltCard3D
+                  key={benefit.id}
+                  data-animate-item
+                  className="flex flex-col justify-between rounded-xl border-2 border-amber-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(234,88,12,0.06)]"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[11px] text-lime">
+                        0{idx + 1}
+                      </span>
+                      <CheckCircle2 className="h-4 w-4 text-lime/80" />
+                    </div>
+                    <h3 className="mt-3 text-base font-semibold text-ink leading-snug">
+                      {benefit.title}
+                    </h3>
+                    <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-secondary">
+                      {benefit.detail}
+                    </p>
                   </div>
-                  <h3 className="mt-3 text-base font-semibold text-ink leading-snug">
-                    {benefit.title}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-secondary">
-                    {benefit.detail}
-                  </p>
-                </div>
-              </TiltCard3D>
-            ))}
+                </TiltCard3D>
+              ))}
+            </div>
+
+            <div className="pt-2 flex justify-start">
+              <Button
+                type="button"
+                size="lg"
+                onClick={() =>
+                  scrollToSection(CANDIDATES_SECTION_CONTENT.ctaHref, {
+                    preselectRole: "Candidate",
+                  })
+                }
+              >
+                {CANDIDATES_SECTION_CONTENT.ctaLabel}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
-          {/* Right Column on desktop: Narrative + CTA + Architectural Preview */}
+          {/* Right Column on desktop: Narrative + Architectural Preview */}
           <div
             data-animate-header
             className="order-1 lg:order-2 lg:col-span-5 space-y-6 lg:sticky lg:top-24"
@@ -105,21 +122,6 @@ export function CandidatesSection() {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="pt-1">
-              <Button
-                type="button"
-                size="lg"
-                onClick={() =>
-                  scrollToSection(CANDIDATES_SECTION_CONTENT.ctaHref, {
-                    preselectRole: "Candidate",
-                  })
-                }
-              >
-                {CANDIDATES_SECTION_CONTENT.ctaLabel}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </div>

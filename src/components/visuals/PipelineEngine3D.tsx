@@ -50,9 +50,9 @@ export function PipelineEngine3D({
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
-    // Centered framing covering the 6 stages, guide pillars, and bottom foundation bar
-    camera.position.set(0, -0.05, 5.0);
-    camera.lookAt(0, -0.05, 0);
+    // Centered framing with balanced top & bottom margins for the bottom plate
+    camera.position.set(0, -0.12, 5.0);
+    camera.lookAt(0, -0.12, 0);
 
     attachSolarLighting(scene, 22);
 
@@ -78,9 +78,9 @@ export function PipelineEngine3D({
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.position.x = 0;
-      camera.position.y = -0.05;
-      camera.position.z = w < 540 ? 5.6 : 5.0;
-      camera.lookAt(0, -0.05, 0);
+      camera.position.y = -0.12;
+      camera.position.z = w < 540 ? 5.4 : 5.0;
+      camera.lookAt(0, -0.12, 0);
       camera.updateProjectionMatrix();
     };
     resize();
@@ -217,7 +217,7 @@ export function PipelineEngine3D({
   return (
     <div
       className={cn(
-        "relative w-full h-[520px] sm:h-[560px] lg:h-[600px] pointer-events-none select-none",
+        "relative w-full h-[540px] sm:h-[580px] lg:h-[620px] pointer-events-none select-none",
         className
       )}
     >

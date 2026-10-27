@@ -12,7 +12,6 @@ export interface FloatingArtifactSpec {
 }
 
 export const PAGE_3D_ARTIFACTS: ReadonlyArray<FloatingArtifactSpec> = [
-  { kind: "cube", label: "TS", primaryHex: "#EA580C", accentHex: "#FDE047", x: -5.4, y: 1.8, z: -2.2, scale: 0.72, rotSpeedX: 0.35, rotSpeedY: 0.48 },
   { kind: "icosa", primaryHex: "#F59E0B", accentHex: "#FEF08A", x: 5.5, y: -2.2, z: -2.9, scale: 0.84, rotSpeedX: 0.28, rotSpeedY: -0.4 },
   { kind: "torus", primaryHex: "#DC2626", accentHex: "#FDBA74", x: -5.2, y: -6.0, z: -2.6, scale: 0.78, rotSpeedX: 0.45, rotSpeedY: 0.3 },
   { kind: "cube", label: "PY", primaryHex: "#EAB308", accentHex: "#FFFBEB", x: 5.3, y: -9.8, z: -2.2, scale: 0.7, rotSpeedX: -0.32, rotSpeedY: 0.5 },

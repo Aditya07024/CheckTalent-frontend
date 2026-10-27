@@ -74,7 +74,7 @@ export function CandidatesSection() {
               </span>
             </div>
 
-            <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[40px] leading-[1.12]">
+            <h2 className="aldrich-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl lg:text-[40px] leading-[1.12]">
               {CANDIDATES_SECTION_CONTENT.heading}
             </h2>
 

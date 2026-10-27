@@ -59,7 +59,7 @@ export function TrustSection() {
             <span className="inline-block rounded-full border border-orange-300 bg-orange-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-orange-800">
               {TRUST_SECTION_CONTENT.eyebrow}
             </span>
-            <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+            <h2 className="graduate-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
               {TRUST_SECTION_CONTENT.heading}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">

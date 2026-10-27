@@ -51,7 +51,7 @@ export function UseCasesSection() {
           <span className="inline-block rounded-full border border-amber-300 bg-yellow-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-amber-900">
             {USE_CASES_CONTENT.eyebrow}
           </span>
-          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+          <h2 className="aldrich-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
             {USE_CASES_CONTENT.heading}
           </h2>
           <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">

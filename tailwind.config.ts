@@ -94,6 +94,7 @@ const config: Config = {
         quantico: ["'Quantico'", "sans-serif"],
         gochi: ["'Gochi Hand'", "cursive"],
         kanit: ["'Kanit'", "sans-serif"],
+        graduate: ["'Graduate'", "serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

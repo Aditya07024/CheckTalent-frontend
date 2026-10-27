@@ -19,7 +19,7 @@ export function ProofCardSection() {
             <span className="font-mono text-xs uppercase tracking-widest text-lime">
               INTERACTIVE SKILL PROOF CARD · PRODUCT DEMONSTRATION
             </span>
-            <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+            <h2 className="graduate-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
               Every skill claim should have a reason.
             </h2>
             <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">

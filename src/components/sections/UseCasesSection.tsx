@@ -44,7 +44,7 @@ export function UseCasesSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.useCases}
-      className="border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/55 via-orange-50/35 to-red-50/35 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/45 via-transparent to-red-50/30 py-20 lg:py-28"
     >
       <div className="container">
         <div data-animate-header className="max-w-3xl space-y-4">
@@ -64,7 +64,7 @@ export function UseCasesSection() {
             <TiltCard3D
               key={item.id}
               data-animate-item
-              className="flex flex-col justify-between rounded-2xl border border-orange-200/85 bg-white p-6 shadow-[0_10px_28px_rgba(234,88,12,0.06)] hover:border-orange-400"
+              className="flex flex-col justify-between rounded-2xl border border-orange-200/85 border-b-4 border-b-orange-400 bg-white/95 p-6 shadow-[0_10px_28px_rgba(234,88,12,0.07)] hover:border-orange-400"
             >
               <div>
                 <div className="flex items-center justify-between gap-2">

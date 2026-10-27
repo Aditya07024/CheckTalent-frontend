@@ -8,22 +8,25 @@ import { scrollToSection } from "@/lib/utils";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TiltCard3D } from "@/components/visuals/TiltCard3D";
+import { Floating3DCube } from "@/components/three/Floating3DCube";
 
 export function RecruitersSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.recruiters}
-      className="border-b border-orange-200/70 bg-gradient-to-b from-red-50/40 via-orange-50/40 to-yellow-50/50 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-red-50/35 via-transparent to-yellow-50/40 py-20 lg:py-28"
     >
       <div className="container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
-          {/* Left Column: Eight Recruiter Capabilities */}
+          {/* Left Column: Eight 3D Recruiter Capabilities */}
           <div className="order-2 lg:order-1 lg:col-span-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {RECRUITERS_SECTION_CONTENT.benefits.map((benefit, idx) => (
-              <div
+              <TiltCard3D
                 key={benefit.id}
                 data-animate-item
-                className="rounded-xl border border-orange-200/85 bg-white p-5 shadow-[0_6px_20px_rgba(220,38,38,0.05)] transition-all hover:-translate-y-0.5 hover:border-red-400"
+                glowColor="rgba(220, 38, 38, 0.14)"
+                className="rounded-xl border border-orange-200/85 border-b-4 border-b-red-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(220,38,38,0.06)]"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[11px] text-ink-muted">
@@ -39,7 +42,7 @@ export function RecruitersSection() {
                 <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-secondary">
                   {benefit.detail}
                 </p>
-              </div>
+              </TiltCard3D>
             ))}
           </div>
 
@@ -48,9 +51,12 @@ export function RecruitersSection() {
             data-animate-header
             className="order-1 lg:order-2 lg:col-span-5 space-y-6 lg:sticky lg:top-24"
           >
-            <span className="font-mono text-xs uppercase tracking-widest text-lime">
-              {RECRUITERS_SECTION_CONTENT.eyebrow}
-            </span>
+            <div className="flex items-center gap-3.5">
+              <Floating3DCube label="HIRE" tone="crimson" size={44} />
+              <span className="font-mono text-xs uppercase tracking-widest text-lime">
+                {RECRUITERS_SECTION_CONTENT.eyebrow}
+              </span>
+            </div>
 
             <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[40px] leading-[1.12]">
               {RECRUITERS_SECTION_CONTENT.heading}

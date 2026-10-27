@@ -15,6 +15,8 @@ import { HOW_IT_WORKS_CONTENT } from "@/data/site-content";
 import { SECTION_IDS } from "@/lib/constants";
 import type { IconKey } from "@/types/platform";
 import { useAnimationContext } from "@/components/animations/AnimationProvider";
+import { SectionSculpture3D } from "@/components/three/SectionSculpture3D";
+import { TiltCard3D } from "@/components/visuals/TiltCard3D";
 
 function WorkflowIcon({ icon }: { icon: IconKey }) {
   switch (icon) {
@@ -80,20 +82,23 @@ export function HowItWorksSection() {
     <section
       id={SECTION_IDS.howItWorks}
       ref={sectionRef}
-      className="border-b border-orange-200/70 bg-gradient-to-b from-orange-50/50 via-amber-50/35 to-[#FAF7F2] py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-orange-50/45 via-transparent to-amber-50/35 py-20 lg:py-28"
     >
       <div className="container">
-        {/* Heading */}
-        <div className="max-w-3xl space-y-4">
-          <span className="inline-block rounded-full border border-amber-300 bg-yellow-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-amber-900">
-            {HOW_IT_WORKS_CONTENT.eyebrow}
-          </span>
-          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
-            {HOW_IT_WORKS_CONTENT.heading}
-          </h2>
-          <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">
-            {HOW_IT_WORKS_CONTENT.subheading}
-          </p>
+        {/* Heading + Open-Air 3D Molecular AST Cluster */}
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+          <div className="max-w-3xl space-y-4">
+            <span className="inline-block rounded-full border border-amber-300 bg-yellow-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-amber-900">
+              {HOW_IT_WORKS_CONTENT.eyebrow}
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+              {HOW_IT_WORKS_CONTENT.heading}
+            </h2>
+            <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">
+              {HOW_IT_WORKS_CONTENT.subheading}
+            </p>
+          </div>
+          <SectionSculpture3D variant="molecule" className="hidden lg:block" />
         </div>
 
         {/* Scroll-Linked Progress Indicator Rail */}
@@ -113,10 +118,10 @@ export function HowItWorksSection() {
         {/* Four-Step Grid */}
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {HOW_IT_WORKS_CONTENT.steps.map((step) => (
-            <article
+            <TiltCard3D
               key={step.stepNumber}
               data-workflow-step
-              className="flex flex-col justify-between rounded-2xl border border-orange-200/85 bg-white p-6 shadow-[0_8px_24px_rgba(234,88,12,0.06)] transition-all hover:-translate-y-1 hover:border-orange-400"
+              className="flex flex-col justify-between rounded-2xl border border-orange-200/90 border-b-4 border-b-orange-400 bg-white/95 p-6 shadow-[0_10px_28px_rgba(234,88,12,0.08)]"
             >
               <div>
                 <div className="flex items-center justify-between border-b border-hairline pb-4">
@@ -156,7 +161,7 @@ export function HowItWorksSection() {
               <div className="mt-5 rounded border border-hairline bg-canvas-secondary px-3 py-2 font-mono text-[11px] text-ink-muted">
                 {step.systemNote}
               </div>
-            </article>
+            </TiltCard3D>
           ))}
         </div>
 

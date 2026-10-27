@@ -34,7 +34,7 @@ export function FAQSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.faq}
-      className="relative overflow-hidden border-b border-orange-200/80 bg-gradient-to-b from-amber-50/65 via-[#FAF7F2] to-orange-50/55 py-20 lg:py-28"
+      className="relative overflow-hidden border-b border-orange-200/80 bg-gradient-to-b from-amber-50/45 via-transparent to-orange-50/45 py-20 lg:py-28"
     >
       <div
         aria-hidden="true"

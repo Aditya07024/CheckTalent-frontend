@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { RepoShowcaseSection } from "@/components/sections/RepoShowcaseSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { SolutionSection } from "@/components/sections/SolutionSection";
 import { ProofCardSection } from "@/components/sections/ProofCardSection";
@@ -12,6 +13,8 @@ import { RecruitersSection } from "@/components/sections/RecruitersSection";
 import { TrustSection } from "@/components/sections/TrustSection";
 import { UseCasesSection } from "@/components/sections/UseCasesSection";
 import { RoadmapSection } from "@/components/sections/RoadmapSection";
+import { GlobalExperience3D } from "@/components/three/GlobalExperience3D";
+import { PolyglotMarquee3D } from "@/components/three/PolyglotMarquee3D";
 
 const FeatureExplorerSection = dynamic(() =>
   import("@/components/sections/FeatureExplorerSection").then(
@@ -29,52 +32,61 @@ const CTASection = dynamic(() =>
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* Section 1: Navigation Bar */}
+    <div className="relative flex min-h-screen flex-col">
+      {/* Full-Viewport Scroll-Reactive Three.js 3D World + 3D Scroll HUD */}
+      <GlobalExperience3D />
+
+      {/* Navigation Bar */}
       <Navbar />
 
-      <main id="main-content" className="flex-1">
-        {/* Section 2: Hero — The Core Product Message */}
+      <main id="main-content" className="relative z-[2] flex-1">
+        {/* Page 1: Clean Hero + Floating Open-Air 3D Orbit */}
         <HeroSection />
 
-        {/* Section 3: The Problem */}
+        {/* 3D Extruded Polyglot Stack Ribbon */}
+        <PolyglotMarquee3D />
+
+        {/* Page 2: Shifted Repository Intelligence & Viva Preview */}
+        <RepoShowcaseSection />
+
+        {/* The Problem */}
         <ProblemSection />
 
-        {/* Section 4: The Solution */}
+        {/* The Solution */}
         <SolutionSection />
 
-        {/* Section 5: Feature Explorer (All 38 Features Across 6 Categories) */}
+        {/* Feature Explorer (All 38 Features Across 6 Categories) */}
         <FeatureExplorerSection />
 
-        {/* Section 6: Interactive Skill Proof Card */}
+        {/* Interactive Skill Proof Card */}
         <ProofCardSection />
 
-        {/* Section 7: How It Works */}
+        {/* How It Works */}
         <HowItWorksSection />
 
-        {/* Section 8: For Candidates */}
+        {/* For Candidates */}
         <CandidatesSection />
 
-        {/* Section 9: For Recruiters */}
+        {/* For Recruiters */}
         <RecruitersSection />
 
-        {/* Section 10: Fairness, Privacy & Trust */}
+        {/* Fairness, Privacy & Trust */}
         <TrustSection />
 
-        {/* Section 11: Use Cases */}
+        {/* Use Cases */}
         <UseCasesSection />
 
-        {/* Section 12: Product Roadmap */}
+        {/* Product Roadmap */}
         <RoadmapSection />
 
-        {/* Section 13: Frequently Asked Questions */}
+        {/* Frequently Asked Questions */}
         <FAQSection />
 
-        {/* Section 14: Final Call to Action */}
+        {/* Final Call to Action */}
         <CTASection />
       </main>
 
-      {/* Section 15: Footer */}
+      {/* Footer */}
       <Footer />
     </div>
   );

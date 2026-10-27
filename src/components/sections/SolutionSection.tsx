@@ -16,6 +16,7 @@ import type { IconKey, PipelineStageItem } from "@/types/platform";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { EvidenceConnector } from "@/components/visuals/EvidenceConnector";
 import { LanguageShowcase3D } from "@/components/visuals/LanguageShowcase3D";
+import { SectionSculpture3D } from "@/components/three/SectionSculpture3D";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -94,20 +95,23 @@ export function SolutionSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.solution}
-      className="border-b border-orange-200/70 bg-gradient-to-b from-[#FAF7F2] via-yellow-50/45 to-orange-50/45 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-transparent via-yellow-50/40 to-orange-50/40 py-20 lg:py-28"
     >
       <div className="container">
-        {/* Section Header */}
-        <div data-animate-header className="max-w-3xl space-y-4">
-          <span className="inline-block rounded-full border border-orange-300 bg-orange-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-orange-800">
-            {SOLUTION_SECTION_CONTENT.eyebrow}
-          </span>
-          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
-            {SOLUTION_SECTION_CONTENT.heading}
-          </h2>
-          <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">
-            {SOLUTION_SECTION_CONTENT.subheading}
-          </p>
+        {/* Section Header + Open-Air 3D Torus Knot Sculpture */}
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+          <div data-animate-header className="max-w-3xl space-y-4">
+            <span className="inline-block rounded-full border border-orange-300 bg-orange-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-orange-800">
+              {SOLUTION_SECTION_CONTENT.eyebrow}
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+              {SOLUTION_SECTION_CONTENT.heading}
+            </h2>
+            <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">
+              {SOLUTION_SECTION_CONTENT.subheading}
+            </p>
+          </div>
+          <SectionSculpture3D variant="knot" className="hidden lg:block" />
         </div>
 
         {/* Desktop Horizontal / Mobile Vertical Verification Pipeline */}
@@ -132,10 +136,10 @@ export function SolutionSection() {
                     onClick={() => setActiveStageId(stage.id)}
                     onMouseEnter={() => setActiveStageId(stage.id)}
                     className={cn(
-                      "group relative flex flex-1 flex-col justify-between rounded-xl border p-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                      "group relative flex flex-1 flex-col justify-between rounded-xl border border-b-4 p-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
                       isSelected
-                        ? `${palette.activeCard} -translate-y-1`
-                        : "border-orange-200/75 bg-white/90 hover:border-orange-300 hover:bg-amber-50/40"
+                        ? `${palette.activeCard} border-b-orange-600 -translate-y-1.5`
+                        : "border-orange-200/80 border-b-orange-300 bg-white/95 hover:-translate-y-0.5 hover:border-orange-400 hover:bg-amber-50/45"
                     )}
                   >
                     <div>

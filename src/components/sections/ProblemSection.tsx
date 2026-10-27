@@ -43,7 +43,7 @@ export function ProblemSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.problem}
-      className="border-b border-orange-200/70 bg-gradient-to-b from-amber-50/65 via-orange-50/40 to-red-50/35 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-amber-50/50 via-transparent to-red-50/35 py-20 lg:py-28"
     >
       <div className="container">
         {/* Section Header */}
@@ -68,7 +68,7 @@ export function ProblemSection() {
                 key={problem.id}
                 glowColor={theme.glow}
                 data-animate-item
-                className={`flex flex-col justify-between rounded-2xl border bg-gradient-to-br p-6 shadow-[0_12px_32px_rgba(234,88,12,0.07)] ${theme.cardTint} ${theme.topBorder}`}
+                className={`flex flex-col justify-between rounded-2xl border border-b-4 border-b-orange-300 bg-gradient-to-br p-6 shadow-[0_12px_32px_rgba(234,88,12,0.08)] ${theme.cardTint} ${theme.topBorder}`}
               >
                 <div>
                   {/* Top Card Telemetry */}

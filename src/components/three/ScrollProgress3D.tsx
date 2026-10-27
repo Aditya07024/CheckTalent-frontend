@@ -51,7 +51,7 @@ export function ScrollProgress3D() {
           type="button"
           aria-label="Scroll back to top"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-orange-500 border-b-4 border-b-red-700 bg-gradient-to-br from-amber-500 via-orange-600 to-red-600 text-white shadow-[0_8px_22px_rgba(234,88,12,0.34)] transition-transform hover:-translate-y-0.5 active:translate-y-0.5"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/25 bg-gradient-to-br from-amber-500 via-orange-600 to-red-600 text-white shadow-[0_6px_20px_rgba(234,88,12,0.32)] transition-all hover:shadow-[0_8px_26px_rgba(234,88,12,0.45)] hover:-translate-y-0.5 active:scale-95"
         >
           <ArrowUp className="h-4 w-4" />
         </button>

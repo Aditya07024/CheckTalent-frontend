@@ -5,7 +5,6 @@ import { SECTION_IDS } from "@/lib/constants";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { SkillProofCard } from "@/components/product-demo/SkillProofCard";
 import { SectionSculpture3D } from "@/components/three/SectionSculpture3D";
-import { TiltCard3D } from "@/components/visuals/TiltCard3D";
 
 export function ProofCardSection() {
   return (
@@ -33,11 +32,9 @@ export function ProofCardSection() {
           <SectionSculpture3D variant="crystal" className="hidden lg:block" />
         </div>
 
-        {/* Interactive Skill Proof Card Demo with 3D Perspective Tilt */}
+        {/* Interactive Skill Proof Card Demo (Fixed, no mouse tilt) */}
         <div data-animate-item className="mt-12">
-          <TiltCard3D maxTiltDeg={2.8} glowColor="rgba(234, 88, 12, 0.14)">
-            <SkillProofCard />
-          </TiltCard3D>
+          <SkillProofCard />
         </div>
       </div>
     </AnimatedSection>

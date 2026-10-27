@@ -93,6 +93,7 @@ const config: Config = {
         londrina: ["'Londrina Shadow'", "sans-serif"],
         quantico: ["'Quantico'", "sans-serif"],
         gochi: ["'Gochi Hand'", "cursive"],
+        kanit: ["'Kanit'", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -7,7 +7,6 @@ import { RepoShowcaseSection } from "@/components/sections/RepoShowcaseSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { SolutionSection } from "@/components/sections/SolutionSection";
 import { ProofCardSection } from "@/components/sections/ProofCardSection";
-import { HowItWorksSection } from "@/components/sections/HowItWorksSection";
 import { CandidatesSection } from "@/components/sections/CandidatesSection";
 import { RecruitersSection } from "@/components/sections/RecruitersSection";
 import { TrustSection } from "@/components/sections/TrustSection";
@@ -15,12 +14,6 @@ import { UseCasesSection } from "@/components/sections/UseCasesSection";
 import { RoadmapSection } from "@/components/sections/RoadmapSection";
 import { GlobalExperience3D } from "@/components/three/GlobalExperience3D";
 import { PolyglotMarquee3D } from "@/components/three/PolyglotMarquee3D";
-
-const FeatureExplorerSection = dynamic(() =>
-  import("@/components/sections/FeatureExplorerSection").then(
-    (mod) => mod.FeatureExplorerSection
-  )
-);
 
 const FAQSection = dynamic(() =>
   import("@/components/sections/FAQSection").then((mod) => mod.FAQSection)
@@ -55,14 +48,8 @@ export default function HomePage() {
         {/* The Solution */}
         <SolutionSection />
 
-        {/* Feature Explorer (All 38 Features Across 6 Categories) */}
-        <FeatureExplorerSection />
-
         {/* Interactive Skill Proof Card */}
         <ProofCardSection />
-
-        {/* How It Works */}
-        <HowItWorksSection />
 
         {/* For Candidates */}
         <CandidatesSection />

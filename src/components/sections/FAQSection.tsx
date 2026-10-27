@@ -20,7 +20,6 @@ const FILTER_OPTIONS: ReadonlyArray<FAQFilter> = [
   "Platform",
   "Verification",
   "Privacy & Fairness",
-  "Adoption",
 ];
 
 export function FAQSection() {

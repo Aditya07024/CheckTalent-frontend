@@ -7,6 +7,8 @@ import { useGSAP } from "@gsap/react";
 import { useAnimationContext } from "@/components/animations/AnimationProvider";
 import { cn } from "@/lib/utils";
 
+gsap.registerPlugin(ScrollTrigger);
+
 interface AnimatedSectionProps extends React.HTMLAttributes<HTMLElement> {
   as?: "section" | "div";
   staggerSelector?: string;
@@ -32,8 +34,6 @@ export function AnimatedSection({
   useGSAP(
     () => {
       if (prefersReducedMotion || !containerRef.current) return;
-
-      gsap.registerPlugin(ScrollTrigger);
 
       const headerItems = containerRef.current.querySelectorAll("[data-animate-header]");
       const items = containerRef.current.querySelectorAll(staggerSelector);

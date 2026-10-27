@@ -8,51 +8,30 @@ import { scrollToSection } from "@/lib/utils";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TiltCard3D } from "@/components/visuals/TiltCard3D";
+import { Floating3DCube } from "@/components/three/Floating3DCube";
 
 export function RecruitersSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.recruiters}
-      className="border-b border-hairline bg-canvas-secondary/45 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-red-50/35 via-transparent to-yellow-50/40 py-20 lg:py-28"
     >
       <div className="container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
-          {/* Left Column: Eight Recruiter Capabilities */}
-          <div className="order-2 lg:order-1 lg:col-span-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {RECRUITERS_SECTION_CONTENT.benefits.map((benefit, idx) => (
-              <div
-                key={benefit.id}
-                data-animate-item
-                className="rounded-xl border border-hairline bg-canvas p-5 transition-colors hover:border-hairline-strong"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] text-ink-muted">
-                    REC // 0{idx + 1}
-                  </span>
-                  <span className="flex h-5 w-5 items-center justify-center rounded border border-lime/30 bg-lime-dim">
-                    <Check className="h-3 w-3 text-lime" />
-                  </span>
-                </div>
-                <h3 className="mt-3 text-base font-semibold text-ink leading-snug">
-                  {benefit.title}
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-secondary">
-                  {benefit.detail}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Right Column: Recruiter Pitch + Decision-Support Snapshot + CTA */}
+          {/* Left Column on desktop: Recruiter Pitch + Decision-Support Snapshot */}
           <div
             data-animate-header
-            className="order-1 lg:order-2 lg:col-span-5 space-y-6 lg:sticky lg:top-24"
+            className="order-1 lg:order-1 lg:col-span-5 space-y-6 lg:sticky lg:top-24"
           >
-            <span className="font-mono text-xs uppercase tracking-widest text-lime">
-              {RECRUITERS_SECTION_CONTENT.eyebrow}
-            </span>
+            <div className="flex items-center gap-3.5">
+              <Floating3DCube label="HIRE" tone="crimson" size={44} />
+              <span className="font-mono text-xs uppercase tracking-widest text-lime">
+                {RECRUITERS_SECTION_CONTENT.eyebrow}
+              </span>
+            </div>
 
-            <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[40px] leading-[1.12]">
+            <h2 className="aldrich-regular font-bold text-3xl tracking-tight text-ink sm:text-4xl lg:text-[40px] leading-[1.12]">
               {RECRUITERS_SECTION_CONTENT.heading}
             </h2>
 
@@ -107,14 +86,43 @@ export function RecruitersSection() {
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+          {/* Right Column on desktop: Four 3D Recruiter Capabilities + Buttons on the Right */}
+          <div className="order-2 lg:order-2 lg:col-span-7 flex flex-col gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {RECRUITERS_SECTION_CONTENT.benefits.map((benefit, idx) => (
+                <TiltCard3D
+                  key={benefit.id}
+                  data-animate-item
+                  glowColor="rgba(220, 38, 38, 0.14)"
+                  className="rounded-xl border-2 border-red-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(220,38,38,0.06)]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[11px] text-ink-muted">
+                      REC // 0{idx + 1}
+                    </span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded border border-lime/30 bg-lime-dim">
+                      <Check className="h-3 w-3 text-lime" />
+                    </span>
+                  </div>
+                  <h3 className="mt-3 text-base font-semibold text-ink leading-snug">
+                    {benefit.title}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-secondary">
+                    {benefit.detail}
+                  </p>
+                </TiltCard3D>
+              ))}
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <Button
                 type="button"
                 size="lg"
                 onClick={() =>
                   scrollToSection(RECRUITERS_SECTION_CONTENT.ctaHref, {
-                    selectCategory: "recruiter-intelligence",
+                    preselectRole: "Recruiter",
                   })
                 }
               >
@@ -127,12 +135,10 @@ export function RecruitersSection() {
                 variant="outline"
                 size="lg"
                 onClick={() =>
-                  scrollToSection(`#${SECTION_IDS.earlyAccess}`, {
-                    preselectRole: "Recruiter",
-                  })
+                  scrollToSection(RECRUITERS_SECTION_CONTENT.secondaryCtaHref)
                 }
               >
-                Request Recruiter Access
+                {RECRUITERS_SECTION_CONTENT.secondaryCtaLabel}
               </Button>
             </div>
           </div>

@@ -14,14 +14,14 @@ export const HERO_CONTENT = {
   headlineAccent: "better story",
   headlineTail: " than your resume.",
   supportingParagraph:
-    "Proof of Skill analyzes real repositories, tests technical understanding, and turns project evidence into skill profiles recruiters can actually evaluate.",
+    "TalentLens analyzes real repositories, tests technical understanding, and turns project evidence into skill profiles recruiters can actually evaluate.",
   primaryCta: {
     label: "Explore the Platform",
-    href: `#${SECTION_IDS.features}`,
+    href: `#${SECTION_IDS.solution}`,
   },
   secondaryCta: {
-    label: "See How It Works",
-    href: `#${SECTION_IDS.howItWorks}`,
+    label: "View Proof Card",
+    href: `#${SECTION_IDS.proofCard}`,
   },
   supportingLine:
     "Built for candidates who can do the work—and recruiters who want to see the proof.",
@@ -33,9 +33,9 @@ export const HERO_REPO_PREVIEW_DATA = {
   branch: "main",
   analysisStatus: "Inspection Complete · 38 source modules indexed",
   languages: [
-    { name: "TypeScript", share: "68%", colorClass: "bg-lime" },
-    { name: "React", share: "21%", colorClass: "bg-[#61DAFB]" },
-    { name: "Node.js", share: "11%", colorClass: "bg-violet" },
+    { name: "TypeScript", share: "68%", colorClass: "bg-orange-500" },
+    { name: "React", share: "21%", colorClass: "bg-yellow-500" },
+    { name: "Node.js", share: "11%", colorClass: "bg-red-500" },
   ],
   evidenceFindings: [
     {
@@ -151,10 +151,10 @@ export const PROBLEM_SECTION_CONTENT = {
 } as const;
 
 export const SOLUTION_SECTION_CONTENT = {
-  eyebrow: "THE PROOF OF SKILL ARCHITECTURE",
+  eyebrow: "THE TALENTLENS ARCHITECTURE",
   heading: "Turn technical claims into inspectable evidence.",
   subheading:
-    "Proof of Skill replaces opaque resume scoring with an auditable verification pipeline—connecting source artifacts, adaptive technical questioning, and explicit rubrics into a structured Skill Proof Card.",
+    "TalentLens replaces opaque resume scoring with an auditable verification pipeline—connecting source artifacts, adaptive technical questioning, and explicit rubrics into a structured Skill Proof Card.",
   stages: [
     {
       id: "stage-inputs",
@@ -238,13 +238,12 @@ export const HOW_IT_WORKS_CONTENT = {
       stepNumber: "STEP 01",
       title: "Connect Your Work",
       description:
-        "The candidate uploads a resume, connects GitHub with explicit repository permissions, or chooses an alternative evidence pathway when code cannot be shared publicly.",
-      artifactTag: "INPUT // CONSENT-SCOPED ARTIFACTS",
-      systemNote: "Supports public repos, authorized selections, or guided non-GitHub assessments.",
+        "Upload a resume and authorize specific GitHub repositories with granular permissions, or choose a guided project pathway for private work.",
+      artifactTag: "INPUT // CONSENT-SCOPED INTAKE",
+      systemNote: "Authorized repo selections or guided non-GitHub assessments.",
       details: [
-        "Select specific repositories rather than exposing unrelated personal work",
-        "Extract claimed technologies from resume for targeted verification",
-        "Use guided project & assessment path if prior code is proprietary",
+        "Select specific repositories rather than exposing unrelated code",
+        "Extract claimed technologies for targeted evidence binding",
       ],
       icon: "upload",
     },
@@ -252,13 +251,12 @@ export const HOW_IT_WORKS_CONTENT = {
       stepNumber: "STEP 02",
       title: "Analyze the Evidence",
       description:
-        "The platform examines available source code, project structure, development history, dependencies, and testing artifacts—linking observations to concrete files and line ranges.",
-      artifactTag: "ANALYSIS // ASYNCHRONOUS INDEXING",
-      systemNote: "Analysis duration varies with repository scope; commit logs inform context, not authorship proof.",
+        "The engine inspects source code, AST architecture, dependency trees, and error boundaries—linking findings to concrete files.",
+      artifactTag: "ANALYSIS // STATIC CODE MAPPING",
+      systemNote: "File-anchored static code observations and template filters.",
       details: [
-        "Map components, API handlers, validation schemas, and error boundaries",
-        "Identify structural overlap with common starter templates transparently",
-        "Flag areas where code artifacts are absent so gaps remain explicit",
+        "Map components, API handlers, and validation schemas",
+        "Filter starter template boilerplate transparently",
       ],
       icon: "cpu",
     },
@@ -266,27 +264,25 @@ export const HOW_IT_WORKS_CONTENT = {
       stepNumber: "STEP 03",
       title: "Demonstrate Understanding",
       description:
-        "The candidate completes repository-specific technical questions or targeted assessments that probe design choices, trade-offs, and failure modes in their own work.",
-      artifactTag: "VIVA // CODE DEFENSE & RUBRICS",
-      systemNote: "Adaptive follow-up prompts adjust to answer depth and target role skills.",
+        "Candidates complete adaptive technical viva questions anchored directly to functions and architectural decisions in their own code.",
+      artifactTag: "VIVA // CODE DEFENSE PROBE",
+      systemNote: "Adaptive prompts probe architectural trade-offs.",
       details: [
-        "Questions reference real functions and architectural boundaries in the project",
-        "Candidates articulate why specific patterns or dependencies were chosen",
-        "Responses are evaluated against explicit, inspectable technical criteria",
+        "Questions reference real functions and design choices",
+        "Responses evaluated against inspectable engineering rubrics",
       ],
       icon: "message-square-code",
     },
     {
       stepNumber: "STEP 04",
-      title: "Generate the Proof Card",
+      title: "Generate Proof Card",
       description:
-        "The system connects findings to supporting evidence, evaluates skills against a transparent rubric, and produces an inspectable skill profile ready for candidate review and controlled sharing.",
-      artifactTag: "OUTPUT // INSPECTABLE SKILL PROOF CARD",
-      systemNote: "Findings reflect available evidence only and distinguish direct observations from inferences.",
+        "Findings, code citations, and viva defenses synthesize into an inspectable Skill Proof Card ready for candidate review and sharing.",
+      artifactTag: "OUTPUT // SKILL PROOF CARD",
+      systemNote: "Separates direct observations from inferred assessments.",
       details: [
-        "Displays Strong, Moderate, or Insufficient evidence per evaluated skill",
-        "Preserves provenance: source files, viva references, rubric ID, and date",
-        "Highlights concrete next steps to strengthen thin or missing evidence",
+        "Explicit Strong, Moderate, or Insufficient ratings per skill",
+        "Complete provenance tracing to exact files and timestamps",
       ],
       icon: "check-circle",
     },
@@ -297,7 +293,7 @@ export const CANDIDATES_SECTION_CONTENT = {
   eyebrow: "FOR CANDIDATES · MERIT OVER BUZZWORDS",
   heading: "Let your work speak for itself.",
   subheading:
-    "Whether you are self-taught, graduating from a lesser-known college, or building serious side projects, Proof of Skill turns genuine engineering effort into structured proof recruiters can inspect.",
+    "Whether you are self-taught, graduating from a lesser-known college, or building serious side projects, TalentLens turns genuine engineering effort into structured proof recruiters can inspect.",
   ctaLabel: "Build Your Skill Profile",
   ctaHref: `#${SECTION_IDS.earlyAccess}`,
   benefits: [
@@ -309,39 +305,21 @@ export const CANDIDATES_SECTION_CONTENT = {
     },
     {
       id: "cand-2",
-      title: "Explain real projects rather than answer only generic questions",
+      title: "Defend real engineering decisions",
       detail:
-        "Defend architectural trade-offs and implementation decisions in software you actually built and understand.",
+        "Articulate architectural trade-offs and implementation choices in software you actually built through repository-grounded viva.",
     },
     {
       id: "cand-3",
-      title: "Identify technical knowledge gaps",
+      title: "Pinpoint exact technical skill gaps",
       detail:
-        "See precisely which role expectations—such as integration testing, validation, or concurrency safety—lack supporting evidence.",
+        "See precisely which role expectations—such as integration testing, schema validation, or concurrency—lack supporting evidence.",
     },
     {
       id: "cand-4",
-      title: "Receive specific feedback",
+      title: "Controlled, verifiable evidence sharing",
       detail:
-        "Get actionable technical feedback on misconceptions and concrete ways to strengthen both code quality and conceptual clarity.",
-    },
-    {
-      id: "cand-5",
-      title: "Build an evidence-backed developer profile",
-      detail:
-        "Compile verified observations, code defenses, and project competencies into a structured, credible engineering portfolio.",
-    },
-    {
-      id: "cand-6",
-      title: "Share selected results with recruiters",
-      detail:
-        "Control what you share via permissioned verification links without exposing private repositories indiscriminately.",
-    },
-    {
-      id: "cand-7",
-      title: "Demonstrate skills without relying exclusively on public repositories",
-      detail:
-        "Use guided project evaluations and targeted technical assessments when NDA work or academic constraints limit public GitHub history.",
+        "Share verified proof with hiring teams via controlled links without exposing private repositories indiscriminately.",
     },
   ] satisfies ReadonlyArray<AudienceBenefit>,
 } as const;
@@ -351,56 +329,34 @@ export const RECRUITERS_SECTION_CONTENT = {
   heading: "Evaluate evidence. Make better-informed decisions.",
   subheading:
     "Move past surface-level resume claims and uncalibrated screening calls. Inspect verifiable code evidence, comprehension outcomes, and explicit gaps before committing engineering interview hours.",
-  ctaLabel: "Explore Recruiter Features",
-  ctaHref: `#${SECTION_IDS.features}`,
+  ctaLabel: "Request Recruiter Access",
+  ctaHref: `#${SECTION_IDS.earlyAccess}`,
+  secondaryCtaLabel: "View Sample Proof Card",
+  secondaryCtaHref: `#${SECTION_IDS.proofCard}`,
   benefits: [
     {
       id: "rec-1",
-      title: "Evaluate technical evidence at scale",
+      title: "Inspect evidence, not just claims",
       detail:
         "Review structured repository findings and code-defense summaries without manually cloning and auditing dozens of repositories from scratch.",
     },
     {
       id: "rec-2",
-      title: "Understand the reasoning behind skill assessments",
+      title: "Uniform, rubric-anchored evaluations",
       detail:
-        "Inspect the exact files, line references, viva exchanges, and rubric criteria behind every skill status—never an unexplained score.",
+        "Evaluate applicants for the same role using uniform technical criteria rather than ad-hoc reviewer impressions.",
     },
     {
       id: "rec-3",
-      title: "Generate repository-specific interview questions",
+      title: "Tailored repository interview kits",
       detail:
         "Equip hiring managers with tailored follow-up prompts grounded in the candidate’s actual codebase and architectural decisions.",
     },
     {
       id: "rec-4",
-      title: "Compare candidates against consistent rubrics",
+      title: "Human oversight of all hiring decisions",
       detail:
-        "Evaluate applicants for the same role using uniform technical criteria rather than ad-hoc reviewer impressions.",
-    },
-    {
-      id: "rec-5",
-      title: "Identify missing evidence",
-      detail:
-        "Spot unverified requirements early—knowing immediately where to focus live technical interviews or supplemental challenges.",
-    },
-    {
-      id: "rec-6",
-      title: "Reduce dependence on resume keywords",
-      detail:
-        "Surface capable builders whose resumes understate their engineering depth while filtering out unsupported buzzword claims.",
-    },
-    {
-      id: "rec-7",
-      title: "Review tutorial-like project similarities",
-      detail:
-        "See transparent structural similarity comparisons against known starter templates—presented with supporting context and uncertainty rather than automatic accusations.",
-    },
-    {
-      id: "rec-8",
-      title: "Maintain human oversight of hiring decisions",
-      detail:
-        "Use structured assessments as transparent decision support while keeping shortlisting and hiring judgment firmly in human hands.",
+        "Structured assessments operate strictly as transparent decision support—keeping shortlisting and hiring judgment firmly in human hands.",
     },
   ] satisfies ReadonlyArray<AudienceBenefit>,
 } as const;
@@ -409,9 +365,9 @@ export const TRUST_SECTION_CONTENT = {
   eyebrow: "FAIRNESS, PRIVACY & ACCOUNTABILITY",
   heading: "Evidence should be inspectable. Decisions should be accountable.",
   subheading:
-    "Automated technical assessment carries real responsibility. Proof of Skill is architected around inspectable provenance, strict consent boundaries, bias-aware design, and human decision ownership.",
+    "Automated technical assessment carries real responsibility. TalentLens is architected around inspectable provenance, strict consent boundaries, bias-aware design, and human decision ownership.",
   methodologicalDisclaimer:
-    "Methodological note: Proof of Skill does not claim guaranteed accuracy, zero bias, or automated legal compliance. Confidence indicators represent qualitative evidence consistency and are meaningful only when supported by an appropriate evaluation methodology and human review.",
+    "Methodological note: TalentLens does not claim guaranteed accuracy, zero bias, or automated legal compliance. Confidence indicators represent qualitative evidence consistency and are meaningful only when supported by human review.",
   pillars: [
     {
       id: "trust-explainability",
@@ -421,7 +377,6 @@ export const TRUST_SECTION_CONTENT = {
       commitments: [
         "Every skill assessment links back to specific files, code ranges, or viva responses.",
         "Explicitly separates Verified Observations from rubric-based Inferred Assessments.",
-        "Candidates can review findings and submit appeals or supplemental context.",
       ],
       boundaryNote: "No opaque black-box readiness percentages.",
       icon: "eye",
@@ -434,7 +389,6 @@ export const TRUST_SECTION_CONTENT = {
         "Require consent for repository analysis and protect sensitive candidate information.",
       commitments: [
         "Opt-in candidate authorization required before indexing any repository.",
-        "Granular sharing controls over which Proof Card artifacts recruiters can view.",
         "Private source code is never exposed to third parties without explicit permission.",
       ],
       boundaryNote: "Candidate-controlled visibility and revocable verification links.",
@@ -447,11 +401,10 @@ export const TRUST_SECTION_CONTENT = {
       summary:
         "Test for unintended disparities and exclude prohibited features from ranking models.",
       commitments: [
-        "Excludes college name, gender, age, and location from candidate ranking logic.",
-        "Designed to mitigate indirect proxy reliance where technically feasible.",
-        "Uses controlled evaluation scenarios to audit scoring consistency across groups.",
+        "Excludes college tier, gender, age, and location from candidate ranking logic.",
+        "Uses controlled evaluation scenarios to audit scoring consistency across cohorts.",
       ],
-      boundaryNote: "Ongoing empirical evaluation rather than unsubstantiated 'zero-bias' claims.",
+      boundaryNote: "Ongoing empirical evaluation rather than unsubstantiated claims.",
       icon: "sliders",
     },
     {
@@ -462,7 +415,6 @@ export const TRUST_SECTION_CONTENT = {
       commitments: [
         "Assessments operate strictly as structured decision support, never auto-rejection.",
         "Template similarity reports include uncertainty and require human interpretation.",
-        "Missing evidence is labeled 'Insufficient evidence' rather than penalized as failure.",
       ],
       boundaryNote: "Final hiring judgment always rests with accountable human reviewers.",
       icon: "user-cog",
@@ -474,7 +426,7 @@ export const USE_CASES_CONTENT = {
   eyebrow: "APPLICATIONS · WHERE EVIDENCE MATTERS MOST",
   heading: "Designed for real technical evaluation workflows.",
   subheading:
-    "From early-stage engineering teams to campus placement cohorts, Proof of Skill adapts to wherever practical capability needs to be demonstrated and inspected.",
+    "From early-stage engineering teams to campus placement cohorts, TalentLens adapts to wherever practical capability needs to be demonstrated and inspected.",
   items: [
     {
       id: "uc-startups",
@@ -482,7 +434,7 @@ export const USE_CASES_CONTENT = {
       audience: "Early-Stage Engineering Teams",
       title: "Startups hiring their first engineers",
       description:
-        "Founding teams cannot afford mis-hires masked by polished resumes. Inspect how applicants actually structure code, handle edge cases, and reason about trade-offs before final-round pairing.",
+        "Inspect how applicants actually structure code, handle edge cases, and reason about trade-offs before committing engineering interview hours.",
       primaryMechanism: "Repository Intelligence + Code Defense",
       icon: "rocket",
     },
@@ -490,51 +442,31 @@ export const USE_CASES_CONTENT = {
       id: "uc-freshers",
       code: "USE CASE 02",
       audience: "High-Volume Graduate Hiring",
-      title: "Companies screening large fresher cohorts",
+      title: "Companies screening fresher cohorts",
       description:
-        "Look beyond institution tier and identical coursework bullet points. Differentiate entry-level applicants through verifiable project substance and structured technical comprehension.",
+        "Look beyond institution tier and identical resume templates. Differentiate entry-level applicants through verifiable project substance and code comprehension.",
       primaryMechanism: "Bias-Aware Matching + Standardized Rubrics",
       icon: "users",
     },
     {
       id: "uc-recruiters",
       code: "USE CASE 03",
-      audience: "Talent Acquisition & Sourcers",
-      title: "Technical recruiters assessing project claims",
+      audience: "Technical Recruiters & Sourcers",
+      title: "Recruiters evaluating project claims",
       description:
         "Bridge the gap between recruiter screening and engineering review with clear evidence summaries, template-similarity context, and tailored interview questions.",
       primaryMechanism: "Skill Proof Cards + Assessment Reports",
       icon: "briefcase",
     },
     {
-      id: "uc-colleges",
-      code: "USE CASE 04",
-      audience: "University Placement Offices",
-      title: "College placement cells helping students demonstrate practical skills",
-      description:
-        "Help graduating students convert capstone repositories and lab work into credible, inspectable skill profiles that stand on engineering merit with visiting employers.",
-      primaryMechanism: "Portfolio Proof + Skill Gap Identification",
-      icon: "graduation-cap",
-    },
-    {
       id: "uc-candidates",
-      code: "USE CASE 05",
+      code: "USE CASE 04",
       audience: "Software Engineering Candidates",
       title: "Candidates preparing for technical interviews",
       description:
         "Practice defending your own repositories against adaptive technical questions, uncover blind spots in your codebase, and build stronger evidence before interviewing.",
       primaryMechanism: "AI Technical Viva + Improvement Roadmap",
       icon: "terminal",
-    },
-    {
-      id: "uc-training",
-      code: "USE CASE 06",
-      audience: "Bootcamps & Engineering Academies",
-      title: "Training programs evaluating project-based learning",
-      description:
-        "Assess whether learners genuinely understand the capstone applications they build through structured code reviews, viva rubrics, and longitudinal assessment history.",
-      primaryMechanism: "Rubric Evaluation + Assessment History",
-      icon: "book-open",
     },
   ] satisfies ReadonlyArray<UseCaseItem>,
 } as const;
@@ -545,8 +477,8 @@ export const CTA_SECTION_CONTENT = {
   supportingText:
     "Build a clearer picture of what you can do—and give recruiters the evidence to see it.",
   primaryCtaLabel: "Get Early Access",
-  secondaryCtaLabel: "Explore the Platform",
-  secondaryCtaHref: `#${SECTION_IDS.features}`,
+  secondaryCtaLabel: "View Proof Card",
+  secondaryCtaHref: `#${SECTION_IDS.proofCard}`,
   formHeading: "Request Early Access",
   formSubheading:
     "Tell us your role so we can share relevant platform updates as verification workflows roll out.",

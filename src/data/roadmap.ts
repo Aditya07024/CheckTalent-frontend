@@ -2,11 +2,11 @@ import type { RoadmapPhase } from "@/types/platform";
 
 export const ROADMAP_SECTION_CONTENT = {
   eyebrow: "PRODUCT ROADMAP · PLANNED EVOLUTION",
-  heading: "Deliberate architecture from core verification to hiring workflows.",
+  heading: "Deliberate architecture from verification to hiring.",
   subheading:
-    "Proof of Skill is structured in four progressive phases. Phase 1 defines the foundational verification architecture; Phases 2 through 4 represent planned capabilities that are not yet live.",
+    "TalentLens is structured in progressive phases. Phase 1 establishes the foundational verification engine; Phases 2–4 represent planned capabilities.",
   statusLegendNote:
-    "Transparency notice: Planned phases describe architectural direction and upcoming milestones—not currently deployed production features.",
+    "Transparency notice: Planned phases describe architectural direction and upcoming milestones.",
 } as const;
 
 export const ROADMAP_PHASES: ReadonlyArray<RoadmapPhase> = [
@@ -17,13 +17,11 @@ export const ROADMAP_PHASES: ReadonlyArray<RoadmapPhase> = [
     status: "Core Architecture (Phase 1)",
     isCurrentFocus: true,
     summary:
-      "Establish end-to-end evidence extraction from candidate artifacts, repository-grounded technical questioning, and inspectable skill profiles.",
+      "End-to-end evidence extraction from repository code, technical viva questioning, and inspectable Skill Proof Cards.",
     deliverables: [
-      "Resume analysis & claim extraction",
-      "Consent-scoped GitHub integration",
-      "Static repository & code structure analysis",
+      "Consent-scoped GitHub intake & AST mapping",
       "Repository-grounded AI technical viva",
-      "Inspectable Skill Proof Cards",
+      "Inspectable Skill Proof Cards with provenance",
     ],
   },
   {
@@ -33,12 +31,11 @@ export const ROADMAP_PHASES: ReadonlyArray<RoadmapPhase> = [
     status: "Planned — Phase 2",
     isCurrentFocus: false,
     summary:
-      "Connect verified candidate evidence to structured role criteria so hiring teams can compare applicants transparently.",
+      "Connecting verified candidate evidence to role criteria for objective, side-by-side technical evaluation.",
     deliverables: [
       "Job description skill & rubric extraction",
-      "Side-by-side candidate comparison",
-      "Explainable evidence-to-role ranking",
-      "Collaborative shortlisting tools",
+      "Side-by-side candidate comparison matrix",
+      "Tailored engineering interview kits",
     ],
   },
   {
@@ -48,12 +45,11 @@ export const ROADMAP_PHASES: ReadonlyArray<RoadmapPhase> = [
     status: "Planned — Phase 3",
     isCurrentFocus: false,
     summary:
-      "Broaden verification pathways for candidates without public codebases and deepen similarity and fairness auditing.",
+      "Alternative evidence pathways for proprietary code and deeper template similarity auditing.",
     deliverables: [
-      "Improved tutorial similarity detection with uncertainty bounds",
+      "Starter template similarity detection",
       "Controlled fairness evaluation suites",
-      "Alternative evidence pathways for non-public work",
-      "Controlled-access evidence sharing & verification links",
+      "Alternative assessment paths for NDA work",
     ],
   },
   {
@@ -63,12 +59,11 @@ export const ROADMAP_PHASES: ReadonlyArray<RoadmapPhase> = [
     status: "Planned — Phase 4",
     isCurrentFocus: false,
     summary:
-      "Integrate structured skill evidence into broader engineering education, placement cohorts, and external hiring systems.",
+      "Integrating structured skill proof into university placement cohorts and ATS partner ecosystems.",
     deliverables: [
-      "Targeted coding assessments",
       "College placement cohort dashboards",
-      "ATS & recruiter platform API integrations",
-      "Advanced cohort & rubric analytics",
+      "ATS & HRIS webhook integrations",
+      "Longitudinal developer progress tracking",
     ],
   },
 ];

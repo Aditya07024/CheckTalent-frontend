@@ -76,7 +76,7 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
     <div
       ref={panelRef}
       aria-live="polite"
-      className="flex h-full flex-col justify-between rounded-xl border border-hairline-strong bg-canvas-secondary p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+      className="flex h-full flex-col justify-between rounded-xl border border-hairline-strong bg-canvas-elevated p-5 sm:p-6 shadow-[0_14px_40px_rgba(15,23,42,0.07)]"
     >
       <div>
         {/* Top Metadata Strip */}
@@ -103,20 +103,20 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
         </div>
 
         {/* Value Proposition Callout */}
-        <div className="mt-4 rounded-lg border border-hairline bg-canvas-elevated/80 p-3.5">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-lime">
+        <div className="mt-4 rounded-lg border border-orange-200 bg-gradient-to-r from-yellow-50/90 via-amber-50/80 to-orange-50/90 p-3.5">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-orange-800">
             Why It Matters
           </p>
-          <p className="mt-1 text-xs sm:text-sm leading-relaxed text-ink">
+          <p className="mt-1 text-xs sm:text-sm font-medium leading-relaxed text-ink">
             {feature.valueProposition}
           </p>
         </div>
 
         {/* Guardrail / Epistemic Note if present */}
         {feature.guardrailNote && (
-          <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-amber-400/25 bg-amber-400/[0.06] p-3">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
-            <p className="text-xs leading-relaxed text-amber-100/90">
+          <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-amber-600/25 bg-amber-500/[0.08] p-3">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+            <p className="text-xs leading-relaxed text-amber-950">
               {feature.guardrailNote}
             </p>
           </div>
@@ -156,25 +156,26 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
                 <span className="truncate text-ink-secondary">{preview.filePath}</span>
                 <span>{preview.language}</span>
               </div>
-              <div className="overflow-x-auto rounded border border-hairline bg-canvas-secondary p-2.5 font-mono text-xs">
+              <div className="overflow-x-auto rounded-lg border border-orange-900/30 bg-[#1F1510] p-3 font-mono text-xs text-amber-50 shadow-inner">
                 {preview.lines.map((line) => (
                   <div
                     key={line.lineNumber}
                     className={cn(
                       "px-2 py-1 rounded-sm",
-                      line.highlight === "lime" && "bg-lime-dim/70 border-l-2 border-lime",
+                      line.highlight === "lime" &&
+                        "bg-orange-500/20 border-l-2 border-yellow-400",
                       line.highlight === "violet" &&
-                        "bg-violet-dim/70 border-l-2 border-violet"
+                        "bg-red-500/20 border-l-2 border-red-400"
                     )}
                   >
                     <div className="flex gap-3">
-                      <span className="w-6 shrink-0 select-none text-right text-ink-muted">
+                      <span className="w-6 shrink-0 select-none text-right text-amber-200/45">
                         {line.lineNumber}
                       </span>
-                      <code className="whitespace-pre text-ink">{line.code}</code>
+                      <code className="whitespace-pre text-amber-50">{line.code}</code>
                     </div>
                     {line.annotation && (
-                      <p className="mt-1 pl-9 text-[11px] text-lime">
+                      <p className="mt-1 pl-9 text-[11px] text-yellow-300">
                         ↳ {line.annotation}
                       </p>
                     )}
@@ -195,7 +196,7 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
                         "mt-0.5 font-mono text-xs",
                         sig.tone === "verified" && "text-lime",
                         sig.tone === "neutral" && "text-ink",
-                        sig.tone === "caution" && "text-amber-300"
+                        sig.tone === "caution" && "text-amber-700"
                       )}
                     >
                       {sig.value}
@@ -361,7 +362,7 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
                       item.state === "Enforced" &&
                         "border-lime/30 bg-lime-dim text-lime",
                       item.state === "Excluded Signal" &&
-                        "border-red-400/30 bg-red-400/10 text-red-300",
+                        "border-red-600/30 bg-red-500/10 text-red-700",
                       item.state === "Human Gate" &&
                         "border-violet-border bg-violet-dim text-violet"
                     )}

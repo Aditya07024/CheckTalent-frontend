@@ -3,10 +3,10 @@ import { SECTION_IDS } from "@/lib/constants";
 
 export const PRIMARY_NAV_ITEMS: ReadonlyArray<NavItem> = [
   { label: "Platform", href: `#${SECTION_IDS.solution}` },
-  { label: "Features", href: `#${SECTION_IDS.features}` },
-  { label: "How It Works", href: `#${SECTION_IDS.howItWorks}` },
-  { label: "For Recruiters", href: `#${SECTION_IDS.recruiters}` },
+  { label: "Proof Card", href: `#${SECTION_IDS.proofCard}` },
   { label: "For Candidates", href: `#${SECTION_IDS.candidates}` },
+  { label: "For Recruiters", href: `#${SECTION_IDS.recruiters}` },
+  { label: "Trust & Ethics", href: `#${SECTION_IDS.trust}` },
 ];
 
 export const FOOTER_LINK_GROUPS: ReadonlyArray<FooterLinkGroup> = [
@@ -14,18 +14,18 @@ export const FOOTER_LINK_GROUPS: ReadonlyArray<FooterLinkGroup> = [
     heading: "Platform",
     links: [
       { label: "Verification Pipeline", href: `#${SECTION_IDS.solution}` },
-      { label: "Feature Explorer (38)", href: `#${SECTION_IDS.features}` },
       { label: "Sample Proof Card", href: `#${SECTION_IDS.proofCard}` },
-      { label: "How It Works", href: `#${SECTION_IDS.howItWorks}` },
+      { label: "Trust & Governance", href: `#${SECTION_IDS.trust}` },
       { label: "Product Roadmap", href: `#${SECTION_IDS.roadmap}` },
+      { label: "Frequently Asked Questions", href: `#${SECTION_IDS.faq}` },
     ],
   },
   {
     heading: "For Candidates",
     links: [
       { label: "Candidate Capabilities", href: `#${SECTION_IDS.candidates}` },
-      { label: "Repository Intelligence", href: `#${SECTION_IDS.features}` },
-      { label: "AI Technical Viva", href: `#${SECTION_IDS.features}` },
+      { label: "Sample Proof Card", href: `#${SECTION_IDS.proofCard}` },
+      { label: "Improvement Roadmap", href: `#${SECTION_IDS.roadmap}` },
       { label: "Alternative Evidence Path", href: `#${SECTION_IDS.faq}` },
       { label: "Join Early Access", href: `#${SECTION_IDS.earlyAccess}` },
     ],
@@ -34,7 +34,7 @@ export const FOOTER_LINK_GROUPS: ReadonlyArray<FooterLinkGroup> = [
     heading: "For Recruiters",
     links: [
       { label: "Recruiter Capabilities", href: `#${SECTION_IDS.recruiters}` },
-      { label: "Explainable Matching", href: `#${SECTION_IDS.features}` },
+      { label: "Verification Pipeline", href: `#${SECTION_IDS.solution}` },
       { label: "Fairness & Oversight", href: `#${SECTION_IDS.trust}` },
       { label: "Hiring Use Cases", href: `#${SECTION_IDS.useCases}` },
       { label: "Request Recruiter Access", href: `#${SECTION_IDS.earlyAccess}` },

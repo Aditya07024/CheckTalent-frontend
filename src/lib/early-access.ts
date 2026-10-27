@@ -59,7 +59,7 @@ export function validateEarlyAccessForm(
   }
 
   if (!values.role || !VALID_ROLES.includes(values.role)) {
-    errors.role = "Select how you plan to use Proof of Skill.";
+    errors.role = "Select how you plan to use TalentLens.";
   }
 
   if (values.message.trim().length > 500) {

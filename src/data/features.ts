@@ -1,12 +1,12 @@
 import type { FeatureCategory, PlatformFeature } from "@/types/feature";
 
 export const FEATURE_EXPLORER_HEADER = {
-  eyebrow: "PLATFORM CAPABILITIES · 38 SYSTEM MODULES ACROSS 6 DOMAINS",
-  heading: "Every layer required to verify, explain, and act on technical skill.",
+  eyebrow: "PLATFORM CAPABILITIES",
+  heading: "Six domains. One verification pipeline.",
   subheading:
-    "Explore the complete Proof of Skill system architecture. Select a capability domain below, then inspect any module to view its engineering workflow, value proposition, and illustrative artifact preview.",
+    "Select a domain to explore TalentLens modules — from static code analysis to recruiter decision support.",
   previewDisclaimer:
-    "Illustrative module inspector: Previews depict representative system structures and mock engineering artifacts.",
+    "Illustrative previews depict representative system structures.",
 } as const;
 
 export const FEATURE_CATEGORIES: ReadonlyArray<FeatureCategory> = [
@@ -1567,7 +1567,7 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
           state: "Enforced",
         },
       ],
-      auditNote: "Proof of Skill informs human engineering reviewers—it never replaces them.",
+      auditNote: "TalentLens informs human engineering reviewers—it never replaces them.",
     },
   },
 ];

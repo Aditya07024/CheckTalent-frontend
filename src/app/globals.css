@@ -1,82 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Bungee+Inline&family=Gochi+Hand&family=Graduate&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Londrina+Shadow&family=Quantico:ital@1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+.graduate-regular {
+  font-family: "Graduate", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.graduate-bold,
+.graduate-regular.font-bold,
+h2.graduate-regular {
+  font-family: "Graduate", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.kanit-semibold {
+  font-family: "Kanit", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.londrina-shadow-regular {
+  font-family: "Londrina Shadow", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.quantico-regular-italic {
+  font-family: "Quantico", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.bungee-inline-regular {
+  font-family: "Bungee Inline", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.aldrich-regular {
+  font-family: "Aldrich", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.aldrich-bold,
+.aldrich-regular.font-bold,
+h2.aldrich-regular {
+  font-family: "Aldrich", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Tactile stamp buttons with straight alignment and clean sans typography */
+.pos-stamp-button {
+  padding: 0;
+  border: none;
+  transform: none;
+  text-decoration: none;
+  cursor: pointer;
+  padding-bottom: 3.5px;
+  border-radius: 8px;
+  box-shadow: 0 2px 0 #1c1613;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pos-stamp-button .pos-stamp-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 6px;
+  border: 2px solid #1c1613;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.pos-stamp-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 #1c1613;
+}
+
+.pos-stamp-button:active {
+  transform: translateY(3.5px);
+  padding-bottom: 0px;
+  box-shadow: 0 0 0 #1c1613;
+  outline: 0;
+}
+
 @layer base {
   :root {
-    --background: 228 24% 4%;
-    --foreground: 216 25% 97%;
-    --card: 227 22% 8%;
-    --card-foreground: 216 25% 97%;
-    --popover: 225 22% 11%;
-    --popover-foreground: 216 25% 97%;
-    --primary: 79 100% 65%;
-    --primary-foreground: 228 24% 4%;
-    --secondary: 225 22% 11%;
-    --secondary-foreground: 216 25% 97%;
-    --muted: 227 22% 8%;
-    --muted-foreground: 221 13% 67%;
-    --accent: 248 100% 77%;
-    --accent-foreground: 228 24% 4%;
-    --destructive: 0 72% 58%;
-    --destructive-foreground: 216 25% 97%;
-    --border: 0 0% 100% / 0.1;
-    --input: 0 0% 100% / 0.12;
-    --ring: 79 100% 65%;
+    --background: 38 38% 97%;
+    --foreground: 20 19% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 19% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 19% 9%;
+    --primary: 14 76% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 37 38% 92%;
+    --secondary-foreground: 20 19% 9%;
+    --muted: 37 38% 92%;
+    --muted-foreground: 28 12% 42%;
+    --accent: 0 72% 51%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 74% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 19% 9% / 0.1;
+    --input: 20 19% 9% / 0.15;
+    --ring: 14 76% 48%;
     --radius: 0.5rem;
   }
 
   * {
-    border-color: rgba(255, 255, 255, 0.10);
+    border-color: rgba(28, 22, 19, 0.10);
   }
 
   html {
-    background-color: #08090D;
-    color: #F5F7FA;
-    color-scheme: dark;
+    background-color: #FAF7F2;
+    color: #1C1613;
+    color-scheme: light;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background-color: #08090D;
-    color: #F5F7FA;
+    background-color: #FAF7F2;
+    color: #1C1613;
     overflow-x: hidden;
     position: relative;
   }
 
-  /* Subtle CSS SVG fractal-noise texture overlay across the dark canvas */
+  /* Subtle warm paper-grain texture across the ivory canvas */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: 50;
     pointer-events: none;
-    opacity: 0.024;
+    opacity: 0.02;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='posNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23posNoise)'/%3E%3C/svg%3E");
   }
 
   ::selection {
-    background-color: rgba(197, 255, 74, 0.24);
-    color: #F5F7FA;
+    background-color: rgba(249, 115, 22, 0.24);
+    color: #1C1613;
   }
 }
 
-/* Fine architectural grid patterns */
+/* Warm terracotta & amber drafting-grid patterns */
 .pos-grid-fine {
   background-size: 36px 36px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 45%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 45%, transparent 100%);
+    linear-gradient(to right, rgba(217, 72, 30, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(217, 119, 6, 0.065) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 35%, #000 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 35%, #000 50%, transparent 100%);
 }
 
 .pos-grid-standard {
   background-size: 64px 64px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(217, 72, 30, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(217, 119, 6, 0.05) 1px, transparent 1px);
 }
 
 /* Respect operating-system reduced-motion preferences */

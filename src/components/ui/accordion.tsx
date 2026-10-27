@@ -14,7 +14,7 @@ const AccordionItem = React.forwardRef<
   <AccordionPrimitive.Item
     ref={ref}
     className={cn(
-      "border-b border-hairline transition-colors data-[state=open]:bg-canvas-secondary/60",
+      "border-b border-orange-100 last:border-b-0 transition-colors data-[state=open]:bg-gradient-to-r data-[state=open]:from-yellow-50/75 data-[state=open]:via-amber-50/55 data-[state=open]:to-orange-50/65",
       className
     )}
     {...props}
@@ -30,13 +30,13 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between gap-4 py-5 px-4 text-left text-base font-medium text-ink transition-all hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime focus-visible:ring-inset [&[data-state=open]>svg]:rotate-180 [&[data-state=open]>svg]:text-lime",
+        "flex flex-1 items-center justify-between gap-4 py-5 px-4 text-left text-base font-medium text-ink transition-all hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset [&[data-state=open]>svg]:rotate-180 [&[data-state=open]>svg]:text-orange-600",
         className
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 text-ink-secondary transition-transform duration-200" />
+      <ChevronDown className="h-4 w-4 shrink-0 text-orange-700/70 transition-transform duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

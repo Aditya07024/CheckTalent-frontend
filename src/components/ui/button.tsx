@@ -4,27 +4,27 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "pos-stamp-button inline-flex items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "relative border border-white/25 bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 text-white font-semibold shadow-[0_4px_16px_rgba(234,88,12,0.28)] hover:shadow-[0_8px_24px_rgba(234,88,12,0.40)] hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
+          "bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 [&_.pos-stamp-inner]:bg-[#FFFBEB] [&_.pos-stamp-inner]:text-[#1C1613] hover:[&_.pos-stamp-inner]:bg-[#FFFFFF]",
         secondary:
-          "bg-white/95 text-ink border border-orange-200/80 hover:border-orange-400 hover:bg-orange-50/70 hover:text-orange-950 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
+          "bg-[#F59E0B] [&_.pos-stamp-inner]:bg-[#FFFFFF] [&_.pos-stamp-inner]:text-[#1C1613] hover:[&_.pos-stamp-inner]:bg-[#FFFBEB]",
         outline:
-          "border border-orange-300/85 bg-white/90 text-ink backdrop-blur-sm hover:bg-amber-50/70 hover:border-orange-400 hover:text-orange-950 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
+          "bg-[#EA580C] [&_.pos-stamp-inner]:bg-[#FAF7F2] [&_.pos-stamp-inner]:text-[#1C1613] hover:[&_.pos-stamp-inner]:bg-[#FFFFFF]",
         ghost:
-          "text-ink-secondary hover:text-orange-900 hover:bg-orange-100/60 rounded-lg active:scale-[0.98]",
+          "bg-transparent shadow-none hover:shadow-none p-0 pb-0 rotate-0 hover:rotate-0 hover:bg-orange-100/50 [&_.pos-stamp-inner]:border-transparent [&_.pos-stamp-inner]:bg-transparent [&_.pos-stamp-inner]:text-ink-secondary hover:[&_.pos-stamp-inner]:text-orange-900 active:translate-y-0",
         limeOutline:
-          "border border-orange-300 bg-orange-50/90 text-orange-900 font-semibold hover:bg-orange-100 hover:border-orange-400 shadow-sm hover:-translate-y-0.5 active:scale-[0.98]",
+          "bg-[#DC2626] [&_.pos-stamp-inner]:bg-[#FEF3C7] [&_.pos-stamp-inner]:text-[#1C1613] hover:[&_.pos-stamp-inner]:bg-[#FFFFFF]",
       },
       size: {
-        default: "h-10 px-5 py-2",
-        sm: "h-8.5 rounded-lg px-3.5 text-xs",
-        lg: "h-11 rounded-xl px-6 text-sm",
-        xl: "h-12 rounded-xl px-7 text-base font-semibold",
-        icon: "h-9 w-9 rounded-lg",
+        default: "[&_.pos-stamp-inner]:h-10 [&_.pos-stamp-inner]:px-4 [&_.pos-stamp-inner]:py-1.5 text-base",
+        sm: "[&_.pos-stamp-inner]:h-8.5 [&_.pos-stamp-inner]:px-3 [&_.pos-stamp-inner]:py-1 text-sm",
+        lg: "[&_.pos-stamp-inner]:h-11 [&_.pos-stamp-inner]:px-6 [&_.pos-stamp-inner]:py-2 text-lg",
+        xl: "[&_.pos-stamp-inner]:h-12 [&_.pos-stamp-inner]:px-7 [&_.pos-stamp-inner]:py-2.5 text-xl font-bold",
+        icon: "[&_.pos-stamp-inner]:h-9 [&_.pos-stamp-inner]:w-9 [&_.pos-stamp-inner]:p-0",
       },
     },
     defaultVariants: {
@@ -41,14 +41,16 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+      >
+        <span className="pos-stamp-inner w-full h-full">{children}</span>
+      </Comp>
     );
   }
 );

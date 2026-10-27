@@ -58,7 +58,7 @@ export function HeroSection() {
     <section
       id={SECTION_IDS.hero}
       ref={sectionRef}
-      className="relative flex min-h-[640px] items-start overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 pb-16 pt-8 sm:min-h-[700px] sm:pt-10 lg:min-h-[calc(100vh-4rem)] lg:pt-14"
+      className="relative flex min-h-[620px] items-start overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 pb-12 pt-3 sm:min-h-[660px] sm:pt-4 lg:min-h-[calc(100vh-4rem)] lg:pt-5"
     >
       <GridBackground density="fine" showRadialGlow />
 
@@ -74,7 +74,7 @@ export function HeroSection() {
       <div className="container relative z-10 w-full">
         <div className="max-w-xl lg:max-w-4xl xl:max-w-5xl">
           {/* Title + Minimal Core Components (overlaying the orbit) */}
-          <div className="space-y-7">
+          <div className="space-y-4 sm:space-y-5">
             <div
               data-hero-copy
               className="inline-flex items-center gap-2.5 rounded-full border border-orange-300 border-b-[3px] border-b-orange-400 bg-white/90 px-4 py-1.5 shadow-sm"

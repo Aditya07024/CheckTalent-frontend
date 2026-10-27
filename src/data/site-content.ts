@@ -33,9 +33,9 @@ export const HERO_REPO_PREVIEW_DATA = {
   branch: "main",
   analysisStatus: "Inspection Complete · 38 source modules indexed",
   languages: [
-    { name: "TypeScript", share: "68%", colorClass: "bg-lime" },
-    { name: "React", share: "21%", colorClass: "bg-[#61DAFB]" },
-    { name: "Node.js", share: "11%", colorClass: "bg-violet" },
+    { name: "TypeScript", share: "68%", colorClass: "bg-orange-500" },
+    { name: "React", share: "21%", colorClass: "bg-yellow-500" },
+    { name: "Node.js", share: "11%", colorClass: "bg-red-500" },
   ],
   evidenceFindings: [
     {

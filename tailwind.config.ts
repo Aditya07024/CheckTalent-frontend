@@ -25,29 +25,32 @@ const config: Config = {
     extend: {
       colors: {
         canvas: {
-          DEFAULT: "#08090D",
-          secondary: "#101219",
-          elevated: "#151821",
-          hover: "#1B1F2B",
+          DEFAULT: "#FAF7F2",
+          secondary: "#F3ECE1",
+          elevated: "#FFFFFF",
+          hover: "#EAE0D1",
         },
         ink: {
-          DEFAULT: "#F5F7FA",
-          secondary: "#A2A8B5",
-          muted: "#6E7687",
+          DEFAULT: "#1C1613",
+          secondary: "#4E433B",
+          muted: "#786A5E",
         },
+        // Remapped primary accent -> Warm Terracotta / Solar Orange (Zero green/blue/violet)
         lime: {
-          DEFAULT: "#C5FF4A",
-          dim: "rgba(197, 255, 74, 0.14)",
-          border: "rgba(197, 255, 74, 0.32)",
-          hover: "#D4FF73",
+          DEFAULT: "#D9481E",
+          bright: "#FF6B35",
+          dim: "rgba(234, 88, 12, 0.11)",
+          border: "rgba(217, 72, 30, 0.30)",
+          hover: "#C23B14",
         },
+        // Remapped secondary accent -> Pure Crimson / Scarlet Red (Zero green/blue/violet)
         violet: {
-          DEFAULT: "#9B8CFF",
-          dim: "rgba(155, 140, 255, 0.14)",
-          border: "rgba(155, 140, 255, 0.30)",
+          DEFAULT: "#DC2626",
+          dim: "rgba(220, 38, 38, 0.10)",
+          border: "rgba(220, 38, 38, 0.28)",
         },
-        hairline: "rgba(255, 255, 255, 0.10)",
-        "hairline-strong": "rgba(255, 255, 255, 0.18)",
+        hairline: "rgba(28, 22, 19, 0.10)",
+        "hairline-strong": "rgba(28, 22, 19, 0.19)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -85,6 +88,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+        londrina: ["'Londrina Shadow'", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -102,13 +106,29 @@ const config: Config = {
         },
         "scan-sweep": {
           "0%": { transform: "translateY(-100%)", opacity: "0" },
-          "20%": { opacity: "0.7" },
-          "80%": { opacity: "0.7" },
+          "20%": { opacity: "0.8" },
+          "80%": { opacity: "0.8" },
           "100%": { transform: "translateY(420%)", opacity: "0" },
         },
         "pulse-subtle": {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.4" },
+          "50%": { opacity: "0.45" },
+        },
+        "marquee-left": {
+          "0%": { transform: "translate3d(0, 0, 0)" },
+          "100%": { transform: "translate3d(-50%, 0, 0)" },
+        },
+        "marquee-right": {
+          "0%": { transform: "translate3d(-50%, 0, 0)" },
+          "100%": { transform: "translate3d(0, 0, 0)" },
+        },
+        "float-slow": {
+          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
+          "50%": { transform: "translateY(-10px) rotate(3deg)" },
+        },
+        "spin-3d": {
+          "0%": { transform: "rotateX(-22deg) rotateY(0deg)" },
+          "100%": { transform: "rotateX(-22deg) rotateY(360deg)" },
         },
       },
       animation: {
@@ -116,6 +136,10 @@ const config: Config = {
         "accordion-up": "accordion-up 0.18s cubic-bezier(0.16, 1, 0.3, 1)",
         "scan-sweep": "scan-sweep 7s ease-in-out infinite",
         "pulse-subtle": "pulse-subtle 2.8s ease-in-out infinite",
+        "marquee-left": "marquee-left 34s linear infinite",
+        "marquee-right": "marquee-right 38s linear infinite",
+        "float-slow": "float-slow 5.5s ease-in-out infinite",
+        "spin-3d": "spin-3d 18s linear infinite",
       },
     },
   },

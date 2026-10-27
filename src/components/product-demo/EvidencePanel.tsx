@@ -163,7 +163,7 @@ export function EvidencePanel({ skill, compact = false }: EvidencePanelProps) {
             <p className="mb-2.5 text-xs text-ink-secondary">
               {skill.codeReference.caption}
             </p>
-            <pre className="overflow-x-auto rounded border border-hairline bg-canvas-secondary p-3 font-mono text-xs leading-relaxed text-ink">
+            <pre className="overflow-x-auto rounded-lg border border-orange-900/30 bg-[#1F1510] p-3.5 font-mono text-xs leading-relaxed text-amber-50 shadow-inner">
               <code>{skill.codeReference.snippet}</code>
             </pre>
           </div>
@@ -206,8 +206,8 @@ export function EvidencePanel({ skill, compact = false }: EvidencePanelProps) {
 
       {/* Optional Recommended Next Action for Insufficient Evidence */}
       {skill.recommendedNextAction && (
-        <div className="rounded-lg border border-amber-400/30 bg-amber-400/[0.07] p-3.5">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-amber-300">
+        <div className="rounded-lg border border-amber-600/30 bg-amber-500/[0.08] p-3.5">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-amber-800">
             Recommended Next Verification Step
           </p>
           <p className="mt-1 text-xs sm:text-sm text-ink">

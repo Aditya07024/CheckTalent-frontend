@@ -63,10 +63,15 @@ export function Navbar() {
         className={cn(
           "sticky top-0 z-40 w-full transition-all duration-200",
           scrolled
-            ? "border-b border-hairline bg-[#08090D]/85 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
-            : "border-b border-transparent bg-[#08090D]/60"
+            ? "border-b border-orange-200/70 bg-[#FAF7F2]/90 backdrop-blur-md shadow-[0_6px_24px_rgba(217,72,30,0.07)]"
+            : "border-b border-stone-200/70 bg-[#FAF7F2]/80 backdrop-blur-sm"
         )}
       >
+        {/* Top Warm Solar Accent Line (Yellow -> Amber -> Orange -> Red) */}
+        <div
+          aria-hidden="true"
+          className="h-[3px] w-full bg-gradient-to-r from-yellow-400 via-amber-500 via-orange-500 to-red-600"
+        />
         <div className="container flex h-16 items-center justify-between gap-4">
           {/* Left: Product Logo & Name */}
           <a
@@ -81,14 +86,14 @@ export function Navbar() {
           {/* Center Navigation */}
           <nav
             aria-label="Primary navigation"
-            className="hidden lg:flex items-center gap-1 rounded-full border border-hairline bg-canvas-secondary/80 px-2 py-1"
+            className="hidden lg:flex items-center gap-1 rounded-full border border-orange-200/85 bg-gradient-to-r from-yellow-50/90 via-white to-orange-50/90 px-2 py-1 shadow-sm"
           >
             {PRIMARY_NAV_ITEMS.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                className="rounded-full px-3.5 py-1.5 text-[13px] font-medium text-ink-secondary transition-colors hover:bg-white/[0.05] hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
+                className="rounded-full px-3.5 py-1.5 text-[13px] font-medium text-ink-secondary transition-colors hover:bg-orange-500/10 hover:text-orange-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
               >
                 {item.label}
               </a>

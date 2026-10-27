@@ -45,7 +45,11 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-hairline bg-[#06070B] text-ink-secondary">
+    <footer className="relative z-[2] border-t-2 border-orange-200 bg-gradient-to-b from-[#F5EFE6] to-[#EFE5D6] text-ink-secondary">
+      <div
+        aria-hidden="true"
+        className="h-1 w-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600"
+      />
       <div className="container py-16 lg:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           {/* Brand Summary */}

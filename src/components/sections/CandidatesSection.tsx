@@ -8,20 +8,25 @@ import { scrollToSection } from "@/lib/utils";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TiltCard3D } from "@/components/visuals/TiltCard3D";
+import { Floating3DCube } from "@/components/three/Floating3DCube";
 
 export function CandidatesSection() {
   return (
     <AnimatedSection
       id={SECTION_IDS.candidates}
-      className="border-b border-hairline py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/45 via-transparent to-orange-50/35 py-20 lg:py-28"
     >
       <div className="container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
           {/* Left Column: Narrative + CTA + Architectural Preview */}
           <div data-animate-header className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-            <span className="font-mono text-xs uppercase tracking-widest text-lime">
-              {CANDIDATES_SECTION_CONTENT.eyebrow}
-            </span>
+            <div className="flex items-center gap-3.5">
+              <Floating3DCube label="DEV" tone="gold" size={44} />
+              <span className="font-mono text-xs uppercase tracking-widest text-lime">
+                {CANDIDATES_SECTION_CONTENT.eyebrow}
+              </span>
+            </div>
 
             <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl lg:text-[40px] leading-[1.12]">
               {CANDIDATES_SECTION_CONTENT.heading}
@@ -89,13 +94,13 @@ export function CandidatesSection() {
             </div>
           </div>
 
-          {/* Right Column: Seven Structured Candidate Benefits */}
+          {/* Right Column: Seven Structured 3D Candidate Benefits */}
           <div className="lg:col-span-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {CANDIDATES_SECTION_CONTENT.benefits.map((benefit, idx) => (
-              <div
+              <TiltCard3D
                 key={benefit.id}
                 data-animate-item
-                className="flex flex-col justify-between rounded-xl border border-hairline bg-canvas-secondary/75 p-5 transition-colors hover:border-hairline-strong"
+                className="flex flex-col justify-between rounded-xl border border-orange-200/85 border-b-4 border-b-amber-400 bg-white/95 p-5 shadow-[0_8px_24px_rgba(234,88,12,0.06)]"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -111,7 +116,7 @@ export function CandidatesSection() {
                     {benefit.detail}
                   </p>
                 </div>
-              </div>
+              </TiltCard3D>
             ))}
           </div>
         </div>

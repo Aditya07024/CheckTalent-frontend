@@ -104,12 +104,12 @@ export function CTASection() {
   return (
     <section
       id={SECTION_IDS.earlyAccess}
-      className="relative overflow-hidden py-20 lg:py-28"
+      className="relative overflow-hidden bg-gradient-to-b from-yellow-50/60 via-orange-50/50 to-red-50/50 py-20 lg:py-28"
     >
       <GridBackground density="fine" showRadialGlow />
 
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 gap-12 rounded-2xl border border-hairline-strong bg-canvas-secondary/95 p-6 sm:p-10 lg:grid-cols-12 lg:p-12 shadow-[0_32px_96px_rgba(0,0,0,0.65)]">
+        <div className="grid grid-cols-1 gap-12 rounded-3xl border-2 border-orange-300/90 bg-gradient-to-br from-yellow-50 via-white to-orange-50/90 p-6 sm:p-10 lg:grid-cols-12 lg:p-12 shadow-[0_28px_72px_rgba(234,88,12,0.14),0_6px_20px_rgba(239,68,68,0.08)]">
           {/* Left Column: Final Conversion Headline & CTAs */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-8">
             <div className="space-y-5">
@@ -157,21 +157,21 @@ export function CTASection() {
             <div className="space-y-2.5 border-t border-hairline pt-6 font-mono text-xs text-ink-secondary">
               <p className="text-ink">EARLY-ACCESS TRACKS:</p>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                <div className="rounded border border-hairline bg-canvas px-3 py-2">
-                  <span className="block text-lime">Candidates</span>
-                  <span className="text-[11px] text-ink-muted">
+                <div className="rounded-xl border border-yellow-300 bg-yellow-50 px-3 py-2.5 shadow-sm">
+                  <span className="block font-bold text-amber-900">Candidates</span>
+                  <span className="text-[11px] text-amber-800/80">
                     Skill Proof Cards & Viva
                   </span>
                 </div>
-                <div className="rounded border border-hairline bg-canvas px-3 py-2">
-                  <span className="block text-ink">Recruiters</span>
-                  <span className="text-[11px] text-ink-muted">
+                <div className="rounded-xl border border-orange-300 bg-orange-50 px-3 py-2.5 shadow-sm">
+                  <span className="block font-bold text-orange-900">Recruiters</span>
+                  <span className="text-[11px] text-orange-800/80">
                     Explainable Rubrics
                   </span>
                 </div>
-                <div className="rounded border border-hairline bg-canvas px-3 py-2">
-                  <span className="block text-violet">Placement Cells</span>
-                  <span className="text-[11px] text-ink-muted">
+                <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2.5 shadow-sm">
+                  <span className="block font-bold text-red-900">Placement Cells</span>
+                  <span className="text-[11px] text-red-800/80">
                     Cohort Readiness
                   </span>
                 </div>
@@ -181,7 +181,7 @@ export function CTASection() {
 
           {/* Right Column: Validated Early-Access Form / Demo Submission State */}
           <div className="lg:col-span-6">
-            <div className="rounded-xl border border-hairline bg-canvas p-6 sm:p-7">
+            <div className="rounded-2xl border border-orange-200 bg-white p-6 sm:p-7 shadow-[0_12px_36px_rgba(234,88,12,0.08)]">
               {submissionResult ? (
                 <div role="status" aria-live="polite" className="space-y-5">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-4">
@@ -283,7 +283,7 @@ export function CTASection() {
                       <p
                         id="ea-name-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.name}
@@ -315,7 +315,7 @@ export function CTASection() {
                       <p
                         id="ea-email-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.email}
@@ -354,7 +354,7 @@ export function CTASection() {
                       <p
                         id="ea-role-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.role}
@@ -392,7 +392,7 @@ export function CTASection() {
                       <p
                         id="ea-message-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.message}

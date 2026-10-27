@@ -35,26 +35,29 @@ function getStatusStyles(status: EvidenceStrength) {
     case "Strong evidence":
       return {
         badgeVariant: "default" as const,
-        dotClass: "bg-lime",
-        borderActive: "border-lime/50 bg-canvas-elevated",
+        dotClass: "bg-orange-600",
+        borderActive:
+          "border-orange-500 bg-gradient-to-br from-yellow-50/90 via-orange-50/75 to-white shadow-[0_10px_28px_rgba(234,88,12,0.14)]",
         icon: CheckCircle2,
-        iconClass: "text-lime",
+        iconClass: "text-orange-600",
       };
     case "Moderate evidence":
       return {
         badgeVariant: "neutral" as const,
-        dotClass: "bg-ink",
-        borderActive: "border-hairline-strong bg-canvas-elevated",
+        dotClass: "bg-amber-500",
+        borderActive:
+          "border-amber-500 bg-gradient-to-br from-yellow-50/90 via-amber-50/70 to-white shadow-[0_10px_28px_rgba(245,158,11,0.14)]",
         icon: Layers,
-        iconClass: "text-ink",
+        iconClass: "text-amber-600",
       };
     case "Insufficient evidence":
       return {
-        badgeVariant: "amber" as const,
-        dotClass: "bg-amber-300",
-        borderActive: "border-amber-400/40 bg-canvas-elevated",
+        badgeVariant: "violet" as const,
+        dotClass: "bg-red-600",
+        borderActive:
+          "border-red-400 bg-gradient-to-br from-red-50/80 via-orange-50/60 to-white shadow-[0_10px_28px_rgba(239,68,68,0.12)]",
         icon: AlertCircle,
-        iconClass: "text-amber-300",
+        iconClass: "text-red-600",
       };
   }
 }
@@ -110,26 +113,26 @@ export function SkillProofCard() {
 
   return (
     <>
-      <div className="overflow-hidden rounded-xl border border-hairline-strong bg-canvas-secondary shadow-[0_28px_90px_rgba(0,0,0,0.65)]">
+      <div className="overflow-hidden rounded-2xl border border-orange-300/80 bg-white shadow-[0_24px_64px_rgba(234,88,12,0.12),0_4px_12px_rgba(220,38,38,0.06)]">
         {/* Sample Demonstration Top Warning/Identification Banner */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline bg-canvas px-4 py-2.5 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 bg-gradient-to-r from-[#1F140E] via-[#341A0F] to-[#421313] px-4 py-3 text-white sm:px-6">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-lime" />
-            <span className="font-mono text-[11px] font-medium uppercase tracking-wider text-lime">
+            <span className="h-2 w-2 rounded-full bg-yellow-400" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-amber-300">
               {SAMPLE_PROOF_CARD.simulationBanner}
             </span>
           </div>
-          <span className="font-mono text-[11px] text-ink-muted">
+          <span className="font-mono text-[11px] text-orange-200/85">
             RECORD ID: {SAMPLE_PROOF_CARD.profileId} · EVALUATED{" "}
             {SAMPLE_PROOF_CARD.lastEvaluatedDate}
           </span>
         </div>
 
         {/* Candidate Profile Header */}
-        <div className="border-b border-hairline p-5 sm:p-7">
+        <div className="border-b border-orange-100 bg-gradient-to-r from-yellow-50/60 via-white to-orange-50/60 p-5 sm:p-7">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-lime/35 bg-canvas-elevated font-mono text-base font-semibold text-lime">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600 font-mono text-base font-bold text-white shadow-md">
                 AM
               </div>
               <div>

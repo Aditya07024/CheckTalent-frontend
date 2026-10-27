@@ -13,6 +13,7 @@ import type { FeatureCategoryId } from "@/types/feature";
 import { SECTION_IDS } from "@/lib/constants";
 import { useAnimationContext } from "@/components/animations/AnimationProvider";
 import { FeaturePreview } from "@/components/product-demo/FeaturePreview";
+import { Floating3DCube } from "@/components/three/Floating3DCube";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -97,7 +98,7 @@ export function FeatureExplorerSection() {
   return (
     <section
       id={SECTION_IDS.features}
-      className="border-b border-hairline bg-canvas-secondary/40 py-20 lg:py-28"
+      className="border-b border-orange-200/70 bg-gradient-to-b from-orange-50/40 via-transparent to-amber-50/45 py-20 lg:py-28"
     >
       <div className="container">
         {/* Section Heading */}
@@ -114,7 +115,8 @@ export function FeatureExplorerSection() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start lg:self-end">
+          <div className="flex items-center gap-4 self-start lg:self-end">
+            <Floating3DCube label="38" tone="gold" size={44} className="hidden sm:block" />
             <Badge variant="default">
               <Layers3 className="h-3.5 w-3.5" />
               38 MODULES · 6 CATEGORIES
@@ -143,10 +145,10 @@ export function FeatureExplorerSection() {
                 aria-controls={`category-panel-${category.id}`}
                 onClick={() => handleCategoryChange(category.id)}
                 className={cn(
-                  "flex flex-col justify-between rounded-lg border p-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime",
+                  "flex flex-col justify-between rounded-xl border border-b-4 p-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
                   isSelected
-                    ? "border-lime bg-canvas-elevated shadow-[0_8px_28px_rgba(197,255,74,0.10)]"
-                    : "border-hairline bg-canvas hover:border-hairline-strong hover:bg-canvas-secondary"
+                    ? "border-orange-500 border-b-red-600 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50/70 shadow-[0_10px_28px_rgba(234,88,12,0.16)] -translate-y-1"
+                    : "border-orange-200/80 border-b-orange-300 bg-white/95 hover:-translate-y-0.5 hover:border-orange-400 hover:bg-amber-50/45"
                 )}
               >
                 <div className="flex w-full items-center justify-between gap-2">
@@ -223,10 +225,10 @@ export function FeatureExplorerSection() {
                     aria-pressed={isSelected}
                     onClick={() => setSelectedFeatureId(feature.id)}
                     className={cn(
-                      "group flex flex-col justify-between rounded-lg border p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime",
+                      "group flex flex-col justify-between rounded-xl border p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
                       isSelected
-                        ? "border-lime/60 bg-canvas-elevated shadow-[inset_0_0_0_1px_rgba(197,255,74,0.2)]"
-                        : "border-hairline bg-canvas-secondary/80 hover:border-hairline-strong hover:bg-canvas-elevated/60"
+                        ? "border-orange-500 bg-gradient-to-br from-yellow-50/85 via-white to-orange-50/80 shadow-[0_8px_24px_rgba(234,88,12,0.12)]"
+                        : "border-orange-200/70 bg-white hover:border-orange-300 hover:bg-amber-50/40"
                     )}
                   >
                     <div>

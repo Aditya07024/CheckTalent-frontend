@@ -52,7 +52,7 @@ export function ProblemSection() {
           <span className="inline-block rounded-full border border-red-200 bg-red-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-red-800">
             {PROBLEM_SECTION_CONTENT.eyebrow}
           </span>
-          <h2 className="w-full text-3xl sm:text-4xl md:text-5xl lg:text-[64px] xl:text-[76px] 2xl:text-[84px] font-normal text-ink leading-[1.08] tracking-wide font-bungee bungee-inline-regular">
+          <h2 className="w-full text-2xl sm:text-3xl md:text-4xl lg:text-[44px] xl:text-[50px] font-normal text-ink leading-[1.2] tracking-wide font-bungee bungee-inline-regular">
             {PROBLEM_SECTION_CONTENT.heading}
           </h2>
         </div>

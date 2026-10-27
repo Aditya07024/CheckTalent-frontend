@@ -35,7 +35,7 @@ export function BrandLogo({
 
       {showWordmark && (
         <span className="flex flex-col">
-          <span className="text-[17px] font-bold tracking-tight text-ink leading-none">
+          <span className="kanit-semibold text-[20px] tracking-tight text-ink leading-none">
             {PRODUCT_METADATA.name}
           </span>
           {subtitle && (

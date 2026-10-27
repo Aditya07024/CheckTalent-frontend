@@ -278,12 +278,27 @@ export function SolutionSection() {
                 );
               })}
             </div>
+          </div>
 
-            {/* Active Stage Deep-Dive Card with Animated Choreography */}
+          {/* Right Column: 40% width — 3D Pipeline Stack + Live Active Stage Inspection HUD Card */}
+          <div className="relative w-full lg:w-[40%] flex flex-col items-center gap-3">
+            {/* Ambient Warm Glow behind the floating 3D stack */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute top-6 h-[380px] w-[380px] rounded-full bg-gradient-to-tr from-yellow-300/25 via-orange-300/20 to-red-300/15 blur-3xl transform-gpu will-change-transform"
+            />
+
+            {/* Unboxed 3D Canvas */}
+            <PipelineEngine3D
+              activeStageIndex={activeStageIndex}
+              className="relative z-10 w-full"
+            />
+
+            {/* Live Stage Inspection HUD Card directly on the 3D element */}
             <div
               ref={cardRef}
               aria-live="polite"
-              className="relative overflow-hidden rounded-2xl border-2 border-orange-400/90 bg-white p-5 shadow-[0_12px_28px_rgba(234,88,12,0.10)] transition-colors duration-300"
+              className="relative z-20 w-full overflow-hidden rounded-2xl border-2 border-orange-400/90 bg-white/95 backdrop-blur-md p-4 shadow-[0_12px_28px_rgba(234,88,12,0.12)] transition-colors duration-300"
             >
               {/* Laser Scanner Sweep Line on Tab Change */}
               <div
@@ -291,7 +306,7 @@ export function SolutionSection() {
                 className="stage-anim-scan pointer-events-none absolute left-0 top-0 h-[3px] w-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 shadow-[0_2px_8px_rgba(249,115,22,0.6)]"
               />
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2.5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="stage-anim-badge">
                     <Badge variant={activeStage.isAiAssisted ? "violet" : "default"}>
@@ -305,47 +320,32 @@ export function SolutionSection() {
                   </span>
                 </div>
 
-                <p className="stage-anim-desc text-sm leading-relaxed text-ink-secondary">
+                <p className="stage-anim-desc text-xs sm:text-sm leading-relaxed text-ink-secondary">
                   {activeStage.shortDescription}
                 </p>
 
-                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 pt-1">
-                  <div className="stage-anim-box-1 rounded-xl border-2 border-amber-300 bg-gradient-to-br from-yellow-50/90 to-amber-50/70 p-3 shadow-sm">
+                <div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-2">
+                  <div className="stage-anim-box-1 rounded-xl border-2 border-amber-300 bg-gradient-to-br from-yellow-50/90 to-amber-50/70 p-2.5 shadow-sm">
                     <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-900">
                       <FileText className="h-3 w-3 text-amber-700" />
                       Stage Input
                     </span>
-                    <p className="mt-1 font-mono text-xs font-medium text-ink">
+                    <p className="mt-0.5 font-mono text-[11px] font-medium text-ink">
                       {activeStage.inputArtifact}
                     </p>
                   </div>
-                  <div className="stage-anim-box-2 rounded-xl border-2 border-orange-300 bg-gradient-to-br from-orange-50/90 to-red-50/70 p-3 shadow-sm">
+                  <div className="stage-anim-box-2 rounded-xl border-2 border-orange-300 bg-gradient-to-br from-orange-50/90 to-red-50/70 p-2.5 shadow-sm">
                     <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-orange-900">
                       <ShieldCheck className="h-3 w-3 text-orange-700" />
                       Verified Output
                     </span>
-                    <p className="mt-1 font-mono text-xs font-medium text-ink">
+                    <p className="mt-0.5 font-mono text-[11px] font-medium text-ink">
                       {activeStage.outputArtifact}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Right Column: 40% width — Open-air floating 3D Pipeline Stack (NO box) */}
-          <div className="relative w-full lg:w-[40%] flex items-center justify-center">
-            {/* Ambient Warm Glow behind the floating 3D stack */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute h-[420px] w-[420px] rounded-full bg-gradient-to-tr from-yellow-300/25 via-orange-300/20 to-red-300/15 blur-3xl transform-gpu will-change-transform"
-            />
-
-            {/* Unboxed 3D Canvas */}
-            <PipelineEngine3D
-              activeStageIndex={activeStageIndex}
-              className="relative z-10"
-            />
           </div>
         </div>
       </div>

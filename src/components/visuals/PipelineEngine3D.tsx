@@ -79,7 +79,7 @@ export function PipelineEngine3D({
       camera.aspect = w / h;
       camera.position.x = 0;
       camera.position.y = -0.12;
-      camera.position.z = w < 540 ? 5.4 : 5.0;
+      camera.position.z = w < 540 ? 5.1 : 4.8;
       camera.lookAt(0, -0.12, 0);
       camera.updateProjectionMatrix();
     };
@@ -217,7 +217,7 @@ export function PipelineEngine3D({
   return (
     <div
       className={cn(
-        "relative w-full h-[540px] sm:h-[580px] lg:h-[620px] pointer-events-none select-none",
+        "relative w-full h-[390px] sm:h-[420px] lg:h-[440px] pointer-events-none select-none",
         className
       )}
     >

@@ -48,16 +48,13 @@ export function ProblemSection() {
     >
       <div className="container">
         {/* Section Header */}
-        <div data-animate-header className="max-w-3xl space-y-4">
+        <div data-animate-header className="w-full space-y-5">
           <span className="inline-block rounded-full border border-red-200 bg-red-50 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-red-800">
             {PROBLEM_SECTION_CONTENT.eyebrow}
           </span>
-          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[42px] leading-[1.12]">
+          <h2 className="w-full text-3xl sm:text-4xl md:text-5xl lg:text-[64px] xl:text-[76px] 2xl:text-[84px] font-normal text-ink leading-[1.08] tracking-wide font-bungee bungee-inline-regular">
             {PROBLEM_SECTION_CONTENT.heading}
           </h2>
-          <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">
-            {PROBLEM_SECTION_CONTENT.subheading}
-          </p>
         </div>
 
         {/* Three 3D-Tilt Warm Color Problem Cards */}

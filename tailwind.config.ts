@@ -25,29 +25,30 @@ const config: Config = {
     extend: {
       colors: {
         canvas: {
-          DEFAULT: "#08090D",
-          secondary: "#101219",
-          elevated: "#151821",
-          hover: "#1B1F2B",
+          DEFAULT: "#F8F9FB",
+          secondary: "#F1F4F8",
+          elevated: "#FFFFFF",
+          hover: "#E8ECF3",
         },
         ink: {
-          DEFAULT: "#F5F7FA",
-          secondary: "#A2A8B5",
-          muted: "#6E7687",
+          DEFAULT: "#0B0F17",
+          secondary: "#424C5E",
+          muted: "#647084",
         },
         lime: {
-          DEFAULT: "#C5FF4A",
-          dim: "rgba(197, 255, 74, 0.14)",
-          border: "rgba(197, 255, 74, 0.32)",
-          hover: "#D4FF73",
+          DEFAULT: "#236B00",
+          bright: "#B8F533",
+          dim: "rgba(101, 189, 21, 0.12)",
+          border: "rgba(35, 107, 0, 0.28)",
+          hover: "#A9E922",
         },
         violet: {
-          DEFAULT: "#9B8CFF",
-          dim: "rgba(155, 140, 255, 0.14)",
-          border: "rgba(155, 140, 255, 0.30)",
+          DEFAULT: "#5538EE",
+          dim: "rgba(85, 56, 238, 0.08)",
+          border: "rgba(85, 56, 238, 0.24)",
         },
-        hairline: "rgba(255, 255, 255, 0.10)",
-        "hairline-strong": "rgba(255, 255, 255, 0.18)",
+        hairline: "rgba(15, 23, 42, 0.09)",
+        "hairline-strong": "rgba(15, 23, 42, 0.18)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -102,13 +103,13 @@ const config: Config = {
         },
         "scan-sweep": {
           "0%": { transform: "translateY(-100%)", opacity: "0" },
-          "20%": { opacity: "0.7" },
-          "80%": { opacity: "0.7" },
+          "20%": { opacity: "0.75" },
+          "80%": { opacity: "0.75" },
           "100%": { transform: "translateY(420%)", opacity: "0" },
         },
         "pulse-subtle": {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.4" },
+          "50%": { opacity: "0.45" },
         },
       },
       animation: {

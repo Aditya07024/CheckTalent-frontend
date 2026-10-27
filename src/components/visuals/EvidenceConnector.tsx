@@ -27,7 +27,7 @@ export function EvidenceConnector({
   const pulseRef = useRef<SVGLineElement | null>(null);
   const { prefersReducedMotion } = useAnimationContext();
 
-  const strokeColor = accent === "violet" ? "#9B8CFF" : "#C5FF4A";
+  const strokeColor = accent === "violet" ? "#5538EE" : "#236B00";
 
   useGSAP(
     () => {
@@ -66,7 +66,7 @@ export function EvidenceConnector({
             y1="0"
             x2="8"
             y2="24"
-            stroke="rgba(255,255,255,0.14)"
+            stroke="rgba(15,23,42,0.15)"
             strokeWidth="1"
           />
           <line
@@ -76,14 +76,14 @@ export function EvidenceConnector({
             x2="8"
             y2="24"
             stroke={strokeColor}
-            strokeOpacity={active ? "0.9" : "0.4"}
-            strokeWidth="1.25"
+            strokeOpacity={active ? "0.95" : "0.45"}
+            strokeWidth="1.35"
             strokeDasharray="6 12"
           />
           <path
             d="M4.5 21L8 25.5L11.5 21"
-            stroke={active ? strokeColor : "rgba(255,255,255,0.35)"}
-            strokeWidth="1.2"
+            stroke={active ? strokeColor : "rgba(15,23,42,0.38)"}
+            strokeWidth="1.25"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -110,7 +110,7 @@ export function EvidenceConnector({
           y1="8"
           x2="27"
           y2="8"
-          stroke="rgba(255,255,255,0.14)"
+          stroke="rgba(15,23,42,0.15)"
           strokeWidth="1"
         />
         <line
@@ -121,13 +121,13 @@ export function EvidenceConnector({
           y2="8"
           stroke={strokeColor}
           strokeOpacity={active ? "0.95" : "0.45"}
-          strokeWidth="1.25"
+          strokeWidth="1.35"
           strokeDasharray="6 12"
         />
         <path
           d="M24 4.5L28.5 8L24 11.5"
-          stroke={active ? strokeColor : "rgba(255,255,255,0.38)"}
-          strokeWidth="1.2"
+          stroke={active ? strokeColor : "rgba(15,23,42,0.4)"}
+          strokeWidth="1.25"
           strokeLinecap="round"
           strokeLinejoin="round"
         />

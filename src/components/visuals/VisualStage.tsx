@@ -63,7 +63,7 @@ export function VisualStage({
         "relative w-full",
         minHeightClass,
         framed &&
-          "rounded-xl border border-hairline bg-canvas-secondary/80 p-1.5 sm:p-2 shadow-[0_24px_80px_rgba(0,0,0,0.65)]",
+          "rounded-xl border border-hairline-strong bg-canvas-secondary/85 p-1.5 sm:p-2 shadow-[0_20px_56px_rgba(15,23,42,0.09),0_2px_8px_rgba(15,23,42,0.04)]",
         className
       )}
     >

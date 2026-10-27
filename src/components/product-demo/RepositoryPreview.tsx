@@ -42,13 +42,13 @@ export function RepositoryPreview() {
   return (
     <div
       ref={rootRef}
-      className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg border border-hairline bg-canvas p-4 sm:p-5"
+      className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg border border-hairline bg-canvas-elevated p-4 sm:p-5"
     >
       {/* Subtle non-intrusive scanning highlight line (disabled under reduced motion) */}
       {!prefersReducedMotion && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-20 animate-scan-sweep bg-gradient-to-b from-transparent via-lime/[0.035] to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-20 animate-scan-sweep bg-gradient-to-b from-transparent via-lime/[0.045] to-transparent"
         />
       )}
 
@@ -100,10 +100,10 @@ export function RepositoryPreview() {
         </div>
         <div
           aria-hidden="true"
-          className="flex h-1.5 w-full overflow-hidden rounded-full bg-canvas-elevated"
+          className="flex h-1.5 w-full overflow-hidden rounded-full bg-canvas-secondary"
         >
           <div className="h-full w-[68%] bg-lime" />
-          <div className="h-full w-[21%] bg-[#61DAFB]" />
+          <div className="h-full w-[21%] bg-[#0284C7]" />
           <div className="h-full w-[11%] bg-violet" />
         </div>
       </div>
@@ -113,25 +113,25 @@ export function RepositoryPreview() {
         {/* Extracted Repository Evidence */}
         <div
           data-hero-panel
-          className="sm:col-span-7 rounded-md border border-hairline bg-canvas-secondary p-3.5"
+          className="sm:col-span-7 rounded-md border border-hairline bg-canvas-secondary/75 p-3.5"
         >
           <div className="mb-2.5 flex items-center justify-between">
             <span className="font-mono text-[11px] uppercase tracking-wider text-ink-secondary">
               Repository Evidence
             </span>
-            <span className="font-mono text-[10px] text-lime">4 FINDINGS</span>
+            <span className="font-mono text-[10px] font-semibold text-lime">4 FINDINGS</span>
           </div>
 
           <ul className="space-y-2">
             {HERO_REPO_PREVIEW_DATA.evidenceFindings.map((item) => (
               <li
                 key={item.id}
-                className="flex items-start gap-2 rounded border border-hairline/70 bg-canvas/70 px-2.5 py-2"
+                className="flex items-start gap-2 rounded border border-hairline bg-canvas-elevated px-2.5 py-2"
               >
                 {item.tone === "verified" ? (
                   <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-lime" />
                 ) : (
-                  <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-300" />
+                  <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-700" />
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-medium text-ink leading-tight">
@@ -149,7 +149,7 @@ export function RepositoryPreview() {
         {/* Skill Assessment + Confidence */}
         <div
           data-hero-panel
-          className="sm:col-span-5 flex flex-col justify-between gap-3 rounded-md border border-hairline bg-canvas-secondary p-3.5"
+          className="sm:col-span-5 flex flex-col justify-between gap-3 rounded-md border border-hairline bg-canvas-secondary/75 p-3.5"
         >
           <div>
             <div className="mb-2.5 flex items-center justify-between">
@@ -166,22 +166,22 @@ export function RepositoryPreview() {
                     <span className="font-medium text-ink">{item.skill}</span>
                     <span
                       className={cn(
-                        "font-mono text-[10px]",
+                        "font-mono text-[10px] font-medium",
                         item.tone === "strong" && "text-lime",
-                        item.tone === "moderate" && "text-ink",
-                        item.tone === "limited" && "text-amber-300"
+                        item.tone === "moderate" && "text-ink-secondary",
+                        item.tone === "limited" && "text-amber-700"
                       )}
                     >
                       {item.rating}
                     </span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-canvas-elevated">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-canvas-hover">
                     <div
                       className={cn(
                         "h-full rounded-full transition-all",
                         item.tone === "strong" && "bg-lime",
                         item.tone === "moderate" && "bg-ink-secondary",
-                        item.tone === "limited" && "bg-amber-300/80"
+                        item.tone === "limited" && "bg-amber-600"
                       )}
                       style={{ width: `${item.barPercent}%` }}
                     />

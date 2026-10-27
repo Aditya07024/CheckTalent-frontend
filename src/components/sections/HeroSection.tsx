@@ -47,8 +47,8 @@ export function HeroSection() {
           {/* Left Column: Core Product Pitch */}
           <div className="lg:col-span-6 space-y-6">
             {/* Eyebrow */}
-            <div data-hero-copy className="inline-flex items-center gap-2.5 rounded-full border border-hairline-strong bg-canvas-secondary/90 px-3.5 py-1.5">
-              <span className="h-2 w-2 rounded-full bg-lime shadow-[0_0_10px_#C5FF4A]" />
+            <div data-hero-copy className="inline-flex items-center gap-2.5 rounded-full border border-hairline-strong bg-canvas-elevated px-3.5 py-1.5 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+              <span className="h-2 w-2 rounded-full bg-lime ring-4 ring-lime-bright/60" />
               <span className="font-mono text-[11px] font-medium tracking-wider text-ink-secondary">
                 {HERO_CONTENT.eyebrow}
               </span>
@@ -57,10 +57,12 @@ export function HeroSection() {
             {/* Editorial Headline */}
             <h1
               data-hero-copy
-              className="text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.06]"
+              className="text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl lg:text-[54px] xl:text-[60px] leading-[1.08]"
             >
               {HERO_CONTENT.headlineLead}
-              <span className="text-lime">{HERO_CONTENT.headlineAccent}</span>
+              <span className="rounded-md bg-lime-bright/70 px-2 py-0.5 text-ink box-decoration-clone">
+                {HERO_CONTENT.headlineAccent}
+              </span>
               {HERO_CONTENT.headlineTail}
             </h1>
 

@@ -12,9 +12,9 @@ const badgeVariants = cva(
         violet:
           "border-violet-border bg-violet-dim text-violet",
         neutral:
-          "border-hairline bg-canvas-elevated text-ink-secondary",
+          "border-hairline-strong bg-canvas-elevated text-ink-secondary",
         amber:
-          "border-amber-400/30 bg-amber-400/10 text-amber-300",
+          "border-amber-600/30 bg-amber-500/10 text-amber-800",
         muted:
           "border-hairline bg-canvas-secondary text-ink-muted",
       },

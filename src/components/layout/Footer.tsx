@@ -45,7 +45,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-hairline bg-[#06070B] text-ink-secondary">
+    <footer className="relative border-t border-hairline bg-canvas-secondary text-ink-secondary">
       <div className="container py-16 lg:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           {/* Brand Summary */}

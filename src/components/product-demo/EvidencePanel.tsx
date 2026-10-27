@@ -206,8 +206,8 @@ export function EvidencePanel({ skill, compact = false }: EvidencePanelProps) {
 
       {/* Optional Recommended Next Action for Insufficient Evidence */}
       {skill.recommendedNextAction && (
-        <div className="rounded-lg border border-amber-400/30 bg-amber-400/[0.07] p-3.5">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-amber-300">
+        <div className="rounded-lg border border-amber-600/30 bg-amber-500/[0.08] p-3.5">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-amber-800">
             Recommended Next Verification Step
           </p>
           <p className="mt-1 text-xs sm:text-sm text-ink">

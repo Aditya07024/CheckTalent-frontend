@@ -8,7 +8,7 @@ interface GridBackgroundProps {
 }
 
 /**
- * Pure CSS/SVG architectural grid and subtle fractal noise layer.
+ * Pure CSS/SVG architectural grid and subtle ambient wash on the light canvas.
  * Zero JavaScript overhead, Server Component safe.
  */
 export function GridBackground({
@@ -29,10 +29,10 @@ export function GridBackground({
       />
       {showRadialGlow && (
         <div
-          className="absolute -top-36 left-1/2 h-[540px] w-[960px] -translate-x-1/2 rounded-full opacity-90"
+          className="absolute -top-36 left-1/2 h-[540px] w-[960px] -translate-x-1/2 rounded-full opacity-95"
           style={{
             background:
-              "radial-gradient(ellipse at center, rgba(197, 255, 74, 0.065) 0%, rgba(155, 140, 255, 0.035) 38%, rgba(8, 9, 13, 0) 72%)",
+              "radial-gradient(ellipse at center, rgba(163, 230, 53, 0.16) 0%, rgba(85, 56, 238, 0.055) 40%, rgba(248, 249, 251, 0) 72%)",
           }}
         />
       )}

@@ -10,7 +10,7 @@ function ProblemIcon({ icon }: { icon: IconKey }) {
     case "search-code":
       return <SearchCode className="h-5 w-5 text-lime" />;
     case "copy-slash":
-      return <CopySlash className="h-5 w-5 text-amber-300" />;
+      return <CopySlash className="h-5 w-5 text-amber-700" />;
     case "scale":
     default:
       return <Scale className="h-5 w-5 text-violet" />;
@@ -85,8 +85,8 @@ export function ProblemSection() {
                       {problem.contrastArtifacts.claimed}
                     </span>
                   </div>
-                  <div className="rounded border border-amber-400/20 bg-amber-400/[0.05] px-2.5 py-2 text-amber-100/90">
-                    <span className="block text-[10px] uppercase text-amber-300">
+                  <div className="rounded border border-amber-600/25 bg-amber-500/[0.08] px-2.5 py-2 text-amber-950">
+                    <span className="block text-[10px] uppercase font-semibold text-amber-800">
                       Evaluation Blind Spot
                     </span>
                     <span className="mt-0.5 block">
@@ -98,7 +98,7 @@ export function ProblemSection() {
 
               {/* Bottom Failure Tag */}
               <div className="mt-5 flex items-center gap-2 border-t border-hairline pt-3.5 font-mono text-[11px] text-ink-muted">
-                <AlertOctagon className="h-3.5 w-3.5 shrink-0 text-amber-300/80" />
+                <AlertOctagon className="h-3.5 w-3.5 shrink-0 text-amber-700" />
                 <span>{problem.failureSignal}</span>
               </div>
             </article>

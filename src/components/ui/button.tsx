@@ -9,15 +9,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-lime text-[#08090D] font-semibold hover:bg-lime-hover shadow-[0_0_24px_rgba(197,255,74,0.18)] hover:shadow-[0_0_32px_rgba(197,255,74,0.28)] active:translate-y-[0.5px]",
+          "bg-lime-bright text-[#0B0F17] border border-[#7AB800]/65 font-semibold hover:bg-lime-hover shadow-[0_2px_10px_rgba(122,184,0,0.20),0_1px_2px_rgba(15,23,42,0.06)] hover:shadow-[0_4px_16px_rgba(122,184,0,0.28)] active:translate-y-[0.5px]",
         secondary:
-          "bg-canvas-elevated text-ink border border-hairline hover:border-hairline-strong hover:bg-canvas-hover",
+          "bg-canvas-elevated text-ink border border-hairline-strong hover:bg-canvas-hover shadow-[0_1px_2px_rgba(15,23,42,0.04)]",
         outline:
-          "border border-hairline-strong bg-transparent text-ink hover:bg-canvas-elevated hover:border-lime/40",
+          "border border-hairline-strong bg-canvas-elevated text-ink hover:bg-canvas-secondary hover:border-lime/45 shadow-[0_1px_2px_rgba(15,23,42,0.03)]",
         ghost:
-          "text-ink-secondary hover:text-ink hover:bg-white/[0.04]",
+          "text-ink-secondary hover:text-ink hover:bg-slate-900/[0.05]",
         limeOutline:
-          "border border-lime-border bg-lime-dim text-lime hover:bg-lime/20",
+          "border border-lime-border bg-lime-dim text-lime font-semibold hover:bg-lime/15",
       },
       size: {
         default: "h-10 px-4 py-2",

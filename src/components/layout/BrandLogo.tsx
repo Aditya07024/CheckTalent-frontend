@@ -21,7 +21,7 @@ export function BrandLogo({
     <span className={cn("inline-flex items-center gap-2.5 select-none", className)}>
       <span
         aria-hidden="true"
-        className="relative flex h-8 w-8 items-center justify-center rounded-md border border-lime/35 bg-canvas-elevated shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+        className="relative flex h-8 w-8 items-center justify-center rounded-md border border-[#0B0F17]/15 bg-[#0B0F17] shadow-[0_2px_6px_rgba(15,23,42,0.14)]"
       >
         <svg
           width="20"
@@ -34,7 +34,7 @@ export function BrandLogo({
           {/* Left code bracket */}
           <path
             d="M7.5 6.5L3.25 12L7.5 17.5"
-            stroke="#F5F7FA"
+            stroke="#F8F9FB"
             strokeWidth="1.75"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -42,7 +42,7 @@ export function BrandLogo({
           {/* Right code bracket */}
           <path
             d="M16.5 6.5L20.75 12L16.5 17.5"
-            stroke="#F5F7FA"
+            stroke="#F8F9FB"
             strokeWidth="1.75"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -51,12 +51,12 @@ export function BrandLogo({
           <path
             d="M9.25 12.4L11.2 14.35L15.1 9.65"
             stroke="#C5FF4A"
-            strokeWidth="2.1"
+            strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
         </svg>
-        <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-lime" />
+        <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-lime-bright ring-2 ring-canvas" />
       </span>
 
       {showWordmark && (

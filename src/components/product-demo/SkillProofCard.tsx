@@ -51,10 +51,10 @@ function getStatusStyles(status: EvidenceStrength) {
     case "Insufficient evidence":
       return {
         badgeVariant: "amber" as const,
-        dotClass: "bg-amber-300",
-        borderActive: "border-amber-400/40 bg-canvas-elevated",
+        dotClass: "bg-amber-600",
+        borderActive: "border-amber-600/45 bg-canvas-elevated shadow-[0_8px_24px_rgba(217,119,6,0.08)]",
         icon: AlertCircle,
-        iconClass: "text-amber-300",
+        iconClass: "text-amber-700",
       };
   }
 }
@@ -110,9 +110,9 @@ export function SkillProofCard() {
 
   return (
     <>
-      <div className="overflow-hidden rounded-xl border border-hairline-strong bg-canvas-secondary shadow-[0_28px_90px_rgba(0,0,0,0.65)]">
+      <div className="overflow-hidden rounded-xl border border-hairline-strong bg-canvas-elevated shadow-[0_20px_60px_rgba(15,23,42,0.08),0_2px_8px_rgba(15,23,42,0.04)]">
         {/* Sample Demonstration Top Warning/Identification Banner */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline bg-canvas px-4 py-2.5 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline bg-canvas-secondary px-4 py-2.5 sm:px-6">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-lime" />
             <span className="font-mono text-[11px] font-medium uppercase tracking-wider text-lime">

@@ -109,7 +109,7 @@ export function CTASection() {
       <GridBackground density="fine" showRadialGlow />
 
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 gap-12 rounded-2xl border border-hairline-strong bg-canvas-secondary/95 p-6 sm:p-10 lg:grid-cols-12 lg:p-12 shadow-[0_32px_96px_rgba(0,0,0,0.65)]">
+        <div className="grid grid-cols-1 gap-12 rounded-2xl border border-hairline-strong bg-canvas-elevated p-6 sm:p-10 lg:grid-cols-12 lg:p-12 shadow-[0_24px_64px_rgba(15,23,42,0.08),0_2px_8px_rgba(15,23,42,0.04)]">
           {/* Left Column: Final Conversion Headline & CTAs */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-8">
             <div className="space-y-5">
@@ -181,7 +181,7 @@ export function CTASection() {
 
           {/* Right Column: Validated Early-Access Form / Demo Submission State */}
           <div className="lg:col-span-6">
-            <div className="rounded-xl border border-hairline bg-canvas p-6 sm:p-7">
+            <div className="rounded-xl border border-hairline bg-canvas-secondary/75 p-6 sm:p-7">
               {submissionResult ? (
                 <div role="status" aria-live="polite" className="space-y-5">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-4">
@@ -283,7 +283,7 @@ export function CTASection() {
                       <p
                         id="ea-name-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.name}
@@ -315,7 +315,7 @@ export function CTASection() {
                       <p
                         id="ea-email-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.email}
@@ -354,7 +354,7 @@ export function CTASection() {
                       <p
                         id="ea-role-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.role}
@@ -392,7 +392,7 @@ export function CTASection() {
                       <p
                         id="ea-message-error"
                         role="alert"
-                        className="flex items-center gap-1.5 font-mono text-xs text-red-300"
+                        className="flex items-center gap-1.5 font-mono text-xs text-red-600"
                       >
                         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                         {errors.message}

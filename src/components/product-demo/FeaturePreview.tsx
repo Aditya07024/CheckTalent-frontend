@@ -76,7 +76,7 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
     <div
       ref={panelRef}
       aria-live="polite"
-      className="flex h-full flex-col justify-between rounded-xl border border-hairline-strong bg-canvas-secondary p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+      className="flex h-full flex-col justify-between rounded-xl border border-hairline-strong bg-canvas-elevated p-5 sm:p-6 shadow-[0_14px_40px_rgba(15,23,42,0.07)]"
     >
       <div>
         {/* Top Metadata Strip */}
@@ -114,9 +114,9 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
 
         {/* Guardrail / Epistemic Note if present */}
         {feature.guardrailNote && (
-          <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-amber-400/25 bg-amber-400/[0.06] p-3">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
-            <p className="text-xs leading-relaxed text-amber-100/90">
+          <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-amber-600/25 bg-amber-500/[0.08] p-3">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+            <p className="text-xs leading-relaxed text-amber-950">
               {feature.guardrailNote}
             </p>
           </div>
@@ -195,7 +195,7 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
                         "mt-0.5 font-mono text-xs",
                         sig.tone === "verified" && "text-lime",
                         sig.tone === "neutral" && "text-ink",
-                        sig.tone === "caution" && "text-amber-300"
+                        sig.tone === "caution" && "text-amber-700"
                       )}
                     >
                       {sig.value}
@@ -361,7 +361,7 @@ export function FeaturePreview({ feature, categoryTitle }: FeaturePreviewProps) 
                       item.state === "Enforced" &&
                         "border-lime/30 bg-lime-dim text-lime",
                       item.state === "Excluded Signal" &&
-                        "border-red-400/30 bg-red-400/10 text-red-300",
+                        "border-red-600/30 bg-red-500/10 text-red-700",
                       item.state === "Human Gate" &&
                         "border-violet-border bg-violet-dim text-violet"
                     )}

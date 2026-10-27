@@ -6,6 +6,9 @@ import { AnimationProvider } from "@/components/animations/AnimationProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+  ),
   title: `${PRODUCT_METADATA.name} — ${PRODUCT_METADATA.tagline}`,
   description: PRODUCT_METADATA.supportingMessage,
   icons: {
@@ -52,7 +55,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Londrina+Shadow&family=Quantico:ital@1&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Aldrich&family=Bungee+Inline&family=Gochi+Hand&family=Londrina+Shadow&family=Quantico:ital@1&display=swap"
           rel="stylesheet"
         />
         <link rel="icon" href="/favicon.ico" sizes="any" />

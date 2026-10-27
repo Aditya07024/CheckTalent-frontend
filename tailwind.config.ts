@@ -88,6 +88,8 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+        bungee: ["'Bungee Inline'", "sans-serif"],
+        aldrich: ["'Aldrich'", "sans-serif"],
         londrina: ["'Londrina Shadow'", "sans-serif"],
         quantico: ["'Quantico'", "sans-serif"],
         gochi: ["'Gochi Hand'", "cursive"],

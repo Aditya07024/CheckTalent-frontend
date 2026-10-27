@@ -77,8 +77,8 @@ const STAGE_METADATA = [
 ] as const;
 
 /**
- * Creates ultra-sharp 1024x256 high-resolution texture plates
- * with crisp typography, badge pill, and glowing border.
+ * Creates ultra-sharp high-resolution texture plates with exact 10:1 aspect ratio
+ * matching the 3D plane geometry (zero horizontal stretching/distortion).
  */
 function createHighResTextPlate(
   stageCode: string,
@@ -86,8 +86,8 @@ function createHighResTextPlate(
   tag: string,
   colorHex: string
 ): THREE.CanvasTexture {
-  const width = 1024;
-  const height = 256;
+  const width = 1280;
+  const height = 128;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -103,42 +103,53 @@ function createHighResTextPlate(
 
   // Outer border with soft glow
   ctx.strokeStyle = colorHex;
-  ctx.lineWidth = 8;
-  ctx.strokeRect(8, 8, width - 16, height - 16);
+  ctx.lineWidth = 4;
+  ctx.strokeRect(3, 3, width - 6, height - 6);
 
   // Inner subtle accent frame
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(20, 20, width - 40, height - 40);
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.10)";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(8, 8, width - 16, height - 16);
 
   // Stage Number Badge on the left
   ctx.fillStyle = colorHex;
   ctx.beginPath();
-  ctx.roundRect(36, 40, 130, 176, 20);
+  ctx.roundRect(16, 16, 68, 96, 10);
   ctx.fill();
 
   ctx.fillStyle = "#120B08";
-  ctx.font = "bold 82px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.font = "bold 44px ui-monospace, SFMono-Regular, Menlo, monospace";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(stageCode, 101, 128);
+  ctx.fillText(stageCode, 50, 64);
 
-  // Stage Title
+  // Stage Title in Kanit / clean sans
   ctx.fillStyle = "#FFFFFF";
-  ctx.font = "bold 58px system-ui, -apple-system, sans-serif";
+  ctx.font = "600 32px 'Kanit', system-ui, -apple-system, sans-serif";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.fillText(title, 195, 96);
+  ctx.fillText(title, 102, 44);
 
   // Tag Badge on bottom
-  ctx.fillStyle = "rgba(255, 255, 255, 0.18)";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
   ctx.beginPath();
-  ctx.roundRect(195, 142, 360, 56, 12);
+  ctx.roundRect(102, 70, 240, 36, 8);
   ctx.fill();
 
   ctx.fillStyle = colorHex;
-  ctx.font = "bold 30px ui-monospace, SFMono-Regular, Menlo, monospace";
-  ctx.fillText(`• ${tag}`, 216, 171);
+  ctx.font = "bold 18px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.fillText(`• ${tag}`, 118, 88);
+
+  // Right telemetry indicator
+  ctx.fillStyle = colorHex;
+  ctx.beginPath();
+  ctx.arc(width - 120, 64, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.70)";
+  ctx.font = "bold 18px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.textAlign = "left";
+  ctx.fillText("ACTIVE", width - 106, 64);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -151,11 +162,11 @@ function createHighResTextPlate(
 }
 
 /**
- * Creates high-res 1024x128 front console screen for the bottom chassis bar.
+ * Creates high-res 1344x96 front console screen for the bottom chassis bar (exact 14:1 ratio).
  */
 function createBaseConsoleTexture(): THREE.CanvasTexture {
-  const width = 1024;
-  const height = 128;
+  const width = 1344;
+  const height = 96;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -170,33 +181,33 @@ function createBaseConsoleTexture(): THREE.CanvasTexture {
 
   // Border frame
   ctx.strokeStyle = "#F59E0B";
-  ctx.lineWidth = 4;
-  ctx.strokeRect(4, 4, width - 8, height - 8);
+  ctx.lineWidth = 3;
+  ctx.strokeRect(3, 3, width - 6, height - 6);
 
   // Status LED circle
   ctx.fillStyle = "#F59E0B";
   ctx.beginPath();
-  ctx.arc(36, 64, 9, 0, Math.PI * 2);
+  ctx.arc(32, 48, 6, 0, Math.PI * 2);
   ctx.fill();
 
   // Status text
   ctx.fillStyle = "#F59E0B";
-  ctx.font = "bold 26px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.font = "bold 18px ui-monospace, SFMono-Regular, Menlo, monospace";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.fillText("CHASSIS // BASE", 58, 64);
+  ctx.fillText("CHASSIS // BASE", 48, 48);
 
   // Center title
   ctx.fillStyle = "#FFFFFF";
-  ctx.font = "bold 28px system-ui, -apple-system, sans-serif";
+  ctx.font = "600 22px 'Kanit', system-ui, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("TALENTLENS VERIFICATION PIPELINE", width / 2, 64);
+  ctx.fillText("TALENTLENS VERIFICATION PIPELINE", width / 2, 48);
 
   // Right telemetry
   ctx.fillStyle = "#FBBF24";
-  ctx.font = "bold 24px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.font = "bold 18px ui-monospace, SFMono-Regular, Menlo, monospace";
   ctx.textAlign = "right";
-  ctx.fillText("STAGES 01–06 • ACTIVE", width - 24, 64);
+  ctx.fillText("STAGES 01–06 • ACTIVE", width - 24, 48);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -209,10 +220,10 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const rootGroup = new THREE.Group();
   const disposables: Array<{ dispose: () => void }> = [];
 
-  // Proportions: Straight front-facing server stack with balanced vertical height
-  const slabWidth = 2.8;
+  // Compact, sleek front-facing server stack (reduced width for clean 40% column framing)
+  const slabWidth = 1.95;
   const slabHeight = 0.20;
-  const slabDepth = 1.35;
+  const slabDepth = 1.15;
   const ySpacing = 0.48; // Balanced vertical length
   const totalStages = 6;
   const topY = ((totalStages - 1) * ySpacing) / 2; // (5 * 0.48) / 2 = 1.20
@@ -274,7 +285,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     });
     disposables.push(labelMaterial);
 
-    const labelPlaneGeo = new THREE.PlaneGeometry(2.35, 0.185);
+    const labelPlaneGeo = new THREE.PlaneGeometry(1.80, 0.18);
     disposables.push(labelPlaneGeo);
     const labelPlane = new THREE.Mesh(labelPlaneGeo, labelMaterial);
     labelPlane.position.set(0, 0, slabDepth / 2 + 0.012);
@@ -286,7 +297,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
 
     if (idx === 0) {
       // Stage 01: Intake — Stacked document / repo cards
-      const docGeo = new THREE.BoxGeometry(0.55, 0.025, 0.65);
+      const docGeo = new THREE.BoxGeometry(0.40, 0.025, 0.50);
       const docMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.3,
@@ -295,13 +306,13 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       disposables.push(docGeo, docMat);
       for (let d = 0; d < 3; d++) {
         const doc = new THREE.Mesh(docGeo, docMat);
-        doc.position.set((d - 1) * 0.12, d * 0.03, (d - 1) * 0.05);
+        doc.position.set((d - 1) * 0.09, d * 0.03, (d - 1) * 0.04);
         doc.rotation.y = (d - 1) * 0.1;
         featureGroup.add(doc);
       }
     } else if (idx === 1) {
       // Stage 02: Repo Intel — AST nodes hierarchy
-      const nodeGeo = new THREE.BoxGeometry(0.09, 0.09, 0.09);
+      const nodeGeo = new THREE.BoxGeometry(0.08, 0.08, 0.08);
       const nodeMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -312,11 +323,11 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       disposables.push(nodeGeo, nodeMat);
       const coords: Array<[number, number, number]> = [
         [0, 0.12, 0],
-        [-0.35, 0.06, -0.14],
-        [0.35, 0.06, -0.14],
-        [-0.55, 0.02, 0.15],
-        [0, 0.02, 0.18],
-        [0.55, 0.02, 0.15],
+        [-0.24, 0.06, -0.12],
+        [0.24, 0.06, -0.12],
+        [-0.38, 0.02, 0.12],
+        [0, 0.02, 0.15],
+        [0.38, 0.02, 0.12],
       ];
       coords.forEach(([x, y, z]) => {
         const node = new THREE.Mesh(nodeGeo, nodeMat);
@@ -325,7 +336,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       });
     } else if (idx === 2) {
       // Stage 03: Technical Viva — Pulsing 3D voice frequency spectrum bars
-      const barGeo = new THREE.BoxGeometry(0.055, 0.16, 0.055);
+      const barGeo = new THREE.BoxGeometry(0.05, 0.16, 0.05);
       const barMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -334,16 +345,16 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
         metalness: 0.7,
       });
       disposables.push(barGeo, barMat);
-      for (let b = -4; b <= 4; b++) {
+      for (let b = -3; b <= 3; b++) {
         const bar = new THREE.Mesh(barGeo, barMat);
-        const heightScale = Math.sin((b + 4) * 0.4) * 0.8 + 0.35;
+        const heightScale = Math.sin((b + 3) * 0.5) * 0.8 + 0.35;
         bar.scale.y = heightScale;
-        bar.position.set(b * 0.11, (heightScale * 0.16) / 2, 0);
+        bar.position.set(b * 0.09, (heightScale * 0.16) / 2, 0);
         featureGroup.add(bar);
       }
     } else if (idx === 3) {
       // Stage 04: Validation — Verification rubric grid
-      const gridBoxGeo = new THREE.BoxGeometry(0.14, 0.03, 0.14);
+      const gridBoxGeo = new THREE.BoxGeometry(0.12, 0.03, 0.12);
       const gridBoxMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.25,
@@ -355,13 +366,13 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       for (let gx = -1; gx <= 1; gx++) {
         for (let gz = -1; gz <= 1; gz++) {
           const gbox = new THREE.Mesh(gridBoxGeo, gridBoxMat);
-          gbox.position.set(gx * 0.28, 0.02, gz * 0.28);
+          gbox.position.set(gx * 0.20, 0.02, gz * 0.20);
           featureGroup.add(gbox);
         }
       }
     } else if (idx === 4) {
       // Stage 05: Skill Proof Card — Holographic diamond crest
-      const prismGeo = new THREE.OctahedronGeometry(0.18, 0);
+      const prismGeo = new THREE.OctahedronGeometry(0.15, 0);
       const prismMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         emissive: meta.emissive,
@@ -375,7 +386,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       featureGroup.add(prism);
     } else if (idx === 5) {
       // Stage 06: Human Review — Architectural review gate
-      const gateGeo = new THREE.BoxGeometry(0.68, 0.14, 0.08);
+      const gateGeo = new THREE.BoxGeometry(0.50, 0.13, 0.07);
       const gateMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.2,
@@ -413,17 +424,17 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   // =========================================================================
   const baseBarGroup = new THREE.Group();
 
-  const mainBarWidth = slabWidth + 0.45; // 3.25
-  const mainBarHeight = 0.20;
-  const mainBarDepth = slabDepth + 0.35; // 1.70
-  const mainBarY = -topY - slabHeight / 2 - 0.20 - mainBarHeight / 2; // ~ -1.60
+  const mainBarWidth = slabWidth + 0.35; // 2.30
+  const mainBarHeight = 0.18;
+  const mainBarDepth = slabDepth + 0.25; // 1.40
+  const mainBarY = -topY - slabHeight / 2 - 0.20 - mainBarHeight / 2; // ~ -1.59
   const baseBarTopY = mainBarY + mainBarHeight / 2; // ~ -1.50
   baseBarGroup.position.set(0, mainBarY, 0);
 
   // Tier 1: Sub-Base Footing Plinth (Wider, beveled foundation plate)
-  const plinthWidth = mainBarWidth + 0.35; // 3.60
+  const plinthWidth = mainBarWidth + 0.25; // 2.55
   const plinthHeight = 0.08;
-  const plinthDepth = mainBarDepth + 0.25; // 1.95
+  const plinthDepth = mainBarDepth + 0.20; // 1.60
   const plinthGeo = new THREE.BoxGeometry(plinthWidth, plinthHeight, plinthDepth);
   const plinthEdgesGeo = new THREE.EdgesGeometry(plinthGeo);
   disposables.push(plinthGeo, plinthEdgesGeo);
@@ -477,7 +488,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const mainBarEdgeLine = new THREE.LineSegments(mainBarEdgesGeo, mainBarEdgeMat);
   baseBarGroup.add(mainBarEdgeLine);
 
-  // Front Console Screen with High-Res Texture
+  // Front Console Screen with Exact 14:1 High-Res Texture (Zero Distortion)
   const consoleTexture = createBaseConsoleTexture();
   disposables.push(consoleTexture);
   const consoleMat = new THREE.MeshBasicMaterial({
@@ -485,14 +496,14 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     transparent: true,
   });
   disposables.push(consoleMat);
-  const consoleGeo = new THREE.PlaneGeometry(mainBarWidth - 0.25, mainBarHeight - 0.05);
+  const consoleGeo = new THREE.PlaneGeometry(2.10, 0.15);
   disposables.push(consoleGeo);
   const consolePlane = new THREE.Mesh(consoleGeo, consoleMat);
   consolePlane.position.set(0, 0, mainBarDepth / 2 + 0.012);
   baseBarGroup.add(consolePlane);
 
   // Left & Right Flank Cooling Heat Sink Fins (Precision industrial detail)
-  const finGeo = new THREE.BoxGeometry(0.02, mainBarHeight - 0.04, 0.08);
+  const finGeo = new THREE.BoxGeometry(0.02, mainBarHeight - 0.04, 0.07);
   const finMat = new THREE.MeshStandardMaterial({
     color: 0xd97706,
     metalness: 0.95,
@@ -502,12 +513,12 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   for (let f = -4; f <= 4; f++) {
     // Left side fins
     const leftFin = new THREE.Mesh(finGeo, finMat);
-    leftFin.position.set(-mainBarWidth / 2 - 0.01, 0, f * 0.12);
+    leftFin.position.set(-mainBarWidth / 2 - 0.01, 0, f * 0.10);
     baseBarGroup.add(leftFin);
 
     // Right side fins
     const rightFin = new THREE.Mesh(finGeo, finMat);
-    rightFin.position.set(mainBarWidth / 2 + 0.01, 0, f * 0.12);
+    rightFin.position.set(mainBarWidth / 2 + 0.01, 0, f * 0.10);
     baseBarGroup.add(rightFin);
   }
 
@@ -584,9 +595,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   // Active Laser Scanner Carriage
   const scannerBar = new THREE.Group();
   const scannerFrameGeo = new THREE.BoxGeometry(
-    slabWidth + 0.22,
-    0.04,
-    slabDepth + 0.22
+    slabWidth + 0.16,
+    0.038,
+    slabDepth + 0.16
   );
   const scannerFrameMat = new THREE.MeshStandardMaterial({
     color: 0xf97316,
@@ -600,7 +611,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   scannerBar.add(scannerMesh);
 
   // Intense central laser beam
-  const laserBeamGeo = new THREE.BoxGeometry(slabWidth + 0.18, 0.018, 0.018);
+  const laserBeamGeo = new THREE.BoxGeometry(slabWidth + 0.12, 0.016, 0.016);
   const laserBeamMat = new THREE.MeshBasicMaterial({ color: 0xffedd5 });
   disposables.push(laserBeamGeo, laserBeamMat);
   const laserBeam = new THREE.Mesh(laserBeamGeo, laserBeamMat);
@@ -618,9 +629,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const particleCount = 45;
   const particlePositions = new Float32Array(particleCount * 3);
   for (let i = 0; i < particleCount; i++) {
-    particlePositions[i * 3] = (Math.random() - 0.5) * (slabWidth + 0.5);
+    particlePositions[i * 3] = (Math.random() - 0.5) * (slabWidth + 0.3);
     particlePositions[i * 3 + 1] = (Math.random() - 0.5) * pillarHeight;
-    particlePositions[i * 3 + 2] = (Math.random() - 0.5) * (slabDepth + 0.5);
+    particlePositions[i * 3 + 2] = (Math.random() - 0.5) * (slabDepth + 0.3);
   }
   const particleGeo = new THREE.BufferGeometry();
   particleGeo.setAttribute(

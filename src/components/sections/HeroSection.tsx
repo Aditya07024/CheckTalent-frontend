@@ -72,7 +72,7 @@ export function HeroSection() {
       <LanguageOrbit3D className="z-0 opacity-40 sm:opacity-60 lg:opacity-100" />
 
       <div className="container relative z-10 w-full">
-        <div className="max-w-xl lg:max-w-3xl xl:max-w-4xl">
+        <div className="max-w-xl lg:max-w-4xl xl:max-w-5xl">
           {/* Title + Minimal Core Components (overlaying the orbit) */}
           <div className="space-y-7">
             <div
@@ -89,14 +89,14 @@ export function HeroSection() {
               data-hero-copy
               className="font-londrina font-normal londrina-shadow-regular tracking-wide text-ink"
             >
-              {/* Line 1: Bigger statement */}
-              <span className="block text-5xl sm:text-6xl lg:text-[68px] xl:text-[76px] leading-[1.02] lg:whitespace-nowrap">
+              {/* Line 1: Substantially larger prominent statement */}
+              <span className="block text-6xl sm:text-7xl lg:text-[86px] xl:text-[98px] leading-[0.98] lg:whitespace-nowrap">
                 {HERO_CONTENT.headlineLead}
                 <span className={ACCENT_CLASS}>{accentFirst}</span>
               </span>
 
-              {/* Line 2: Smaller than Line 1 */}
-              <span className="block mt-2 sm:mt-2.5 text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] leading-[1.08] text-ink">
+              {/* Line 2: Also larger than previous, while slightly smaller than Line 1 */}
+              <span className="block mt-2 sm:mt-3 text-5xl sm:text-6xl lg:text-[70px] xl:text-[78px] leading-[1.04] text-ink">
                 <span className={ACCENT_CLASS}>{accentRest}</span>
                 {HERO_CONTENT.headlineTail}
               </span>

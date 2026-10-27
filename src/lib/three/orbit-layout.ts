@@ -1,6 +1,6 @@
 /** Radius (world units) the orbit + cubes need to stay fully on screen. */
 const ORBIT_EXTENT = 3.25;
-const BASE_DISTANCE = 7.1;
+const BASE_DISTANCE = 8.3;
 const DESKTOP_MIN_WIDTH = 1024;
 
 /**

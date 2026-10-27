@@ -224,9 +224,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const slabWidth = 1.95;
   const slabHeight = 0.20;
   const slabDepth = 1.15;
-  const ySpacing = 0.48; // Balanced vertical length
+  const ySpacing = 0.42; // Calibrated vertical length so all 6 stages and bottom plate fit completely
   const totalStages = 6;
-  const topY = ((totalStages - 1) * ySpacing) / 2; // (5 * 0.48) / 2 = 1.20
+  const topY = ((totalStages - 1) * ySpacing) / 2; // (5 * 0.42) / 2 = 1.05
 
   const slabGeometry = new THREE.BoxGeometry(slabWidth, slabHeight, slabDepth);
   const slabEdgesGeometry = new THREE.EdgesGeometry(slabGeometry);
@@ -427,8 +427,8 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const mainBarWidth = slabWidth + 0.35; // 2.30
   const mainBarHeight = 0.18;
   const mainBarDepth = slabDepth + 0.25; // 1.40
-  const mainBarY = -topY - slabHeight / 2 - 0.20 - mainBarHeight / 2; // ~ -1.59
-  const baseBarTopY = mainBarY + mainBarHeight / 2; // ~ -1.50
+  const mainBarY = -topY - slabHeight / 2 - 0.16 - mainBarHeight / 2; // ~ -1.40
+  const baseBarTopY = mainBarY + mainBarHeight / 2; // ~ -1.31
   baseBarGroup.position.set(0, mainBarY, 0);
 
   // Tier 1: Sub-Base Footing Plinth (Wider, beveled foundation plate)
@@ -570,9 +570,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   rootGroup.add(baseBarGroup);
 
   // 4 Guide Pillars that stand firmly on top of the bottom bar sockets
-  const pillarTopY = topY + slabHeight / 2 + 0.18; // ~ 1.48
-  const pillarHeight = pillarTopY - baseBarTopY; // ~ 2.98 units
-  const pillarCenterY = (pillarTopY + baseBarTopY) / 2; // ~ -0.01
+  const pillarTopY = topY + slabHeight / 2 + 0.15; // ~ 1.30
+  const pillarHeight = pillarTopY - baseBarTopY; // ~ 2.61 units
+  const pillarCenterY = (pillarTopY + baseBarTopY) / 2; // ~ -0.005
 
   const guidePillars = new THREE.Group();
   const pillarGeo = new THREE.CylinderGeometry(0.02, 0.02, pillarHeight, 16);

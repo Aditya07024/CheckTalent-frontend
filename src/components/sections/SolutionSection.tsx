@@ -1,23 +1,19 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import gsap from "gsap";
 import {
   Award,
   FileText,
   GitBranch,
   MessageSquareCode,
   ShieldCheck,
-  Sparkles,
   UserCheck,
 } from "lucide-react";
 import { SOLUTION_SECTION_CONTENT } from "@/data/site-content";
 import { SECTION_IDS } from "@/lib/constants";
-import type { IconKey, PipelineStageItem } from "@/types/platform";
+import type { IconKey } from "@/types/platform";
 import { AnimatedSection } from "@/components/animations/AnimatedSection";
-import { Badge } from "@/components/ui/badge";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 
 const PipelineEngine3D = dynamic(
@@ -96,95 +92,11 @@ export function SolutionSection() {
   const [activeStageId, setActiveStageId] = useState<string>(
     SOLUTION_SECTION_CONTENT.stages[1]?.id ?? "stage-repo-intel"
   );
-  const cardRef = useRef<HTMLDivElement | null>(null);
-  const prefersReducedMotion = useReducedMotion();
 
   const activeStageIndex = Math.max(
     0,
     SOLUTION_SECTION_CONTENT.stages.findIndex((s) => s.id === activeStageId)
   );
-
-  const activeStage: PipelineStageItem =
-    SOLUTION_SECTION_CONTENT.stages[activeStageIndex] ??
-    SOLUTION_SECTION_CONTENT.stages[0]!;
-
-  // Smooth choreographed animation on tab switch
-  useEffect(() => {
-    if (prefersReducedMotion || !cardRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const scanLine = cardRef.current?.querySelector(".stage-anim-scan");
-      const badge = cardRef.current?.querySelector(".stage-anim-badge");
-      const signal = cardRef.current?.querySelector(".stage-anim-signal");
-      const desc = cardRef.current?.querySelector(".stage-anim-desc");
-      const box1 = cardRef.current?.querySelector(".stage-anim-box-1");
-      const box2 = cardRef.current?.querySelector(".stage-anim-box-2");
-
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      // 1. Laser beam line sweeps across the card header
-      if (scanLine) {
-        tl.fromTo(
-          scanLine,
-          { scaleX: 0, opacity: 1, transformOrigin: "left center" },
-          { scaleX: 1, opacity: 0.45, duration: 0.42 },
-          0
-        );
-      }
-
-      // 2. Stage Badge slides down into view
-      if (badge) {
-        tl.fromTo(
-          badge,
-          { opacity: 0, y: -10, scale: 0.95 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.32 },
-          0.04
-        );
-      }
-
-      // 3. Verification Signal glides in from right
-      if (signal) {
-        tl.fromTo(
-          signal,
-          { opacity: 0, x: 12 },
-          { opacity: 1, x: 0, duration: 0.32 },
-          0.07
-        );
-      }
-
-      // 4. Description paragraph fades and shifts in
-      if (desc) {
-        tl.fromTo(
-          desc,
-          { opacity: 0, y: 8 },
-          { opacity: 1, y: 0, duration: 0.36 },
-          0.1
-        );
-      }
-
-      // 5. Stage Input box springs up
-      if (box1) {
-        tl.fromTo(
-          box1,
-          { opacity: 0, y: 14, scale: 0.94 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.5)" },
-          0.14
-        );
-      }
-
-      // 6. Verified Output box springs up in sequence
-      if (box2) {
-        tl.fromTo(
-          box2,
-          { opacity: 0, y: 14, scale: 0.94 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.5)" },
-          0.2
-        );
-      }
-    }, cardRef);
-
-    return () => ctx.revert();
-  }, [activeStageId, prefersReducedMotion]);
 
   return (
     <AnimatedSection
@@ -216,7 +128,7 @@ export function SolutionSection() {
               className="grid grid-cols-1 gap-2.5 sm:grid-cols-2"
             >
               {SOLUTION_SECTION_CONTENT.stages.map((stage, index) => {
-                const isSelected = stage.id === activeStage.id;
+                const isSelected = stage.id === activeStageId;
                 const palette = STAGE_PALETTE[index % STAGE_PALETTE.length]!;
 
                 return (
@@ -280,72 +192,23 @@ export function SolutionSection() {
             </div>
           </div>
 
-          {/* Right Column: 40% width — 3D Pipeline Stack + Live Active Stage Inspection HUD Card */}
-          <div className="relative w-full lg:w-[40%] flex flex-col items-center gap-3">
+          {/* Right Column: 40% width — 3D Pipeline Stack with Expanding Stages */}
+          <div className="relative w-full lg:w-[40%] flex flex-col items-center">
             {/* Ambient Warm Glow behind the floating 3D stack */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute top-6 h-[380px] w-[380px] rounded-full bg-gradient-to-tr from-yellow-300/25 via-orange-300/20 to-red-300/15 blur-3xl transform-gpu will-change-transform"
+              className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[450px] w-[450px] rounded-full bg-gradient-to-tr from-yellow-300/25 via-orange-300/20 to-red-300/15 blur-3xl transform-gpu will-change-transform"
             />
 
             {/* Unboxed 3D Canvas */}
             <PipelineEngine3D
               activeStageIndex={activeStageIndex}
+              onSelectStage={(idx) => {
+                const target = SOLUTION_SECTION_CONTENT.stages[idx];
+                if (target) setActiveStageId(target.id);
+              }}
               className="relative z-10 w-full"
             />
-
-            {/* Live Stage Inspection HUD Card directly on the 3D element */}
-            <div
-              ref={cardRef}
-              aria-live="polite"
-              className="relative z-20 w-full overflow-hidden rounded-2xl border-2 border-orange-400/90 bg-white/95 backdrop-blur-md p-4 shadow-[0_12px_28px_rgba(234,88,12,0.12)] transition-colors duration-300"
-            >
-              {/* Laser Scanner Sweep Line on Tab Change */}
-              <div
-                aria-hidden="true"
-                className="stage-anim-scan pointer-events-none absolute left-0 top-0 h-[3px] w-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 shadow-[0_2px_8px_rgba(249,115,22,0.6)]"
-              />
-
-              <div className="flex flex-col gap-2.5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="stage-anim-badge">
-                    <Badge variant={activeStage.isAiAssisted ? "violet" : "default"}>
-                      {activeStage.isAiAssisted && <Sparkles className="h-3 w-3 animate-pulse" />}
-                      STAGE {activeStage.stepNumber} · {activeStage.title.toUpperCase()}
-                    </Badge>
-                  </div>
-                  <span className="stage-anim-signal flex items-center gap-1.5 font-mono text-xs font-semibold text-orange-800">
-                    <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-ping" />
-                    {activeStage.verificationSignal}
-                  </span>
-                </div>
-
-                <p className="stage-anim-desc text-xs sm:text-sm leading-relaxed text-ink-secondary">
-                  {activeStage.shortDescription}
-                </p>
-
-                <div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-2">
-                  <div className="stage-anim-box-1 rounded-xl border-2 border-amber-300 bg-gradient-to-br from-yellow-50/90 to-amber-50/70 p-2.5 shadow-sm">
-                    <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-900">
-                      <FileText className="h-3 w-3 text-amber-700" />
-                      Stage Input
-                    </span>
-                    <p className="mt-0.5 font-mono text-[11px] font-medium text-ink">
-                      {activeStage.inputArtifact}
-                    </p>
-                  </div>
-                  <div className="stage-anim-box-2 rounded-xl border-2 border-orange-300 bg-gradient-to-br from-orange-50/90 to-red-50/70 p-2.5 shadow-sm">
-                    <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-orange-900">
-                      <ShieldCheck className="h-3 w-3 text-orange-700" />
-                      Verified Output
-                    </span>
-                    <p className="mt-0.5 font-mono text-[11px] font-medium text-ink">
-                      {activeStage.outputArtifact}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

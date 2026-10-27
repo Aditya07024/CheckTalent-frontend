@@ -9,6 +9,10 @@ export interface PipelineStageSlab {
   slabMaterial: THREE.MeshPhysicalMaterial;
   edgeLine: THREE.LineSegments;
   edgeMaterial: THREE.LineBasicMaterial;
+  compactPlate: THREE.Mesh;
+  compactMaterial: THREE.MeshBasicMaterial;
+  expandedPlate: THREE.Mesh;
+  expandedMaterial: THREE.MeshBasicMaterial;
   featureGroup: THREE.Group;
   yPosition: number;
   baseX: number;
@@ -21,6 +25,7 @@ export interface BuiltPipelineStackScene {
   scannerBar: THREE.Group;
   scannerLight: THREE.PointLight;
   guidePillars: THREE.Group;
+  baseBar: THREE.Group;
   dataPulses: THREE.Points;
   dispose: () => void;
 }
@@ -31,6 +36,12 @@ const STAGE_METADATA = [
     code: "01",
     tag: "CONSENT INTAKE",
     label: "STAGE 01 · RESUME & PROJECTS",
+    title: "Resume & Projects",
+    description:
+      "Ingest claimed skills alongside authorized repositories or structured project artifacts.",
+    input: "Resume claims + GitHub link / project submission",
+    output: "Normalized claim-to-project inventory",
+    signal: "Consent-scoped intake",
     color: 0xf59e0b, // Amber-500
     emissive: 0xd97706,
   },
@@ -39,6 +50,12 @@ const STAGE_METADATA = [
     code: "02",
     tag: "AST CODE MAP",
     label: "STAGE 02 · REPO INTELLIGENCE",
+    title: "Repository Intelligence",
+    description:
+      "Inspect module boundaries, AST patterns, error handling, tests, and structural evolution.",
+    input: "Source tree, dependencies & commit history",
+    output: "File-anchored code observations",
+    signal: "Static code mapping",
     color: 0xea580c, // Orange-600
     emissive: 0xc2410c,
   },
@@ -47,6 +64,12 @@ const STAGE_METADATA = [
     code: "03",
     tag: "CODE DEFENSE",
     label: "STAGE 03 · AI TECHNICAL VIVA",
+    title: "Technical Viva",
+    description:
+      "Challenge understanding with adaptive questions anchored directly to the candidate’s code.",
+    input: "Selected implementation anchors & role criteria",
+    output: "Evaluated code-defense responses",
+    signal: "AI-assisted comprehension probe",
     color: 0xdc2626, // Red-600
     emissive: 0xb91c1c,
   },
@@ -55,6 +78,12 @@ const STAGE_METADATA = [
     code: "04",
     tag: "EVIDENCE CHECK",
     label: "STAGE 04 · EVIDENCE VALIDATION",
+    title: "Evidence Validation",
+    description:
+      "Cross-check static code observations with viva explanations against explicit rubrics.",
+    input: "Static findings + viva rubric outcomes",
+    output: "Verified observations & gap flags",
+    signal: "Provenance & consistency check",
     color: 0xf97316, // Orange-500
     emissive: 0xea580c,
   },
@@ -63,6 +92,12 @@ const STAGE_METADATA = [
     code: "05",
     tag: "PROOF RECORD",
     label: "STAGE 05 · SKILL PROOF CARD",
+    title: "Skill Proof Card",
+    description:
+      "Assemble an inspectable profile separating direct observations from inferred assessments.",
+    input: "Validated evidence ledger & provenance",
+    output: "Shareable Skill Proof Card",
+    signal: "Inspectable evidence record",
     color: 0xeab308, // Gold-500
     emissive: 0xca8a04,
   },
@@ -70,11 +105,193 @@ const STAGE_METADATA = [
     id: "stage-recruiter",
     code: "06",
     tag: "HUMAN GATE",
-    label: "STAGE 06 · RECRUITER REVIEW",
+    label: "STAGE 06 · RECRUITER EVALUATION",
+    title: "Recruiter Evaluation",
+    description:
+      "Support human hiring teams with explainable role alignment and interview focus areas.",
+    input: "Skill Proof Card + job rubric criteria",
+    output: "Decision-support review brief",
+    signal: "Human-in-the-loop review",
     color: 0xb91c1c, // Crimson Red
     emissive: 0x991b1b,
   },
 ] as const;
+
+function wrapCanvasText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number
+): string[] {
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let currentLine = words[0] ?? "";
+
+  for (let i = 1; i < words.length; i++) {
+    const word = words[i] ?? "";
+    const testLine = currentLine + " " + word;
+    if (ctx.measureText(testLine).width < maxWidth) {
+      currentLine = testLine;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+  return lines;
+}
+
+/**
+ * Creates ultra-sharp 2048x640 expanded information texture
+ * deployed when a 3D stage slab is selected.
+ */
+function createExpandedStageTexture(
+  meta: (typeof STAGE_METADATA)[number]
+): THREE.CanvasTexture {
+  const width = 2048;
+  const height = 640;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  const hexString = `#${meta.color.toString(16).padStart(6, "0")}`;
+
+  // Deep obsidian glass background
+  const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+  bgGrad.addColorStop(0, "#1F1510");
+  bgGrad.addColorStop(0.5, "#140D09");
+  bgGrad.addColorStop(1, "#0D0704");
+  ctx.fillStyle = bgGrad;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, width, height, 24);
+  ctx.fill();
+
+  // Outer glowing border
+  ctx.strokeStyle = hexString;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(3, 3, width - 6, height - 6);
+
+  // Inner subtle accent frame
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(10, 10, width - 20, height - 20);
+
+  // 1. Stage Number Pill
+  ctx.fillStyle = hexString;
+  ctx.beginPath();
+  ctx.roundRect(24, 22, 110, 68, 12);
+  ctx.fill();
+
+  ctx.fillStyle = "#100906";
+  ctx.font = "bold 44px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(meta.code, 79, 56);
+
+  // 2. Stage Title in bold Kanit
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 44px 'Kanit', system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText(`STAGE ${meta.code} · ${meta.title.toUpperCase()}`, 154, 56);
+
+  // 3. Verification Signal Pill (top-right)
+  const signalText = `● ${meta.signal}`;
+  ctx.font = "bold 24px ui-monospace, SFMono-Regular, Menlo, monospace";
+  const signalWidth = ctx.measureText(signalText).width + 40;
+  const signalX = width - signalWidth - 24;
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+  ctx.strokeStyle = hexString;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(signalX, 24, signalWidth, 64, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = hexString;
+  ctx.fillText(signalText, signalX + 20, 56);
+
+  // Horizontal laser accent divider line
+  const lineGrad = ctx.createLinearGradient(24, 108, width - 24, 108);
+  lineGrad.addColorStop(0, "#F59E0B");
+  lineGrad.addColorStop(0.5, "#EA580C");
+  lineGrad.addColorStop(1, "#DC2626");
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(24, 108);
+  ctx.lineTo(width - 24, 108);
+  ctx.stroke();
+
+  // Middle Description paragraph
+  ctx.fillStyle = "#F5EBE1";
+  ctx.font = "34px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  const descLines = wrapCanvasText(ctx, meta.description, width - 64);
+  descLines.slice(0, 2).forEach((line, lIdx) => {
+    ctx.fillText(line, 32, 132 + lIdx * 46);
+  });
+
+  // Bottom Input & Output Data Pods
+  const podY = 248;
+  const podH = 368;
+  const podW = (width - 72) / 2; // ~988px each
+
+  // Left Pod: Stage Input
+  ctx.fillStyle = "rgba(245, 158, 11, 0.10)";
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.50)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(24, podY, podW, podH, 16);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#FBBF24";
+  ctx.font = "bold 26px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.fillText("◆ STAGE INPUT", 48, podY + 36);
+
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 32px ui-monospace, SFMono-Regular, Menlo, monospace";
+  const inputLines = wrapCanvasText(ctx, meta.input, podW - 48);
+  inputLines.slice(0, 4).forEach((line, iIdx) => {
+    ctx.fillText(line, 48, podY + 92 + iIdx * 48);
+  });
+
+  // Right Pod: Verified Output
+  const rightPodX = 24 + podW + 24;
+  ctx.fillStyle = "rgba(234, 88, 12, 0.12)";
+  ctx.strokeStyle = "rgba(234, 88, 12, 0.60)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(rightPodX, podY, podW, podH, 16);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#FB923C";
+  ctx.font = "bold 26px ui-monospace, SFMono-Regular, Menlo, monospace";
+  ctx.fillText("✓ VERIFIED OUTPUT", rightPodX + 24, podY + 36);
+
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 32px ui-monospace, SFMono-Regular, Menlo, monospace";
+  const outputLines = wrapCanvasText(ctx, meta.output, podW - 48);
+  outputLines.slice(0, 4).forEach((line, oIdx) => {
+    ctx.fillText(line, rightPodX + 24, podY + 92 + oIdx * 48);
+  });
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  return texture;
+}
 
 /**
  * Creates ultra-sharp high-resolution texture plates with exact 10:1 aspect ratio
@@ -270,7 +487,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     stageGroup.add(edgeLine);
     disposables.push(edgeMaterial);
 
-    // Front label plate — fits cleanly across the front face
+    // 1. Compact front face (shown when slab is inactive)
     const labelTexture = createHighResTextPlate(
       meta.code,
       meta.label.replace(`STAGE ${meta.code} · `, ""),
@@ -279,17 +496,37 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     );
     disposables.push(labelTexture);
 
-    const labelMaterial = new THREE.MeshBasicMaterial({
+    const compactMaterial = new THREE.MeshBasicMaterial({
       map: labelTexture,
       transparent: true,
+      opacity: 0.95,
     });
-    disposables.push(labelMaterial);
+    disposables.push(compactMaterial);
 
-    const labelPlaneGeo = new THREE.PlaneGeometry(1.80, 0.18);
-    disposables.push(labelPlaneGeo);
-    const labelPlane = new THREE.Mesh(labelPlaneGeo, labelMaterial);
-    labelPlane.position.set(0, 0, slabDepth / 2 + 0.012);
-    stageGroup.add(labelPlane);
+    const compactPlaneGeo = new THREE.PlaneGeometry(1.80, 0.18);
+    disposables.push(compactPlaneGeo);
+    const compactPlate = new THREE.Mesh(compactPlaneGeo, compactMaterial);
+    compactPlate.position.set(0, 0, slabDepth / 2 + 0.012);
+    stageGroup.add(compactPlate);
+
+    // 2. Expanded 3D Information Panel (unfolds when slab is active)
+    const expandedTexture = createExpandedStageTexture(meta);
+    disposables.push(expandedTexture);
+
+    const expandedMaterial = new THREE.MeshBasicMaterial({
+      map: expandedTexture,
+      transparent: true,
+      opacity: 0.0,
+      side: THREE.DoubleSide,
+    });
+    disposables.push(expandedMaterial);
+
+    const expandedPlaneGeo = new THREE.PlaneGeometry(2.35, 0.74);
+    disposables.push(expandedPlaneGeo);
+    const expandedPlate = new THREE.Mesh(expandedPlaneGeo, expandedMaterial);
+    expandedPlate.position.set(0, 0, slabDepth / 2 + 0.04);
+    expandedPlate.scale.set(1, 0.001, 1); // folded flat initially
+    stageGroup.add(expandedPlate);
 
     // Compact 3D architectural feature on top of each slab
     const featureGroup = new THREE.Group();
@@ -412,6 +649,10 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       slabMaterial,
       edgeLine,
       edgeMaterial,
+      compactPlate,
+      compactMaterial,
+      expandedPlate,
+      expandedMaterial,
       featureGroup,
       yPosition: yPos,
       baseX: 0,
@@ -570,9 +811,9 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   rootGroup.add(baseBarGroup);
 
   // 4 Guide Pillars that stand firmly on top of the bottom bar sockets
-  const pillarTopY = topY + slabHeight / 2 + 0.15; // ~ 1.30
-  const pillarHeight = pillarTopY - baseBarTopY; // ~ 2.61 units
-  const pillarCenterY = (pillarTopY + baseBarTopY) / 2; // ~ -0.005
+  const pillarTopY = topY + slabHeight / 2 + 0.35; // ~ 1.50
+  const pillarHeight = 3.4; // Extra height so pillars firmly frame expanded slabs and lower chassis
+  const pillarCenterY = -0.05;
 
   const guidePillars = new THREE.Group();
   const pillarGeo = new THREE.CylinderGeometry(0.02, 0.02, pillarHeight, 16);
@@ -663,6 +904,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     scannerBar,
     scannerLight,
     guidePillars,
+    baseBar: baseBarGroup,
     dataPulses,
     dispose,
   };

@@ -53,7 +53,7 @@ export function HeroSection() {
     <section
       id={SECTION_IDS.hero}
       ref={sectionRef}
-      className="relative flex min-h-[640px] items-center overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 py-16 sm:min-h-[700px] lg:min-h-[calc(100vh-4rem)]"
+      className="relative flex min-h-[640px] items-start overflow-hidden border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/50 via-transparent to-orange-50/35 pb-16 pt-8 sm:min-h-[700px] sm:pt-10 lg:min-h-[calc(100vh-4rem)] lg:pt-14"
     >
       <GridBackground density="fine" showRadialGlow />
 

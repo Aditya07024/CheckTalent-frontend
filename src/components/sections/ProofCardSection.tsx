@@ -23,7 +23,7 @@ export function ProofCardSection() {
               Every skill claim should have a reason.
             </h2>
             <p className="text-base sm:text-lg leading-relaxed text-ink-secondary">
-              Inspect how TalentLens structures a candidate evaluation—linking
+              Inspect how CheckTalent structures a candidate evaluation—linking
               skill claims to repository files, code excerpts, technical viva
               defenses, evaluation timestamps, and explicit observation-vs-inference
               boundaries.

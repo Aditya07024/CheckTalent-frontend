@@ -146,7 +146,7 @@ export function SolutionSection() {
             {/* Stage Selector Grid */}
             <div
               role="tablist"
-              aria-label="TalentLens verification pipeline stages"
+              aria-label="CheckTalent verification pipeline stages"
               className="grid grid-cols-1 gap-3 sm:grid-cols-2"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}

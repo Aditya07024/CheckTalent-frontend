@@ -134,7 +134,7 @@ export function LanguageShowcase3D() {
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <h3 className="mt-1 text-lg sm:text-xl font-bold text-ink">
-            Inspect how TalentLens analyzes real code across languages
+            Inspect how CheckTalent analyzes real code across languages
           </h3>
         </div>
       </div>

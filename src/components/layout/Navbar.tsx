@@ -16,8 +16,11 @@ import { Badge } from "@/components/ui/badge";
 import { PRIMARY_NAV_ITEMS } from "@/data/navigation";
 import { SECTION_IDS } from "@/lib/constants";
 import { cn, scrollToSection } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+
 
 export function Navbar() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signInModalOpen, setSignInModalOpen] = useState(false);
@@ -78,7 +81,7 @@ export function Navbar() {
             href={`#${SECTION_IDS.hero}`}
             onClick={(e) => handleNavClick(e, `#${SECTION_IDS.hero}`)}
             className="rounded-md py-1 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
-            aria-label="TalentLens — Return to top"
+            aria-label="CheckTalent — Return to top"
           >
             <BrandLogo />
           </a>
@@ -106,7 +109,7 @@ export function Navbar() {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setSignInModalOpen(true)}
+              onClick={() => router.push("/signin")}
               className="text-[13px]"
             >
               Sign In
@@ -167,16 +170,16 @@ export function Navbar() {
 
             <div className="mt-4 flex flex-col gap-2.5 border-t border-hairline pt-4">
               <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setSignInModalOpen(true);
-                }}
-                className="w-full justify-center"
-              >
-                Sign In
-              </Button>
+  type="button"
+  variant="secondary"
+  onClick={() => {
+    setMobileMenuOpen(false);
+    router.push("/signin");
+  }}
+  className="w-full justify-center"
+>
+  Sign In
+</Button>
               <Button
                 type="button"
                 onClick={handleEarlyAccessClick}
@@ -202,7 +205,7 @@ export function Navbar() {
               Workspace Sign-In
             </DialogTitle>
             <DialogDescription className="pt-2 leading-relaxed">
-              TalentLens is currently in pre-release development. Account
+              CheckTalent is currently in pre-release development. Account
               authentication for Candidate Proof Workspaces and Recruiter Review
               Portals will open incrementally to early-access cohorts.
             </DialogDescription>

@@ -4,7 +4,7 @@ export const ROADMAP_SECTION_CONTENT = {
   eyebrow: "PRODUCT ROADMAP · PLANNED EVOLUTION",
   heading: "Deliberate architecture from verification to hiring.",
   subheading:
-    "TalentLens is structured in progressive phases. Phase 1 establishes the foundational verification engine; Phases 2–4 represent planned capabilities.",
+    "CheckTalent is structured in progressive phases. Phase 1 establishes the foundational verification engine; Phases 2–4 represent planned capabilities.",
   statusLegendNote:
     "Transparency notice: Planned phases describe architectural direction and upcoming milestones.",
 } as const;

@@ -1,6 +1,7 @@
 export const PRODUCT_METADATA = {
-  name: "TalentLens",
-  tagline: "Explainable Candidate Evaluation Through Code Analysis and Technical Interviews",
+  name: "CheckTalent",
+  tagline:
+    "Explainable Candidate Evaluation Through Code Analysis and Technical Interviews",
   supportingMessage:
     "An AI-powered developer intelligence platform that transforms repositories, code analysis, and technical interviews into explainable candidate evaluations recruiters can trust.",
   domainLabel: "DEVELOPER INTELLIGENCE · CANDIDATE EVALUATION",

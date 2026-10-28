@@ -11,7 +11,7 @@ interface BrandLogoProps {
 }
 
 /**
- * TalentLens brand logo featuring the 3D resume-with-glasses lens emblem
+ * CheckTalent brand logo featuring the 3D resume-with-glasses lens emblem
  * and clear typography.
  */
 export function BrandLogo({

@@ -14,7 +14,7 @@ export const HERO_CONTENT = {
   headlineAccent: "better story",
   headlineTail: " than your resume.",
   supportingParagraph:
-    "TalentLens analyzes real repositories, tests technical understanding, and turns project evidence into skill profiles recruiters can actually evaluate.",
+    "CheckTalent analyzes real repositories, tests technical understanding, and turns project evidence into skill profiles recruiters can actually evaluate.",
   primaryCta: {
     label: "Explore the Platform",
     href: `#${SECTION_IDS.solution}`,
@@ -112,10 +112,13 @@ export const PROBLEM_SECTION_CONTENT = {
       title: "Keyword-driven screening",
       description:
         "Candidates can list technologies without demonstrating practical understanding. Automated filters reward dense buzzword lists while overlooking developers who build clean, maintainable systems without resume-optimized phrasing.",
-      failureSignal: "SIGNAL NOISE: Unverified keyword density ≠ working fluency",
+      failureSignal:
+        "SIGNAL NOISE: Unverified keyword density ≠ working fluency",
       contrastArtifacts: {
-        claimed: 'Resume: "Expert in React, Distributed Systems, Microservices, GraphQL"',
-        reality: "Unanswered: Can the candidate reason about state lifecycles or failure modes?",
+        claimed:
+          'Resume: "Expert in React, Distributed Systems, Microservices, GraphQL"',
+        reality:
+          "Unanswered: Can the candidate reason about state lifecycles or failure modes?",
       },
       icon: "search-code",
     },
@@ -126,10 +129,13 @@ export const PROBLEM_SECTION_CONTENT = {
       title: "Tutorial projects look alike",
       description:
         "Recruiters struggle to distinguish superficial project copies from projects candidates genuinely understand. Two portfolio links with identical README screenshots can mask vastly different levels of architectural comprehension.",
-      failureSignal: "AMBIGUITY: Surface UI parity hides authorship & comprehension depth",
+      failureSignal:
+        "AMBIGUITY: Surface UI parity hides authorship & comprehension depth",
       contrastArtifacts: {
-        claimed: 'Portfolio: "Full-Stack E-Commerce Platform with Auth & Payments"',
-        reality: "Uninspected: Template scaffolding vs. deliberate custom trade-offs",
+        claimed:
+          'Portfolio: "Full-Stack E-Commerce Platform with Auth & Payments"',
+        reality:
+          "Uninspected: Template scaffolding vs. deliberate custom trade-offs",
       },
       icon: "copy-slash",
     },
@@ -140,10 +146,13 @@ export const PROBLEM_SECTION_CONTENT = {
       title: "Interviews lack consistent evidence",
       description:
         "Generic questions and inconsistent assessments make it difficult to compare candidates fairly. Disconnected trivia prompts rarely connect back to the actual software a candidate has designed or debugged.",
-      failureSignal: "DRIFT: Unstructured prompts produce non-comparable hiring notes",
+      failureSignal:
+        "DRIFT: Unstructured prompts produce non-comparable hiring notes",
       contrastArtifacts: {
-        claimed: 'Interview Note: "Seemed confident, struggled on abstract puzzle"',
-        reality: "Missing: Rubric-anchored evidence tied to real implementation artifacts",
+        claimed:
+          'Interview Note: "Seemed confident, struggled on abstract puzzle"',
+        reality:
+          "Missing: Rubric-anchored evidence tied to real implementation artifacts",
       },
       icon: "scale",
     },
@@ -151,10 +160,10 @@ export const PROBLEM_SECTION_CONTENT = {
 } as const;
 
 export const SOLUTION_SECTION_CONTENT = {
-  eyebrow: "THE TALENTLENS ARCHITECTURE",
+  eyebrow: "THE CheckTalent ARCHITECTURE",
   heading: "Turn technical claims into inspectable evidence.",
   subheading:
-    "TalentLens replaces opaque resume scoring with an auditable verification pipeline—connecting source artifacts, adaptive technical questioning, and explicit rubrics into a structured Skill Proof Card.",
+    "CheckTalent replaces opaque resume scoring with an auditable verification pipeline—connecting source artifacts, adaptive technical questioning, and explicit rubrics into a structured Skill Proof Card.",
   stages: [
     {
       id: "stage-inputs",
@@ -240,7 +249,8 @@ export const HOW_IT_WORKS_CONTENT = {
       description:
         "Upload a resume and authorize specific GitHub repositories with granular permissions, or choose a guided project pathway for private work.",
       artifactTag: "INPUT // CONSENT-SCOPED INTAKE",
-      systemNote: "Authorized repo selections or guided non-GitHub assessments.",
+      systemNote:
+        "Authorized repo selections or guided non-GitHub assessments.",
       details: [
         "Select specific repositories rather than exposing unrelated code",
         "Extract claimed technologies for targeted evidence binding",
@@ -253,7 +263,8 @@ export const HOW_IT_WORKS_CONTENT = {
       description:
         "The engine inspects source code, AST architecture, dependency trees, and error boundaries—linking findings to concrete files.",
       artifactTag: "ANALYSIS // STATIC CODE MAPPING",
-      systemNote: "File-anchored static code observations and template filters.",
+      systemNote:
+        "File-anchored static code observations and template filters.",
       details: [
         "Map components, API handlers, and validation schemas",
         "Filter starter template boilerplate transparently",
@@ -293,7 +304,7 @@ export const CANDIDATES_SECTION_CONTENT = {
   eyebrow: "FOR CANDIDATES · MERIT OVER BUZZWORDS",
   heading: "Let your work speak for itself.",
   subheading:
-    "Whether you are self-taught, graduating from a lesser-known college, or building serious side projects, TalentLens turns genuine engineering effort into structured proof recruiters can inspect.",
+    "Whether you are self-taught, graduating from a lesser-known college, or building serious side projects, CheckTalent turns genuine engineering effort into structured proof recruiters can inspect.",
   ctaLabel: "Build Your Skill Profile",
   ctaHref: `#${SECTION_IDS.earlyAccess}`,
   benefits: [
@@ -365,9 +376,9 @@ export const TRUST_SECTION_CONTENT = {
   eyebrow: "FAIRNESS, PRIVACY & ACCOUNTABILITY",
   heading: "Evidence should be inspectable. Decisions should be accountable.",
   subheading:
-    "Automated technical assessment carries real responsibility. TalentLens is architected around inspectable provenance, strict consent boundaries, bias-aware design, and human decision ownership.",
+    "Automated technical assessment carries real responsibility. CheckTalent is architected around inspectable provenance, strict consent boundaries, bias-aware design, and human decision ownership.",
   methodologicalDisclaimer:
-    "Methodological note: TalentLens does not claim guaranteed accuracy, zero bias, or automated legal compliance. Confidence indicators represent qualitative evidence consistency and are meaningful only when supported by human review.",
+    "Methodological note: CheckTalent does not claim guaranteed accuracy, zero bias, or automated legal compliance. Confidence indicators represent qualitative evidence consistency and are meaningful only when supported by human review.",
   pillars: [
     {
       id: "trust-explainability",
@@ -391,7 +402,8 @@ export const TRUST_SECTION_CONTENT = {
         "Opt-in candidate authorization required before indexing any repository.",
         "Private source code is never exposed to third parties without explicit permission.",
       ],
-      boundaryNote: "Candidate-controlled visibility and revocable verification links.",
+      boundaryNote:
+        "Candidate-controlled visibility and revocable verification links.",
       icon: "lock",
     },
     {
@@ -404,7 +416,8 @@ export const TRUST_SECTION_CONTENT = {
         "Excludes college tier, gender, age, and location from candidate ranking logic.",
         "Uses controlled evaluation scenarios to audit scoring consistency across cohorts.",
       ],
-      boundaryNote: "Ongoing empirical evaluation rather than unsubstantiated claims.",
+      boundaryNote:
+        "Ongoing empirical evaluation rather than unsubstantiated claims.",
       icon: "sliders",
     },
     {
@@ -416,7 +429,8 @@ export const TRUST_SECTION_CONTENT = {
         "Assessments operate strictly as structured decision support, never auto-rejection.",
         "Template similarity reports include uncertainty and require human interpretation.",
       ],
-      boundaryNote: "Final hiring judgment always rests with accountable human reviewers.",
+      boundaryNote:
+        "Final hiring judgment always rests with accountable human reviewers.",
       icon: "user-cog",
     },
   ] satisfies ReadonlyArray<TrustPillar>,
@@ -426,7 +440,7 @@ export const USE_CASES_CONTENT = {
   eyebrow: "APPLICATIONS · WHERE EVIDENCE MATTERS MOST",
   heading: "Designed for real technical evaluation workflows.",
   subheading:
-    "From early-stage engineering teams to campus placement cohorts, TalentLens adapts to wherever practical capability needs to be demonstrated and inspected.",
+    "From early-stage engineering teams to campus placement cohorts, CheckTalent adapts to wherever practical capability needs to be demonstrated and inspected.",
   items: [
     {
       id: "uc-startups",

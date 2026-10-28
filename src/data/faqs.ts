@@ -4,7 +4,7 @@ export const FAQ_SECTION_CONTENT = {
   eyebrow: "FREQUENTLY ASKED QUESTIONS",
   heading: "Clear answers on methodology and trust.",
   subheading:
-    "How TalentLens evaluates technical evidence, protects candidate code, and keeps hiring decisions accountable to people.",
+    "How CheckTalent evaluates technical evidence, protects candidate code, and keeps hiring decisions accountable to people.",
 } as const;
 
 export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
@@ -12,9 +12,9 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     id: "faq-what-is",
     index: "01",
     category: "Platform",
-    question: "What is TalentLens?",
+    question: "What is CheckTalent?",
     answer:
-      "TalentLens is an AI-powered developer skill verification platform. It connects source code repositories, adaptive technical viva defenses, and transparent rubrics into inspectable Skill Proof Cards that prove practical capability.",
+      "CheckTalent is an AI-powered developer skill verification platform. It connects source code repositories, adaptive technical viva defenses, and transparent rubrics into inspectable Skill Proof Cards that prove practical capability.",
   },
   {
     id: "faq-different-from-scanner",
@@ -22,7 +22,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Platform",
     question: "How is it different from an AI resume scanner?",
     answer:
-      "Resume scanners match keywords on a PDF. TalentLens inspects real codebase structure, error boundaries, and API designs—paired with an interactive technical viva where candidates defend their actual implementation choices.",
+      "Resume scanners match keywords on a PDF. CheckTalent inspects real codebase structure, error boundaries, and API designs—paired with an interactive technical viva where candidates defend their actual implementation choices.",
   },
   {
     id: "faq-github-required",
@@ -38,7 +38,7 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Verification",
     question: "Does repository analysis prove who wrote the code?",
     answer:
-      "No. Static code inspection alone cannot prove authorship. That is why TalentLens pairs code mapping with an AI Technical Viva that probes candidate comprehension, architecture choices, and failure trade-offs.",
+      "No. Static code inspection alone cannot prove authorship. That is why CheckTalent pairs code mapping with an AI Technical Viva that probes candidate comprehension, architecture choices, and failure trade-offs.",
   },
   {
     id: "faq-private-repos",
@@ -54,6 +54,6 @@ export const FAQ_ITEMS: ReadonlyArray<FAQItem> = [
     category: "Privacy & Fairness",
     question: "Does the platform automatically reject candidates?",
     answer:
-      "No. TalentLens provides structured decision support to human reviewers. We never auto-reject applicants; our goal is to highlight verified strengths and focus live engineering interviews.",
+      "No. CheckTalent provides structured decision support to human reviewers. We never auto-reject applicants; our goal is to highlight verified strengths and focus live engineering interviews.",
   },
 ];

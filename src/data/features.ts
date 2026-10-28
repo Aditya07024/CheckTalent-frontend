@@ -4,7 +4,7 @@ export const FEATURE_EXPLORER_HEADER = {
   eyebrow: "PLATFORM CAPABILITIES",
   heading: "Six domains. One verification pipeline.",
   subheading:
-    "Select a domain to explore TalentLens modules — from static code analysis to recruiter decision support.",
+    "Select a domain to explore CheckTalent modules — from static code analysis to recruiter decision support.",
   previewDisclaimer:
     "Illustrative previews depict representative system structures.",
 } as const;
@@ -102,13 +102,15 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
         },
         {
           label: "Permission Boundary",
-          detail: "Read-only tree & commit metadata for 1 explicitly selected repo; private unchosen repos excluded",
+          detail:
+            "Read-only tree & commit metadata for 1 explicitly selected repo; private unchosen repos excluded",
           classification: "System Metadata",
           badge: "Scoped OAuth",
         },
         {
           label: "Indexed Manifest",
-          detail: "package.json, tsconfig.json, 48 source files queued for static adapters",
+          detail:
+            "package.json, tsconfig.json, 48 source files queued for static adapters",
           classification: "Verified Observation",
           badge: "48 Files",
         },
@@ -143,13 +145,15 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
           lineNumber: 15,
           code: "  constructor(private readonly repo: OrderRepository, private readonly bus: EventBus) {}",
           highlight: "lime",
-          annotation: "Constructor dependency injection enables isolated testing",
+          annotation:
+            "Constructor dependency injection enables isolated testing",
         },
         {
           lineNumber: 16,
           code: "  async assignCourier(orderId: OrderId, courierId: CourierId): Promise<Result<Assignment>> {",
           highlight: "lime",
-          annotation: "Explicit Result<T> return type avoids untyped exception leaks",
+          annotation:
+            "Explicit Result<T> return type avoids untyped exception leaks",
         },
         {
           lineNumber: 17,
@@ -158,9 +162,21 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
         },
       ],
       extractedSignals: [
-        { label: "Layer Separation", value: "Route → Service → Repository", tone: "verified" },
-        { label: "Type Strictness", value: "strict: true · 0 explicit any", tone: "verified" },
-        { label: "Coupling Note", value: "Clean interface boundary", tone: "neutral" },
+        {
+          label: "Layer Separation",
+          value: "Route → Service → Repository",
+          tone: "verified",
+        },
+        {
+          label: "Type Strictness",
+          value: "strict: true · 0 explicit any",
+          tone: "verified",
+        },
+        {
+          label: "Coupling Note",
+          value: "Clean interface boundary",
+          tone: "neutral",
+        },
       ],
     },
   },
@@ -186,19 +202,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Initial Scaffolding → Domain Layer",
-          detail: "Commits 01–09: Initialized schema & Express/Next route skeletons",
+          detail:
+            "Commits 01–09: Initialized schema & Express/Next route skeletons",
           classification: "Verified Observation",
           badge: "Phase 1",
         },
         {
           label: "Refactor: Error Envelope Normalization",
-          detail: "Commit 21 (c84f19a): Replaced ad-hoc try/catch blocks with centralized error middleware",
+          detail:
+            "Commit 21 (c84f19a): Replaced ad-hoc try/catch blocks with centralized error middleware",
           classification: "Verified Observation",
           badge: "Refactor",
         },
         {
           label: "Authorship Interpretation Guardrail",
-          detail: "Git log informs Viva question selection only; does not establish sole authorship",
+          detail:
+            "Git log informs Viva question selection only; does not establish sole authorship",
           classification: "System Metadata",
           badge: "Non-Conclusive",
         },
@@ -267,19 +286,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Matched Starter Baseline",
-          detail: "Auth & Next.js config structure resembles standard T3/create-next-app scaffolding",
+          detail:
+            "Auth & Next.js config structure resembles standard T3/create-next-app scaffolding",
           classification: "Verified Observation",
           badge: "Boilerplate",
         },
         {
           label: "Custom Divergent Modules (Candidate Focus)",
-          detail: "19 modules in `src/features/orders/*` and `useOrderStream.ts` show custom domain logic",
+          detail:
+            "19 modules in `src/features/orders/*` and `useOrderStream.ts` show custom domain logic",
           classification: "Verified Observation",
           badge: "Custom Work",
         },
         {
           label: "Interpretation & Uncertainty Notice",
-          detail: "Shared scaffolding is normal engineering practice; Viva targets custom modules for comprehension",
+          detail:
+            "Shared scaffolding is normal engineering practice; Viva targets custom modules for comprehension",
           classification: "Inferred Assessment",
           badge: "Human Review",
         },
@@ -349,7 +371,8 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
           lineNumber: 41,
           code: "const parsed = PatchOrderStatusSchema.safeParse(await req.json());",
           highlight: "lime",
-          annotation: "EVIDENCE #E-104: Input validated prior to domain mutation",
+          annotation:
+            "EVIDENCE #E-104: Input validated prior to domain mutation",
         },
         {
           lineNumber: 42,
@@ -364,9 +387,21 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
         },
       ],
       extractedSignals: [
-        { label: "Citation Anchor", value: "orders.route.ts:L41–L43", tone: "verified" },
-        { label: "Linked Skill", value: "API Design · Input Validation", tone: "verified" },
-        { label: "Traceability", value: "100% file-referenced", tone: "neutral" },
+        {
+          label: "Citation Anchor",
+          value: "orders.route.ts:L41–L43",
+          tone: "verified",
+        },
+        {
+          label: "Linked Skill",
+          value: "API Design · Input Validation",
+          tone: "verified",
+        },
+        {
+          label: "Traceability",
+          value: "100% file-referenced",
+          tone: "neutral",
+        },
       ],
     },
   },
@@ -398,8 +433,14 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       followUpOrFeedback:
         "Rubric match: Accurately links React render referential identity to network subscription stability.",
       rubricChecks: [
-        { criterion: "Identifies stale-closure vs. reconnect trade-off", status: "Demonstrated" },
-        { criterion: "References actual hook lifecycle behavior", status: "Demonstrated" },
+        {
+          criterion: "Identifies stale-closure vs. reconnect trade-off",
+          status: "Demonstrated",
+        },
+        {
+          criterion: "References actual hook lifecycle behavior",
+          status: "Demonstrated",
+        },
       ],
     },
   },
@@ -427,8 +468,14 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       followUpOrFeedback:
         "Adaptive outcome: Candidate recognized an unimplemented edge case honestly and proposed a sound sequence-cursor recovery pattern.",
       rubricChecks: [
-        { criterion: "Recognizes distributed state gap on reconnect", status: "Demonstrated" },
-        { criterion: "Proposes viable reconciliation mechanism", status: "Demonstrated" },
+        {
+          criterion: "Recognizes distributed state gap on reconnect",
+          status: "Demonstrated",
+        },
+        {
+          criterion: "Proposes viable reconciliation mechanism",
+          status: "Demonstrated",
+        },
       ],
     },
   },
@@ -488,7 +535,8 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
     preview: {
       kind: "viva-exchange",
       panelTitle: "Architectural Trade-Off Defense",
-      sourceReference: "src/server/routes/orders.route.ts · Architecture Review",
+      sourceReference:
+        "src/server/routes/orders.route.ts · Architecture Review",
       promptQuestion:
         "You chose server-sent polling/streaming over full bidirectional WebSockets for order board updates. Walk through the trade-offs behind that choice.",
       candidateExcerpt:
@@ -496,8 +544,14 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       followUpOrFeedback:
         "Defense verified: Articulates pragmatic protocol selection aligned with read-push / REST-write architecture.",
       rubricChecks: [
-        { criterion: "Justifies protocol choice against workload", status: "Demonstrated" },
-        { criterion: "Articulates operational trade-offs", status: "Demonstrated" },
+        {
+          criterion: "Justifies protocol choice against workload",
+          status: "Demonstrated",
+        },
+        {
+          criterion: "Articulates operational trade-offs",
+          status: "Demonstrated",
+        },
       ],
     },
   },
@@ -558,18 +612,23 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       kind: "roadmap-action",
       panelTitle: "Post-Viva Diagnostic Feedback Brief",
       targetRole: "Full Stack Developer Viva Session #1",
-      currentGap: "Concurrent write race condition in PATCH /api/orders/:id/status",
+      currentGap:
+        "Concurrent write race condition in PATCH /api/orders/:id/status",
       steps: [
         {
           stepCode: "DIAG-01",
-          action: "Review optimistic concurrency control using a `version` column in conditional SQL updates",
-          artifactProduced: "Eliminates read-then-write status overwrite window",
+          action:
+            "Review optimistic concurrency control using a `version` column in conditional SQL updates",
+          artifactProduced:
+            "Eliminates read-then-write status overwrite window",
           status: "Recommended",
         },
         {
           stepCode: "DIAG-02",
-          action: "Add integration test simulating two simultaneous PATCH requests expecting one HTTP 409",
-          artifactProduced: "Converts conceptual viva answer into committed code proof",
+          action:
+            "Add integration test simulating two simultaneous PATCH requests expecting one HTTP 409",
+          artifactProduced:
+            "Converts conceptual viva answer into committed code proof",
           status: "Target Outcome",
         },
       ],
@@ -599,19 +658,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "React · Strong evidence",
-          detail: "Backed by 14 typed components, `useOrderStream.ts`, and verified Viva Q-02 defense",
+          detail:
+            "Backed by 14 typed components, `useOrderStream.ts`, and verified Viva Q-02 defense",
           classification: "Inferred Assessment",
           badge: "Strong",
         },
         {
           label: "API Design · Moderate evidence",
-          detail: "Backed by 6 Zod-validated routes & `errorEnvelope.ts`; concurrency lock noted as gap",
+          detail:
+            "Backed by 6 Zod-validated routes & `errorEnvelope.ts`; concurrency lock noted as gap",
           classification: "Inferred Assessment",
           badge: "Moderate",
         },
         {
           label: "Testing · Insufficient evidence",
-          detail: "Only 1 unit test file detected; supplemental testing challenge recommended",
+          detail:
+            "Only 1 unit test file detected; supplemental testing challenge recommended",
           classification: "Verified Observation",
           badge: "Insufficient",
         },
@@ -636,7 +698,11 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
     preview: {
       kind: "comparison-matrix",
       panelTitle: "Qualitative Evidence Consistency Matrix",
-      columns: ["Consistency Band", "Required Signal Alignment", "Interpretation"],
+      columns: [
+        "Consistency Band",
+        "Required Signal Alignment",
+        "Interpretation",
+      ],
       rows: [
         {
           dimension: "High Consistency",
@@ -680,19 +746,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Resume Claim: Automated Testing (Jest / Vitest)",
-          detail: "Only 34 lines of unit tests found across 48 files; 0 async route or component specs",
+          detail:
+            "Only 34 lines of unit tests found across 48 files; 0 async route or component specs",
           classification: "Verified Observation",
           badge: "Insufficient Evidence",
         },
         {
           label: "Resume Claim: Containerized Deployment (Docker)",
-          detail: "No Dockerfile, compose manifest, or CI workflow present in evaluated repository",
+          detail:
+            "No Dockerfile, compose manifest, or CI workflow present in evaluated repository",
           classification: "Verified Observation",
           badge: "Unverified in Repo",
         },
         {
           label: "Recommended Resolution",
-          detail: "Attach second repository with CI/test suite or complete targeted testing assessment",
+          detail:
+            "Attach second repository with CI/test suite or complete targeted testing assessment",
           classification: "System Metadata",
           badge: "Actionable",
         },
@@ -719,19 +788,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Artifact Origin",
-          detail: "Repo `order-dispatch-workspace` @ commit `9f31c8b` + Viva Session #1",
+          detail:
+            "Repo `order-dispatch-workspace` @ commit `9f31c8b` + Viva Session #1",
           classification: "System Metadata",
           badge: "Immutable Ref",
         },
         {
           label: "Applied Rubric & Timestamp",
-          detail: "Rubric `RUB-FE-REACT-04` (v1.2) · Evaluated 2026-10-18T14:20Z",
+          detail:
+            "Rubric `RUB-FE-REACT-04` (v1.2) · Evaluated 2026-10-18T14:20Z",
           classification: "System Metadata",
           badge: "Versioned",
         },
         {
           label: "Observation vs. Inference Split",
-          detail: "3 direct file observations separated explicitly from 1 rubric synthesis statement",
+          detail:
+            "3 direct file observations separated explicitly from 1 rubric synthesis statement",
           classification: "Verified Observation",
           badge: "Auditable",
         },
@@ -758,21 +830,25 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       rules: [
         {
           rule: "Selected Proof Scope",
-          enforcement: "Shares React & API Design cards + approved snippets; raw private repo stays hidden",
+          enforcement:
+            "Shares React & API Design cards + approved snippets; raw private repo stays hidden",
           state: "Enforced",
         },
         {
           rule: "Link Expiration & Revocation",
-          enforcement: "30-day expiry window with instant one-click candidate revocation",
+          enforcement:
+            "30-day expiry window with instant one-click candidate revocation",
           state: "Enforced",
         },
         {
           rule: "Viewer Transparency",
-          enforcement: "Displays provenance timestamps and rubric definitions to reviewing hiring teams",
+          enforcement:
+            "Displays provenance timestamps and rubric definitions to reviewing hiring teams",
           state: "Human Gate",
         },
       ],
-      auditNote: "Planned Phase 3 capability: Candidate retains ownership of shared verification views.",
+      auditNote:
+        "Planned Phase 3 capability: Candidate retains ownership of shared verification views.",
     },
   },
   {
@@ -830,14 +906,17 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       steps: [
         {
           stepCode: "ALT-01",
-          action: "Select role-aligned scoped reference problem or upload sanitized standalone module",
+          action:
+            "Select role-aligned scoped reference problem or upload sanitized standalone module",
           artifactProduced: "Self-contained inspectable source artifact",
           status: "Recommended",
         },
         {
           stepCode: "ALT-02",
-          action: "Complete interactive code defense & modification prompt on the submitted artifact",
-          artifactProduced: "Rubric-backed Skill Proof Card without requiring public GitHub history",
+          action:
+            "Complete interactive code defense & modification prompt on the submitted artifact",
+          artifactProduced:
+            "Rubric-backed Skill Proof Card without requiring public GitHub history",
           status: "Target Outcome",
         },
       ],
@@ -867,19 +946,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Core Requirement: React & Stateful UI",
-          detail: "Mapped to Rubric `RUB-FE-REACT-04` (component boundaries, async hooks, state hygiene)",
+          detail:
+            "Mapped to Rubric `RUB-FE-REACT-04` (component boundaries, async hooks, state hygiene)",
           classification: "System Metadata",
           badge: "Required",
         },
         {
           label: "Core Requirement: REST API & Validation",
-          detail: "Mapped to Rubric `RUB-BE-API-02` (schema validation, HTTP status contracts, error handling)",
+          detail:
+            "Mapped to Rubric `RUB-BE-API-02` (schema validation, HTTP status contracts, error handling)",
           classification: "System Metadata",
           badge: "Required",
         },
         {
           label: "Preferred Criterion: Integration Testing",
-          detail: "Mapped to Rubric `RUB-QA-TEST-01` (flagged as interview probe if repo lacks specs)",
+          detail:
+            "Mapped to Rubric `RUB-QA-TEST-01` (flagged as interview probe if repo lacks specs)",
           classification: "System Metadata",
           badge: "Preferred",
         },
@@ -942,7 +1024,11 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
     preview: {
       kind: "comparison-matrix",
       panelTitle: "Uniform Rubric Candidate Matrix (Illustrative)",
-      columns: ["Rubric Dimension", "Profile A (Repo + Viva)", "Profile B (Repo + Viva)"],
+      columns: [
+        "Rubric Dimension",
+        "Profile A (Repo + Viva)",
+        "Profile B (Repo + Viva)",
+      ],
       rows: [
         {
           dimension: "React State & Hooks",
@@ -986,21 +1072,25 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       rules: [
         {
           rule: "Priority Weight: Input Validation & Error Contracts",
-          enforcement: "Require runtime schema parsing + non-leaking HTTP error responses",
+          enforcement:
+            "Require runtime schema parsing + non-leaking HTTP error responses",
           state: "Enforced",
         },
         {
           rule: "Viva Mandatory Probe: Failure Recovery",
-          enforcement: "Generate 1 viva question on database transactions or network retry behavior",
+          enforcement:
+            "Generate 1 viva question on database transactions or network retry behavior",
           state: "Enforced",
         },
         {
           rule: "Non-Penalized Styling / Framework Choice",
-          enforcement: "Accept Express, Fastify, or Next.js Route Handlers equivalently",
+          enforcement:
+            "Accept Express, Fastify, or Next.js Route Handlers equivalently",
           state: "Human Gate",
         },
       ],
-      auditNote: "Custom rubrics standardize evaluation across every applicant for the role.",
+      auditNote:
+        "Custom rubrics standardize evaluation across every applicant for the role.",
     },
   },
   {
@@ -1023,19 +1113,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Alex Morgan · Full Stack Track",
-          detail: "Status: Shortlisted for HM Live Pairing · Focus live session on integration testing",
+          detail:
+            "Status: Shortlisted for HM Live Pairing · Focus live session on integration testing",
           classification: "System Metadata",
           badge: "HM Review",
         },
         {
           label: "Priya Nair · Full Stack Track",
-          detail: "Status: Awaiting Viva Completion · Strong static API & test suite detected",
+          detail:
+            "Status: Awaiting Viva Completion · Strong static API & test suite detected",
           classification: "System Metadata",
           badge: "Pending Viva",
         },
         {
           label: "Decision Ownership",
-          detail: "Stage transitions require explicit recruiter or hiring manager action",
+          detail:
+            "Stage transitions require explicit recruiter or hiring manager action",
           classification: "System Metadata",
           badge: "Human Owned",
         },
@@ -1062,19 +1155,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Verified Strengths (Skip Repetitive Trivia)",
-          detail: "React hook lifecycles & Zod API validation already substantiated with code + viva",
+          detail:
+            "React hook lifecycles & Zod API validation already substantiated with code + viva",
           classification: "Verified Observation",
           badge: "Substantiated",
         },
         {
           label: "Recommended Live Interview Probes",
-          detail: "Explore database transaction locking and write 1 async route test live",
+          detail:
+            "Explore database transaction locking and write 1 async route test live",
           classification: "Inferred Assessment",
           badge: "Probe Live",
         },
         {
           label: "Explicit Scope Limitation",
-          detail: "Single repository evaluated; CI/CD & cloud infra claims remain unverified",
+          detail:
+            "Single repository evaluated; CI/CD & cloud infra claims remain unverified",
           classification: "System Metadata",
           badge: "Limitation",
         },
@@ -1126,8 +1222,16 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
         },
       ],
       extractedSignals: [
-        { label: "Delivery Phase", value: "Planned — Phase 4", tone: "caution" },
-        { label: "Contract Guarantee", value: "requiresHumanReview: true", tone: "verified" },
+        {
+          label: "Delivery Phase",
+          value: "Planned — Phase 4",
+          tone: "caution",
+        },
+        {
+          label: "Contract Guarantee",
+          value: "requiresHumanReview: true",
+          tone: "verified",
+        },
       ],
     },
   },
@@ -1151,7 +1255,11 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
     preview: {
       kind: "comparison-matrix",
       panelTitle: "Role Readiness Evidence Gap Diagnostic",
-      columns: ["Target Competency", "Current Proof Status", "Root Cause of Gap"],
+      columns: [
+        "Target Competency",
+        "Current Proof Status",
+        "Root Cause of Gap",
+      ],
       rows: [
         {
           dimension: "Integration Testing",
@@ -1196,13 +1304,15 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       steps: [
         {
           stepCode: "STEP-01",
-          action: "Build Vitest + Supertest integration suite covering 200, 409, and 422 responses in `orders.route.ts`",
+          action:
+            "Build Vitest + Supertest integration suite covering 200, 409, and 422 responses in `orders.route.ts`",
           artifactProduced: "Verifiable async API test coverage artifact",
           status: "Recommended",
         },
         {
           stepCode: "STEP-02",
-          action: "Implement optimistic locking (`WHERE id = $1 AND version = $2`) in order status mutations",
+          action:
+            "Implement optimistic locking (`WHERE id = $1 AND version = $2`) in order status mutations",
           artifactProduced: "Concurrency-safe domain mutation pattern",
           status: "Recommended",
         },
@@ -1258,7 +1368,11 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
         },
       ],
       extractedSignals: [
-        { label: "Target Skill", value: "Integration Testing & API Safety", tone: "verified" },
+        {
+          label: "Target Skill",
+          value: "Integration Testing & API Safety",
+          tone: "verified",
+        },
         { label: "Roadmap Stage", value: "Planned — Phase 4", tone: "caution" },
       ],
     },
@@ -1283,19 +1397,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Featured Project: Order Dispatch Workspace",
-          detail: "TypeScript · React · Node.js — 48 indexed files, 3 architectural citations",
+          detail:
+            "TypeScript · React · Node.js — 48 indexed files, 3 architectural citations",
           classification: "Verified Observation",
           badge: "Inspected",
         },
         {
           label: "Highlighted Code Defense",
-          detail: "SSE subscription lifecycle & HTTP error envelope normalization",
+          detail:
+            "SSE subscription lifecycle & HTTP error envelope normalization",
           classification: "Verified Observation",
           badge: "Viva Logged",
         },
         {
           label: "Visibility Control",
-          detail: "Candidate selects which Proof Cards and project summaries appear publicly",
+          detail:
+            "Candidate selects which Proof Cards and project summaries appear publicly",
           classification: "System Metadata",
           badge: "Opt-In",
         },
@@ -1319,18 +1436,23 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       kind: "roadmap-action",
       panelTitle: "High-Leverage Repository Proof Upgrades",
       targetRole: "Strengthening `order-dispatch-workspace` Evidence",
-      currentGap: "Strong UI & route structure, thin verification & concurrency artifacts",
+      currentGap:
+        "Strong UI & route structure, thin verification & concurrency artifacts",
       steps: [
         {
           stepCode: "UPG-01",
-          action: "Add 4–6 route integration tests covering validation errors and conflict states",
-          artifactProduced: "Upgrades Testing from Insufficient → Moderate/Strong evidence",
+          action:
+            "Add 4–6 route integration tests covering validation errors and conflict states",
+          artifactProduced:
+            "Upgrades Testing from Insufficient → Moderate/Strong evidence",
           status: "Recommended",
         },
         {
           stepCode: "UPG-02",
-          action: "Document architecture & trade-offs in `ARCHITECTURE.md` or complete API Viva follow-up",
-          artifactProduced: "Clarifies deliberate design boundaries for human reviewers",
+          action:
+            "Document architecture & trade-offs in `ARCHITECTURE.md` or complete API Viva follow-up",
+          artifactProduced:
+            "Clarifies deliberate design boundaries for human reviewers",
           status: "Optional",
         },
       ],
@@ -1360,19 +1482,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Human-Readable Claim Rationale",
-          detail: "API Design rated Moderate: Zod schemas validate inputs cleanly, while concurrent PATCH locking remains unimplemented in SQL.",
+          detail:
+            "API Design rated Moderate: Zod schemas validate inputs cleanly, while concurrent PATCH locking remains unimplemented in SQL.",
           classification: "Inferred Assessment",
           badge: "Explained",
         },
         {
           label: "Inspectable Supporting Artifacts",
-          detail: "`orders.route.ts:L41–L43`, `errorEnvelope.ts:L19–L37`, and Viva response `VIVA-Q-04`",
+          detail:
+            "`orders.route.ts:L41–L43`, `errorEnvelope.ts:L19–L37`, and Viva response `VIVA-Q-04`",
           classification: "Verified Observation",
           badge: "3 Citations",
         },
         {
           label: "Opaque Score Prohibition",
-          detail: "System blocks unreferenced numeric skill scores without linked evidence items",
+          detail:
+            "System blocks unreferenced numeric skill scores without linked evidence items",
           classification: "System Metadata",
           badge: "Policy Rule",
         },
@@ -1401,21 +1526,25 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       rules: [
         {
           rule: "Profile Metadata Invariance Check",
-          enforcement: "Verify identical Proof Card & match outputs when non-technical profile metadata varies",
+          enforcement:
+            "Verify identical Proof Card & match outputs when non-technical profile metadata varies",
           state: "Enforced",
         },
         {
           rule: "Coding Style & Framework Neutrality Check",
-          enforcement: "Audit rubric consistency across equivalent implementations using different valid idioms",
+          enforcement:
+            "Audit rubric consistency across equivalent implementations using different valid idioms",
           state: "Enforced",
         },
         {
           rule: "Disparity Escalation Gate",
-          enforcement: "Flag rubric variance above threshold for human methodological review",
+          enforcement:
+            "Flag rubric variance above threshold for human methodological review",
           state: "Human Gate",
         },
       ],
-      auditNote: "Planned Phase 3 evaluation suite for ongoing rubric invariance testing.",
+      auditNote:
+        "Planned Phase 3 evaluation suite for ongoing rubric invariance testing.",
     },
   },
   {
@@ -1450,11 +1579,13 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
         },
         {
           rule: "Indirect Proxy Mitigation",
-          enforcement: "Strip graduation/campus tokens from resume text before rubric matching where feasible",
+          enforcement:
+            "Strip graduation/campus tokens from resume text before rubric matching where feasible",
           state: "Enforced",
         },
       ],
-      auditNote: "Ranking operates exclusively on rubric-verified skill evidence and role criteria.",
+      auditNote:
+        "Ranking operates exclusively on rubric-verified skill evidence and role criteria.",
     },
   },
   {
@@ -1477,19 +1608,22 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       entries: [
         {
           label: "Flagged Finding",
-          detail: "Candidate contested 'Zero E2E Tests'—noted Playwright suite lives in sibling repo `order-e2e-specs`",
+          detail:
+            "Candidate contested 'Zero E2E Tests'—noted Playwright suite lives in sibling repo `order-e2e-specs`",
           classification: "System Metadata",
           badge: "Contested",
         },
         {
           label: "Submitted Supplemental Evidence",
-          detail: "Attached authorized link to `order-e2e-specs` + architectural context note",
+          detail:
+            "Attached authorized link to `order-e2e-specs` + architectural context note",
           classification: "Verified Observation",
           badge: "Supplemented",
         },
         {
           label: "Resolution Path",
-          detail: "Triggers re-indexing or attaches candidate context banner directly to Proof Card",
+          detail:
+            "Triggers re-indexing or attaches candidate context banner directly to Proof Card",
           classification: "System Metadata",
           badge: "Transparent",
         },
@@ -1516,21 +1650,25 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       rules: [
         {
           rule: "Pre-Analysis Repository Consent",
-          enforcement: "Zero repository cloning or indexing without explicit candidate authorization",
+          enforcement:
+            "Zero repository cloning or indexing without explicit candidate authorization",
           state: "Enforced",
         },
         {
           rule: "Snippet & File Visibility Toggle",
-          enforcement: "Candidate approves whether short evidence snippets appear on shared Proof Cards",
+          enforcement:
+            "Candidate approves whether short evidence snippets appear on shared Proof Cards",
           state: "Enforced",
         },
         {
           rule: "Access Revocation",
-          enforcement: "Candidates can disconnect GitHub tokens and revoke shared Proof links at any time",
+          enforcement:
+            "Candidates can disconnect GitHub tokens and revoke shared Proof links at any time",
           state: "Enforced",
         },
       ],
-      auditNote: "Private repository contents are never exposed directly to recruiters.",
+      auditNote:
+        "Private repository contents are never exposed directly to recruiters.",
     },
   },
   {
@@ -1553,21 +1691,25 @@ export const PLATFORM_FEATURES: ReadonlyArray<PlatformFeature> = [
       rules: [
         {
           rule: "Prohibition on Autonomous Disqualification",
-          enforcement: "System cannot auto-reject applicants; 'Insufficient evidence' prompts inquiry, not rejection",
+          enforcement:
+            "System cannot auto-reject applicants; 'Insufficient evidence' prompts inquiry, not rejection",
           state: "Human Gate",
         },
         {
           rule: "Similarity Report Handling",
-          enforcement: "Template overlap requires human context review alongside Viva comprehension",
+          enforcement:
+            "Template overlap requires human context review alongside Viva comprehension",
           state: "Human Gate",
         },
         {
           rule: "Accountable Stage Progression",
-          enforcement: "Shortlisting and interview outcomes require named human reviewer confirmation",
+          enforcement:
+            "Shortlisting and interview outcomes require named human reviewer confirmation",
           state: "Enforced",
         },
       ],
-      auditNote: "TalentLens informs human engineering reviewers—it never replaces them.",
+      auditNote:
+        "CheckTalent informs human engineering reviewers—it never replaces them.",
     },
   },
 ];

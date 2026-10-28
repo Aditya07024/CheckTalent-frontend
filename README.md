@@ -1,4 +1,4 @@
-# TalentLens
+# CheckTalent
 
 **Explainable Candidate Evaluation Through Code Analysis and Technical Interviews**
 
@@ -10,12 +10,12 @@ An AI-powered developer intelligence and candidate evaluation platform that tran
 
 This repository enforces a **branch-only management workflow**. Direct feature work is never committed straight to `main`.
 
-| Branch | Purpose | Promotion Rule |
-| :--- | :--- | :--- |
-| `main` | Protected production baseline | Receives verified merges only from staging branches |
-| `staging-1` | Primary QA & integration testing branch | Receives PRs from feature branches (`landing-page`, `feat/*`) |
-| `staging-2` | Secondary pre-production / UAT verification branch | Used for parallel test cohorts & release sign-off before `main` |
-| `landing-page` | Complete TalentLens desktop-first product landing page | Feature branch containing the Next.js App Router frontend |
+| Branch         | Purpose                                                 | Promotion Rule                                                  |
+| :------------- | :------------------------------------------------------ | :-------------------------------------------------------------- |
+| `main`         | Protected production baseline                           | Receives verified merges only from staging branches             |
+| `staging-1`    | Primary QA & integration testing branch                 | Receives PRs from feature branches (`landing-page`, `feat/*`)   |
+| `staging-2`    | Secondary pre-production / UAT verification branch      | Used for parallel test cohorts & release sign-off before `main` |
+| `landing-page` | Complete CheckTalent desktop-first product landing page | Feature branch containing the Next.js App Router frontend       |
 
 See [`BRANCHING.md`](./BRANCHING.md) for exact Git promotion commands and workflow conventions.
 

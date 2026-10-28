@@ -44,26 +44,18 @@ export const FOOTER_LINK_GROUPS: ReadonlyArray<FooterLinkGroup> = [
     heading: "Governance & Legal",
     links: [
       {
-        label: "Privacy Policy (Placeholder)",
-        href: "#privacy-placeholder",
-        isPlaceholder: true,
-        placeholderNotice:
-          "Privacy documentation placeholder: Prior to launch, this policy will specify repository consent scopes, token revocation controls, retention windows, and candidate data deletion rights.",
-      },
+        label: "Privacy Policy",
+        href: "/privacy",
+        },
       {
-        label: "Terms of Use (Placeholder)",
-        href: "#terms-placeholder",
+        label: "Terms of Use",
+        href: "/terms",
         isPlaceholder: true,
-        placeholderNotice:
-          "Terms of Use placeholder: Formal service terms governing candidate submissions, recruiter workspaces, and acceptable assessment usage will be published before general availability.",
-      },
+        },
       {
-        label: "Contact (Placeholder)",
-        href: `#${SECTION_IDS.earlyAccess}`,
-        isPlaceholder: true,
-        placeholderNotice:
-          "Contact channel placeholder: Use the early-access inquiry form above to reach the project team during the pre-release development phase.",
-      },
+        label: "Contact",
+        href: "/contact",
+        },
     ],
   },
 ];

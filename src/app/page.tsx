@@ -1,23 +1,80 @@
 import React from "react";
+import dynamic from "next/dynamic";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { RepoShowcaseSection } from "@/components/sections/RepoShowcaseSection";
+import { ProblemSection } from "@/components/sections/ProblemSection";
+import { SolutionSection } from "@/components/sections/SolutionSection";
+import { ProofCardSection } from "@/components/sections/ProofCardSection";
+import { CandidatesSection } from "@/components/sections/CandidatesSection";
+import { RecruitersSection } from "@/components/sections/RecruitersSection";
+import { TrustSection } from "@/components/sections/TrustSection";
+import { UseCasesSection } from "@/components/sections/UseCasesSection";
+import { RoadmapSection } from "@/components/sections/RoadmapSection";
+import { GlobalExperience3D } from "@/components/three/GlobalExperience3D";
+import { PolyglotMarquee3D } from "@/components/three/PolyglotMarquee3D";
 
-export default function BaselinePage() {
+const FAQSection = dynamic(() =>
+  import("@/components/sections/FAQSection").then((mod) => mod.FAQSection)
+);
+
+const CTASection = dynamic(() =>
+  import("@/components/sections/CTASection").then((mod) => mod.CTASection)
+);
+
+export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-canvas px-6 py-20 text-center">
-      <div className="max-w-xl rounded-xl border border-hairline bg-canvas-secondary p-8">
-        <span className="inline-block rounded border border-lime/30 bg-lime-dim px-2.5 py-1 font-mono text-xs text-lime">
-          PROOF OF SKILL · ENVIRONMENT BASELINE
-        </span>
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-          Branch-Managed Repository Baseline
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-ink-secondary">
-          This deployment reflects the clean baseline branch (<code>main</code>,{" "}
-          <code>staging-1</code>, or <code>staging-2</code>). The complete Proof
-          of Skill product landing page lives on the{" "}
-          <code className="text-lime">landing-page</code> branch and can be
-          previewed directly or promoted via Pull Request.
-        </p>
-      </div>
-    </main>
+    <div className="relative flex min-h-screen flex-col">
+      {/* Full-Viewport Scroll-Reactive Three.js 3D World + 3D Scroll HUD */}
+      <GlobalExperience3D />
+
+      {/* Navigation Bar */}
+      <Navbar />
+
+      <main id="main-content" className="relative z-[2] flex-1">
+        {/* Page 1: Clean Hero + Floating Open-Air 3D Orbit */}
+        <HeroSection />
+
+        {/* 3D Extruded Polyglot Stack Ribbon */}
+        <PolyglotMarquee3D />
+
+        {/* Page 2: Shifted Repository Intelligence & Viva Preview */}
+        <RepoShowcaseSection />
+
+        {/* The Problem */}
+        <ProblemSection />
+
+        {/* The Solution */}
+        <SolutionSection />
+
+        {/* Interactive Skill Proof Card */}
+        <ProofCardSection />
+
+        {/* For Candidates */}
+        <CandidatesSection />
+
+        {/* For Recruiters */}
+        <RecruitersSection />
+
+        {/* Fairness, Privacy & Trust */}
+        <TrustSection />
+
+        {/* Use Cases */}
+        <UseCasesSection />
+
+        {/* Product Roadmap */}
+        <RoadmapSection />
+
+        {/* Frequently Asked Questions */}
+        <FAQSection />
+
+        {/* Final Call to Action */}
+        <CTASection />
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 }

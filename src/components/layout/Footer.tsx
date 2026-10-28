@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function Footer() {
   const [activePlaceholder, setActivePlaceholder] = useState<{
@@ -24,25 +25,35 @@ export function Footer() {
   } | null>(null);
 
   const handleFooterLink = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    link: {
-      label: string;
-      href: string;
-      isPlaceholder?: boolean;
-      placeholderNotice?: string;
-    }
-  ) => {
+  event: React.MouseEvent<HTMLAnchorElement>,
+  link: {
+    label: string;
+    href: string;
+    isPlaceholder?: boolean;
+    placeholderNotice?: string;
+  }
+) => {
+  if (link.isPlaceholder && link.placeholderNotice) {
     event.preventDefault();
-    if (link.isPlaceholder && link.placeholderNotice) {
-      setActivePlaceholder({
-        title: link.label,
-        notice: link.placeholderNotice,
-        href: link.href,
-      });
-      return;
-    }
-    scrollToSection(link.href);
-  };
+
+    setActivePlaceholder({
+      title: link.label,
+      notice: link.placeholderNotice,
+      href: link.href,
+    });
+
+    return;
+  }
+
+  // Allow legal pages to navigate normally.
+  if (link.href === "/privacy" || link.href === "/terms") {
+    return;
+  }
+
+  // Handle in-page section navigation.
+  event.preventDefault();
+  scrollToSection(link.href);
+};
 
   return (
     <footer className="relative z-[2] border-t-2 border-orange-200 bg-gradient-to-b from-[#F5EFE6] to-[#EFE5D6] text-ink-secondary">
@@ -89,17 +100,34 @@ export function Footer() {
                   {group.heading}
                 </h3>
                 <ul className="space-y-2.5">
-                  {group.links.map((link) => (
-                    <li key={link.label}>
-                      <a
-                        href={link.href}
-                        onClick={(e) => handleFooterLink(e, link)}
-                        className="text-sm text-ink-secondary transition-colors hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime rounded-sm"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
+                  {group.links.map((link) => {
+const isLegalPage = [
+  "/privacy",
+  "/terms",
+  "/contact",
+].includes(link.href);
+
+  return (
+    <li key={link.label}>
+      {isLegalPage ? (
+        <Link
+          href={link.href}
+          className="rounded-sm text-sm text-ink-secondary transition-colors hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
+        >
+          {link.label}
+        </Link>
+      ) : (
+        <a
+          href={link.href}
+          onClick={(e) => handleFooterLink(e, link)}
+          className="rounded-sm text-sm text-ink-secondary transition-colors hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
+        >
+          {link.label}
+        </a>
+      )}
+    </li>
+  );
+})}
                 </ul>
               </div>
             ))}

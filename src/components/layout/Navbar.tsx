@@ -16,8 +16,11 @@ import { Badge } from "@/components/ui/badge";
 import { PRIMARY_NAV_ITEMS } from "@/data/navigation";
 import { SECTION_IDS } from "@/lib/constants";
 import { cn, scrollToSection } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+
 
 export function Navbar() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signInModalOpen, setSignInModalOpen] = useState(false);
@@ -106,7 +109,7 @@ export function Navbar() {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setSignInModalOpen(true)}
+              onClick={() => router.push("/signin")}
               className="text-[13px]"
             >
               Sign In
@@ -167,16 +170,16 @@ export function Navbar() {
 
             <div className="mt-4 flex flex-col gap-2.5 border-t border-hairline pt-4">
               <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setSignInModalOpen(true);
-                }}
-                className="w-full justify-center"
-              >
-                Sign In
-              </Button>
+  type="button"
+  variant="secondary"
+  onClick={() => {
+    setMobileMenuOpen(false);
+    router.push("/signin");
+  }}
+  className="w-full justify-center"
+>
+  Sign In
+</Button>
               <Button
                 type="button"
                 onClick={handleEarlyAccessClick}

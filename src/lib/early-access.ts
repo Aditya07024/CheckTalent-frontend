@@ -25,7 +25,7 @@ export interface EarlyAccessSubmissionResult {
 
 export interface EarlyAccessServiceAdapter {
   submitRequest: (
-    payload: EarlyAccessSubmissionPayload
+    payload: EarlyAccessSubmissionPayload,
   ) => Promise<EarlyAccessSubmissionResult>;
 }
 
@@ -38,7 +38,7 @@ const VALID_ROLES: ReadonlyArray<EarlyAccessRole> = [
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export function validateEarlyAccessForm(
-  values: EarlyAccessFormValues
+  values: EarlyAccessFormValues,
 ): EarlyAccessValidationErrors {
   const errors: EarlyAccessValidationErrors = {};
 
@@ -55,11 +55,12 @@ export function validateEarlyAccessForm(
   if (!trimmedEmail) {
     errors.email = "Please enter a valid work, academic, or personal email.";
   } else if (!EMAIL_PATTERN.test(trimmedEmail)) {
-    errors.email = "Enter a valid email address (for example, alex@domain.com).";
+    errors.email =
+      "Enter a valid email address (for example, alex@domain.com).";
   }
 
   if (!values.role || !VALID_ROLES.includes(values.role)) {
-    errors.role = "Select how you plan to use TalentLens.";
+    errors.role = "Select how you plan to use CheckTalent.";
   }
 
   if (values.message.trim().length > 500) {
@@ -79,8 +80,8 @@ export const demoEarlyAccessAdapter: EarlyAccessServiceAdapter = {
     await new Promise((resolve) => setTimeout(resolve, 450));
 
     const hashSeed = Array.from(payload.email).reduce(
-      (acc, ch) => (acc * 31 + ch.charCodeAt(0)) % 9000 + 1000,
-      1024
+      (acc, ch) => ((acc * 31 + ch.charCodeAt(0)) % 9000) + 1000,
+      1024,
     );
 
     return {

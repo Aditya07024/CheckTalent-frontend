@@ -78,7 +78,7 @@ export function Navbar() {
             href={`#${SECTION_IDS.hero}`}
             onClick={(e) => handleNavClick(e, `#${SECTION_IDS.hero}`)}
             className="rounded-md py-1 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
-            aria-label="TalentLens — Return to top"
+            aria-label="CheckTalent — Return to top"
           >
             <BrandLogo />
           </a>
@@ -202,7 +202,7 @@ export function Navbar() {
               Workspace Sign-In
             </DialogTitle>
             <DialogDescription className="pt-2 leading-relaxed">
-              TalentLens is currently in pre-release development. Account
+              CheckTalent is currently in pre-release development. Account
               authentication for Candidate Proof Workspaces and Recruiter Review
               Portals will open incrementally to early-access cohorts.
             </DialogDescription>

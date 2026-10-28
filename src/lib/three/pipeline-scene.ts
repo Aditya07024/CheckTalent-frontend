@@ -84,7 +84,7 @@ function createHighResTextPlate(
   stageCode: string,
   title: string,
   tag: string,
-  colorHex: string
+  colorHex: string,
 ): THREE.CanvasTexture {
   const width = 1280;
   const height = 128;
@@ -201,7 +201,7 @@ function createBaseConsoleTexture(): THREE.CanvasTexture {
   ctx.fillStyle = "#FFFFFF";
   ctx.font = "600 22px 'Kanit', system-ui, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("TALENTLENS VERIFICATION PIPELINE", width / 2, 48);
+  ctx.fillText("CheckTalent VERIFICATION PIPELINE", width / 2, 48);
 
   // Right telemetry
   ctx.fillStyle = "#FBBF24";
@@ -222,7 +222,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
 
   // Compact, sleek front-facing server stack (reduced width for clean 40% column framing)
   const slabWidth = 1.95;
-  const slabHeight = 0.20;
+  const slabHeight = 0.2;
   const slabDepth = 1.15;
   const ySpacing = 0.42; // Calibrated vertical length so all 6 stages and bottom plate fit completely
   const totalStages = 6;
@@ -275,7 +275,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       meta.code,
       meta.label.replace(`STAGE ${meta.code} · `, ""),
       meta.tag,
-      hexString
+      hexString,
     );
     disposables.push(labelTexture);
 
@@ -285,7 +285,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     });
     disposables.push(labelMaterial);
 
-    const labelPlaneGeo = new THREE.PlaneGeometry(1.80, 0.18);
+    const labelPlaneGeo = new THREE.PlaneGeometry(1.8, 0.18);
     disposables.push(labelPlaneGeo);
     const labelPlane = new THREE.Mesh(labelPlaneGeo, labelMaterial);
     labelPlane.position.set(0, 0, slabDepth / 2 + 0.012);
@@ -297,7 +297,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
 
     if (idx === 0) {
       // Stage 01: Intake — Stacked document / repo cards
-      const docGeo = new THREE.BoxGeometry(0.40, 0.025, 0.50);
+      const docGeo = new THREE.BoxGeometry(0.4, 0.025, 0.5);
       const docMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.3,
@@ -366,7 +366,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       for (let gx = -1; gx <= 1; gx++) {
         for (let gz = -1; gz <= 1; gz++) {
           const gbox = new THREE.Mesh(gridBoxGeo, gridBoxMat);
-          gbox.position.set(gx * 0.20, 0.02, gz * 0.20);
+          gbox.position.set(gx * 0.2, 0.02, gz * 0.2);
           featureGroup.add(gbox);
         }
       }
@@ -386,7 +386,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
       featureGroup.add(prism);
     } else if (idx === 5) {
       // Stage 06: Human Review — Architectural review gate
-      const gateGeo = new THREE.BoxGeometry(0.50, 0.13, 0.07);
+      const gateGeo = new THREE.BoxGeometry(0.5, 0.13, 0.07);
       const gateMat = new THREE.MeshStandardMaterial({
         color: meta.color,
         roughness: 0.2,
@@ -434,8 +434,12 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   // Tier 1: Sub-Base Footing Plinth (Wider, beveled foundation plate)
   const plinthWidth = mainBarWidth + 0.25; // 2.55
   const plinthHeight = 0.08;
-  const plinthDepth = mainBarDepth + 0.20; // 1.60
-  const plinthGeo = new THREE.BoxGeometry(plinthWidth, plinthHeight, plinthDepth);
+  const plinthDepth = mainBarDepth + 0.2; // 1.60
+  const plinthGeo = new THREE.BoxGeometry(
+    plinthWidth,
+    plinthHeight,
+    plinthDepth,
+  );
   const plinthEdgesGeo = new THREE.EdgesGeometry(plinthGeo);
   disposables.push(plinthGeo, plinthEdgesGeo);
 
@@ -462,7 +466,11 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   baseBarGroup.add(plinthEdgeLine);
 
   // Tier 2: Main Machined Chassis Bar
-  const mainBarGeo = new THREE.BoxGeometry(mainBarWidth, mainBarHeight, mainBarDepth);
+  const mainBarGeo = new THREE.BoxGeometry(
+    mainBarWidth,
+    mainBarHeight,
+    mainBarDepth,
+  );
   const mainBarEdgesGeo = new THREE.EdgesGeometry(mainBarGeo);
   disposables.push(mainBarGeo, mainBarEdgesGeo);
 
@@ -485,7 +493,10 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     linewidth: 2,
   });
   disposables.push(mainBarEdgeMat);
-  const mainBarEdgeLine = new THREE.LineSegments(mainBarEdgesGeo, mainBarEdgeMat);
+  const mainBarEdgeLine = new THREE.LineSegments(
+    mainBarEdgesGeo,
+    mainBarEdgeMat,
+  );
   baseBarGroup.add(mainBarEdgeLine);
 
   // Front Console Screen with Exact 14:1 High-Res Texture (Zero Distortion)
@@ -496,7 +507,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
     transparent: true,
   });
   disposables.push(consoleMat);
-  const consoleGeo = new THREE.PlaneGeometry(2.10, 0.15);
+  const consoleGeo = new THREE.PlaneGeometry(2.1, 0.15);
   disposables.push(consoleGeo);
   const consolePlane = new THREE.Mesh(consoleGeo, consoleMat);
   consolePlane.position.set(0, 0, mainBarDepth / 2 + 0.012);
@@ -513,17 +524,21 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   for (let f = -4; f <= 4; f++) {
     // Left side fins
     const leftFin = new THREE.Mesh(finGeo, finMat);
-    leftFin.position.set(-mainBarWidth / 2 - 0.01, 0, f * 0.10);
+    leftFin.position.set(-mainBarWidth / 2 - 0.01, 0, f * 0.1);
     baseBarGroup.add(leftFin);
 
     // Right side fins
     const rightFin = new THREE.Mesh(finGeo, finMat);
-    rightFin.position.set(mainBarWidth / 2 + 0.01, 0, f * 0.10);
+    rightFin.position.set(mainBarWidth / 2 + 0.01, 0, f * 0.1);
     baseBarGroup.add(rightFin);
   }
 
   // Tier 3: Top Inset Collar Tray
-  const trayGeo = new THREE.BoxGeometry(mainBarWidth - 0.2, 0.025, mainBarDepth - 0.2);
+  const trayGeo = new THREE.BoxGeometry(
+    mainBarWidth - 0.2,
+    0.025,
+    mainBarDepth - 0.2,
+  );
   const trayMat = new THREE.MeshStandardMaterial({
     color: 0x2b1e17,
     roughness: 0.25,
@@ -597,7 +612,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const scannerFrameGeo = new THREE.BoxGeometry(
     slabWidth + 0.16,
     0.038,
-    slabDepth + 0.16
+    slabDepth + 0.16,
   );
   const scannerFrameMat = new THREE.MeshStandardMaterial({
     color: 0xf97316,
@@ -636,7 +651,7 @@ export function buildPipelineStackScene(): BuiltPipelineStackScene {
   const particleGeo = new THREE.BufferGeometry();
   particleGeo.setAttribute(
     "position",
-    new THREE.BufferAttribute(particlePositions, 3)
+    new THREE.BufferAttribute(particlePositions, 3),
   );
   const particleMat = new THREE.PointsMaterial({
     color: 0xf59e0b,

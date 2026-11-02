@@ -62,8 +62,8 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 }
 
 /**
- * Assigns or updates the user dashboard role.
- * Saves to both Firestore and localStorage for robust offline/fallback operation.
+ * Assigns user dashboard role once upon onboarding.
+ * Once assigned, the dashboard is permanently locked to that account ID and cannot be switched.
  */
 export async function assignUserRole(
   uid: string,
@@ -79,6 +79,15 @@ export async function assignUserRole(
     batchYear?: string;
   } = {}
 ): Promise<UserProfile> {
+  // Enforce permanent assignment: if user already has an assigned dashboard, cannot re-assign or switch
+  const existing = await getUserProfile(uid);
+  if (existing?.role) {
+    console.warn(
+      `Dashboard role is permanently locked to role '${existing.role}' for account ${uid}. Switching is not permitted.`
+    );
+    return existing;
+  }
+
   const now = new Date().toISOString();
 
   const profile: UserProfile = {

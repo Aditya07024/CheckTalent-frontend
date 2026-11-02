@@ -42,15 +42,12 @@ export default function OnboardingPage() {
 
       setUser(currentUser);
 
-      // Check if user already has a role
+      // Check if user already has an assigned dashboard
       const profile = await getUserProfile(currentUser.uid);
       if (profile?.role) {
-        // Pre-select existing role or redirect if already configured
-        setSelectedRole(profile.role);
-        if (profile.institution) setInstitution(profile.institution);
-        if (profile.companyName) setCompanyName(profile.companyName);
-        if (profile.headline) setHeadline(profile.headline);
-        if (profile.targetRole) setTargetRole(profile.targetRole);
+        // Once assigned, user cannot switch or re-onboard -> redirect directly to dashboard
+        router.replace("/dashboard");
+        return;
       }
 
       setAuthChecking(false);
@@ -406,27 +403,27 @@ export default function OnboardingPage() {
               </>
             )}
 
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-center text-xs font-medium text-amber-900">
+              🔒 <strong>Permanent Assignment:</strong> Once confirmed, this dashboard type is permanently locked to your account ID and cannot be switched to another dashboard.
+            </div>
+
             <button
               onClick={handleConfirmRole}
               disabled={saving}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#D9481E] px-5 py-4 font-semibold text-white transition hover:bg-[#B93615] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#D9481E] px-5 py-4 font-semibold text-white transition hover:bg-[#B93615] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Assigning Dashboard to ID...
+                  Permanently Assigning Dashboard to ID...
                 </>
               ) : (
                 <>
-                  Enter {ROLE_CONFIGS[selectedRole].title} Dashboard
+                  Confirm & Lock {ROLE_CONFIGS[selectedRole].title} Dashboard
                   <ArrowRight className="h-5 w-5" />
                 </>
               )}
             </button>
-
-            <p className="text-center text-xs text-[#8C8077]">
-              You can switch between role views anytime from your dashboard header.
-            </p>
           </div>
         </div>
       </section>

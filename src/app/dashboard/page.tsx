@@ -52,13 +52,6 @@ export default function DashboardPage() {
     return () => unsubscribe();
   }, [router]);
 
-  function handleRoleChange(newRole: DashboardRole) {
-    setCurrentRole(newRole);
-    if (profile) {
-      setProfile({ ...profile, role: newRole });
-    }
-  }
-
   if (checking || !user || !currentRole) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#FAF7F2] text-[#1C1613]">
@@ -78,7 +71,6 @@ export default function DashboardPage() {
         user={user}
         profile={profile}
         currentRole={currentRole}
-        onRoleChange={handleRoleChange}
       />
 
       <div className="mx-auto mt-6 max-w-7xl px-5 sm:px-8">

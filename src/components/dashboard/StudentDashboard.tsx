@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { User } from "firebase/auth";
 import { UserProfile } from "@/types/dashboard";
+import { StudentRepoAiForensics } from "./StudentRepoAiForensics";
+import { ForensicsAuditResult } from "@/lib/github-analyzer";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -28,6 +30,7 @@ import {
   Sparkles,
   Terminal,
   TrendingUp,
+  UploadCloud,
   UserCheck,
 } from "lucide-react";
 
@@ -38,7 +41,7 @@ interface StudentDashboardProps {
 
 export function StudentDashboard({ user, profile }: StudentDashboardProps) {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "repos" | "drives" | "assessments" | "proofcard"
+    "overview" | "forensics" | "repos" | "drives" | "assessments" | "proofcard"
   >("overview");
 
   // State for Add Repo modal
@@ -204,8 +207,16 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
 
           <div className="flex flex-wrap items-center gap-3">
             <button
+              onClick={() => setActiveTab("forensics")}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-[#E9A23B] to-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:opacity-95"
+            >
+              <Bot className="h-4 w-4" />
+              Upload Resume / Audit GitHub
+            </button>
+
+            <button
               onClick={() => setShowAddRepo(true)}
-              className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
+              className="flex items-center gap-2 rounded-xl bg-[#1C1613] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black"
             >
               <Plus className="h-4 w-4" />
               Add Repository
@@ -288,6 +299,21 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
         </button>
 
         <button
+          onClick={() => setActiveTab("forensics")}
+          className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
+            activeTab === "forensics"
+              ? "bg-[#D9481E] text-white shadow-sm"
+              : "bg-white text-[#756A62] hover:bg-[#FAF7F2] hover:text-[#1C1613]"
+          }`}
+        >
+          <Bot className="h-4 w-4" />
+          <span>Resume & AI Forensics</span>
+          <span className="rounded-full bg-emerald-500 px-1.5 py-0.2 text-[9px] font-extrabold text-white">
+            NEW
+          </span>
+        </button>
+
+        <button
           onClick={() => setActiveTab("repos")}
           className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
             activeTab === "repos"
@@ -335,6 +361,11 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
           Public Proof Card
         </button>
       </div>
+
+      {/* Tab: Resume & AI Forensics Scanner */}
+      {activeTab === "forensics" && (
+        <StudentRepoAiForensics user={user} profile={profile} />
+      )}
 
       {/* Tab 1: Overview */}
       {activeTab === "overview" && (
@@ -547,13 +578,23 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
               </p>
             </div>
 
-            <button
-              onClick={() => setShowAddRepo(true)}
-              className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
-            >
-              <Plus className="h-4 w-4" />
-              Connect Another Repository
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setActiveTab("forensics")}
+                className="flex items-center gap-1.5 rounded-xl border border-[#D9481E]/30 bg-[#D9481E]/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#D9481E] hover:bg-[#D9481E] hover:text-white transition"
+              >
+                <Bot className="h-4 w-4" />
+                Deep AI & Plagiarism Audit
+              </button>
+
+              <button
+                onClick={() => setShowAddRepo(true)}
+                className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
+              >
+                <Plus className="h-4 w-4" />
+                Connect Another Repository
+              </button>
+            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

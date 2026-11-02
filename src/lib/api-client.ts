@@ -173,3 +173,255 @@ export async function checkBackendHealth() {
     return null;
   }
 }
+
+// ==============================================================================
+// CANDIDATE REPOSITORIES API
+// ==============================================================================
+
+export async function fetchCandidateRepos(token: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/repos`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchCandidateRepos error:", err);
+    return [];
+  }
+}
+
+export async function addCandidateRepo(token: string, repo: Record<string, unknown>) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/repos`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(repo),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("addCandidateRepo error:", err);
+    return null;
+  }
+}
+
+export async function deleteCandidateRepo(token: string, id: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    await fetch(`${baseUrl}/repos/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch (err) {
+    console.warn("deleteCandidateRepo error:", err);
+  }
+}
+
+// ==============================================================================
+// JOBS API
+// ==============================================================================
+
+export async function fetchJobs(token?: string, recruiterUid?: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const url = new URL(`${baseUrl}/jobs`);
+    if (recruiterUid) url.searchParams.set("recruiterUid", recruiterUid);
+    const headers: Record<string, string> = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(url.toString(), { headers });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchJobs error:", err);
+    return [];
+  }
+}
+
+export async function createJobPosting(token: string, job: Record<string, unknown>) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/jobs`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(job),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("createJobPosting error:", err);
+    return null;
+  }
+}
+
+// ==============================================================================
+// DRIVES API
+// ==============================================================================
+
+export async function fetchCampusDrives(token?: string, tpoUid?: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const url = new URL(`${baseUrl}/drives`);
+    if (tpoUid) url.searchParams.set("tpoUid", tpoUid);
+    const headers: Record<string, string> = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(url.toString(), { headers });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchCampusDrives error:", err);
+    return [];
+  }
+}
+
+export async function scheduleCampusDrive(token: string, drive: Record<string, unknown>) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/drives`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(drive),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("scheduleCampusDrive error:", err);
+    return null;
+  }
+}
+
+// ==============================================================================
+// APPLICATIONS API
+// ==============================================================================
+
+export async function fetchApplications(token: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/applications`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchApplications error:", err);
+    return [];
+  }
+}
+
+export async function submitApplication(token: string, app: Record<string, unknown>) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/applications`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(app),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("submitApplication error:", err);
+    return null;
+  }
+}
+
+// ==============================================================================
+// CAMPUS ROSTER API
+// ==============================================================================
+
+export async function fetchCampusStudents(token: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/campus/students`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchCampusStudents error:", err);
+    return [];
+  }
+}
+
+export async function addCampusStudent(token: string, student: Record<string, unknown>) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/campus/students`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(student),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("addCampusStudent error:", err);
+    return null;
+  }
+}
+
+// ==============================================================================
+// RECRUITER TALENT & INTERVIEWS API
+// ==============================================================================
+
+export async function fetchVerifiedCandidates(token: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/candidates`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchVerifiedCandidates error:", err);
+    return [];
+  }
+}
+
+export async function fetchInterviews(token: string) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/interviews`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchInterviews error:", err);
+    return [];
+  }
+}
+
+export async function scheduleInterview(token: string, interview: Record<string, unknown>) {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/interviews`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(interview),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("scheduleInterview error:", err);
+    return null;
+  }
+}

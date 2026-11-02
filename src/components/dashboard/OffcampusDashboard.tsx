@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User } from "firebase/auth";
 import { UserProfile } from "@/types/dashboard";
 import {
   RecruiterJobPosting,
   RecruiterCandidateItem,
   InterviewScheduleItem,
-  INITIAL_RECRUITER_JOBS,
-  INITIAL_RECRUITER_CANDIDATES,
-  INITIAL_INTERVIEW_SCHEDULE,
 } from "@/data/dashboard-demo-data";
+import {
+  getFirebaseIdToken,
+  fetchJobs,
+  createJobPosting,
+  fetchVerifiedCandidates,
+  fetchInterviews,
+  scheduleInterview,
+} from "@/lib/api-client";
 import {
   AlertTriangle,
   ArrowRight,
@@ -49,8 +54,8 @@ interface OffcampusDashboardProps {
 export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "jobs" | "candidates" | "inspection" | "interviews">("overview");
 
-  // State for Job Postings
-  const [jobs, setJobs] = useState<RecruiterJobPosting[]>(INITIAL_RECRUITER_JOBS);
+  // State for Job Postings (Live from Supabase)
+  const [jobs, setJobs] = useState<RecruiterJobPosting[]>([]);
   const [showPostJobModal, setShowPostJobModal] = useState(false);
   const [newJobTitle, setNewJobTitle] = useState("");
   const [newJobDept, setNewJobDept] = useState("Engineering");
@@ -60,8 +65,8 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
   const [newJobMinScore, setNewJobMinScore] = useState("85");
   const [newJobSkills, setNewJobSkills] = useState("React, TypeScript, Go, PostgreSQL");
 
-  // State for Candidates Discovery & Talent Pool
-  const [candidates, setCandidates] = useState<RecruiterCandidateItem[]>(INITIAL_RECRUITER_CANDIDATES);
+  // State for Candidates Discovery & Talent Pool (Live from Supabase)
+  const [candidates, setCandidates] = useState<RecruiterCandidateItem[]>([]);
   const [candidateFilter, setCandidateFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [minScoreFilter, setMinScoreFilter] = useState<number>(80);
@@ -69,63 +74,173 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
   // State for Code Inspection Drawer
   const [selectedCandidateForAudit, setSelectedCandidateForAudit] = useState<RecruiterCandidateItem | null>(null);
 
-  // State for Interview Scheduling
-  const [interviews, setInterviews] = useState<InterviewScheduleItem[]>(INITIAL_INTERVIEW_SCHEDULE);
+  // State for Interview Scheduling (Live from Supabase)
+  const [interviews, setInterviews] = useState<InterviewScheduleItem[]>([]);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [selectedCandidateForInterview, setSelectedCandidateForInterview] = useState<string>("Aditya Sharma");
+  const [selectedCandidateForInterview, setSelectedCandidateForInterview] = useState<string>("");
   const [interviewDate, setInterviewDate] = useState("2026-11-10");
   const [interviewTime, setInterviewTime] = useState("03:00 PM IST");
   const [interviewRound, setInterviewRound] = useState<"Technical Viva" | "System Architecture" | "Founder Fit">("Technical Viva");
-  const [interviewerName, setInterviewerName] = useState("Siddharth Mehta (Staff Architect)");
+  const [interviewerName, setInterviewerName] = useState("Staff Architect");
 
   // State for action feedback
   const [actionNotice, setActionNotice] = useState<string | null>(null);
 
+  // Load Recruiter Data from Supabase Backend
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const token = await getFirebaseIdToken();
+        if (token) {
+          // 1. Load Jobs
+          const liveJobs = await fetchJobs(token, user.uid);
+          if (Array.isArray(liveJobs)) {
+            setJobs(
+              liveJobs.map((j: any) => ({
+                id: j.id,
+                title: j.title,
+                department: j.department || "Engineering",
+                location: j.location || "Remote",
+                type: j.type || "Full-Time",
+                salary: j.salary || "Competitive",
+                applicants: j.applicants || 0,
+                shortlisted: j.shortlisted || 0,
+                avgScore: j.min_score || 85,
+                status: j.status || "Active",
+                skills: j.skills || ["React", "TypeScript", "Node.js"],
+                minScore: j.min_score || 80,
+                createdDate: j.created_at ? new Date(j.created_at).toLocaleDateString() : "Recently",
+              }))
+            );
+          }
+
+          // 2. Load Candidates
+          const liveCandidates = await fetchVerifiedCandidates(token);
+          if (Array.isArray(liveCandidates)) {
+            setCandidates(liveCandidates);
+            if (liveCandidates.length > 0 && !selectedCandidateForInterview) {
+              setSelectedCandidateForInterview(liveCandidates[0]!.name);
+            }
+          }
+
+          // 3. Load Interviews
+          const liveInterviews = await fetchInterviews(token);
+          if (Array.isArray(liveInterviews)) {
+            setInterviews(
+              liveInterviews.map((i: any) => ({
+                id: i.id,
+                candidateName: i.candidate_name,
+                candidateRole: i.candidate_role,
+                date: i.date,
+                time: i.time,
+                roundType: i.round_type,
+                interviewer: i.interviewer,
+                meetingLink: `https://meet.google.com/ckt-${(i.id || "live").slice(-6)}`,
+                status: i.status || "Scheduled",
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load recruiter data:", err);
+      }
+    }
+
+    loadData();
+  }, [user.uid]);
+
   // Handlers
-  function handleCreateJob(e: React.FormEvent) {
+  async function handleCreateJob(e: React.FormEvent) {
     e.preventDefault();
     if (!newJobTitle.trim()) return;
 
-    const newJob: RecruiterJobPosting = {
-      id: `job-${Date.now()}`,
+    const payload = {
+      company_name: profile?.companyName || "Hiring Company",
       title: newJobTitle.trim(),
       department: newJobDept,
       location: newJobLocation,
       type: newJobType,
       salary: newJobSalary,
-      applicants: 1,
-      shortlisted: 0,
-      avgScore: parseInt(newJobMinScore) || 85,
-      status: "Active",
+      min_score: parseInt(newJobMinScore) || 80,
       skills: newJobSkills.split(",").map((s) => s.trim()).filter(Boolean),
-      minScore: parseInt(newJobMinScore) || 80,
-      createdDate: "Just now",
+      status: "Active" as const,
     };
 
-    setJobs((prev) => [newJob, ...prev]);
+    const token = await getFirebaseIdToken();
+    if (token) {
+      const saved = await createJobPosting(token, payload);
+      if (saved) {
+        setJobs((prev) => [
+          {
+            id: saved.id || `job-${Date.now()}`,
+            title: saved.title,
+            department: saved.department || "Engineering",
+            location: saved.location || "Remote",
+            type: saved.type || "Full-Time",
+            salary: saved.salary || "Competitive",
+            applicants: 0,
+            shortlisted: 0,
+            avgScore: saved.min_score || 85,
+            status: "Active",
+            skills: saved.skills || ["React", "TypeScript"],
+            minScore: saved.min_score || 80,
+            createdDate: "Just now",
+          },
+          ...prev,
+        ]);
+      }
+    } else {
+      setJobs((prev) => [
+        {
+          id: `job-${Date.now()}`,
+          ...payload,
+          applicants: 0,
+          shortlisted: 0,
+          avgScore: payload.min_score,
+          minScore: payload.min_score,
+          createdDate: "Just now",
+        },
+        ...prev,
+      ]);
+    }
+
     setShowPostJobModal(false);
     setNewJobTitle("");
-    setActionNotice(`Job posting '${newJob.title}' published successfully!`);
+    setActionNotice(`Job posting '${newJobTitle}' published successfully!`);
     setTimeout(() => setActionNotice(null), 3500);
   }
 
-  function handleScheduleInterviewSubmit(e: React.FormEvent) {
+  async function handleScheduleInterviewSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const newInterview: InterviewScheduleItem = {
-      id: `int-${Date.now()}`,
-      candidateName: selectedCandidateForInterview,
-      candidateRole: "Senior Engineer",
+    const candidateName = selectedCandidateForInterview || "Candidate";
+    const payload = {
+      candidate_name: candidateName,
+      candidate_role: "Senior Engineer",
       date: interviewDate,
       time: interviewTime,
-      roundType: interviewRound,
+      round_type: interviewRound,
       interviewer: interviewerName,
-      meetingLink: `https://meet.google.com/ckt-${Date.now().toString().slice(-6)}`,
-      status: "Scheduled",
     };
 
-    setInterviews((prev) => [newInterview, ...prev]);
+    const token = await getFirebaseIdToken();
+    if (token) {
+      const saved = await scheduleInterview(token, payload);
+      const newInterview: InterviewScheduleItem = {
+        id: saved?.id || `int-${Date.now()}`,
+        candidateName: payload.candidate_name,
+        candidateRole: payload.candidate_role,
+        date: payload.date,
+        time: payload.time,
+        roundType: payload.round_type as any,
+        interviewer: payload.interviewer,
+        meetingLink: `https://meet.google.com/ckt-${Date.now().toString().slice(-6)}`,
+        status: "Scheduled",
+      };
+      setInterviews((prev) => [newInterview, ...prev]);
+    }
+
     setShowScheduleModal(false);
-    setActionNotice(`Interview scheduled for ${newInterview.candidateName} on ${newInterview.date}!`);
+    setActionNotice(`Interview scheduled for ${candidateName} on ${interviewDate}!`);
     setTimeout(() => setActionNotice(null), 3500);
   }
 
@@ -503,7 +618,25 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
             </button>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          {jobs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#1C1613]/20 bg-white p-12 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D9481E]/10 text-[#D9481E]">
+                <Briefcase className="h-7 w-7" />
+              </div>
+              <h3 className="aldrich-regular mt-4 text-lg font-bold text-ink">No Job Postings Published Yet</h3>
+              <p className="mt-1 max-w-md text-xs text-[#756A62]">
+                Create your first opening to receive applications pre-audited with AST scores, AI detection, and genuine authorship verification.
+              </p>
+              <button
+                onClick={() => setShowPostJobModal(true)}
+                className="mt-5 flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
+              >
+                <Plus className="h-4 w-4" />
+                Publish Your First Job
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
             {jobs.map((job) => (
               <div
                 key={job.id}
@@ -575,6 +708,7 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
               </div>
             ))}
           </div>
+          )}
         </div>
       )}
 
@@ -641,7 +775,18 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
           </div>
 
           {/* Candidates Grid */}
-          <div className="grid gap-4 md:grid-cols-2">
+          {filteredCandidates.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#1C1613]/20 bg-white p-12 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E9A23B]/10 text-[#E9A23B]">
+                <Users className="h-7 w-7" />
+              </div>
+              <h3 className="aldrich-regular mt-4 text-lg font-bold text-ink">No Candidates in Discovery Pool Yet</h3>
+              <p className="mt-1 max-w-md text-xs text-[#756A62]">
+                As candidate students connect repositories and complete AI code audits, verified developers matching your criteria will populate here.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
             {filteredCandidates.map((cand) => (
               <div
                 key={cand.id}
@@ -731,6 +876,7 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
               </div>
             ))}
           </div>
+          )}
         </div>
       )}
 
@@ -756,7 +902,25 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
             </button>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          {interviews.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#1C1613]/20 bg-white p-12 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-purple-700">
+                <Video className="h-7 w-7" />
+              </div>
+              <h3 className="aldrich-regular mt-4 text-lg font-bold text-ink">No Interviews Scheduled Yet</h3>
+              <p className="mt-1 max-w-md text-xs text-[#756A62]">
+                Select a candidate from the talent pool or click 'Schedule New Interview' to coordinate technical code defense or system architecture sessions.
+              </p>
+              <button
+                onClick={() => setShowScheduleModal(true)}
+                className="mt-5 flex items-center gap-2 rounded-xl bg-[#1C1613] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#3D352E]"
+              >
+                <Plus className="h-4 w-4" />
+                Schedule First Interview
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-3">
             {interviews.map((item) => (
               <div
                 key={item.id}
@@ -819,6 +983,7 @@ export function OffcampusDashboard({ user, profile }: OffcampusDashboardProps) {
               </div>
             ))}
           </div>
+          )}
         </div>
       )}
 

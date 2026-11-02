@@ -1,16 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User } from "firebase/auth";
 import { UserProfile } from "@/types/dashboard";
 import {
   CampusStudentItem,
   CampusDriveItem,
   CampusPartnerRecruiter,
-  INITIAL_CAMPUS_STUDENTS,
-  INITIAL_CAMPUS_DRIVES,
-  INITIAL_CAMPUS_RECRUITERS,
 } from "@/data/dashboard-demo-data";
+import {
+  getFirebaseIdToken,
+  fetchCampusStudents,
+  addCampusStudent,
+  fetchCampusDrives,
+  scheduleCampusDrive,
+} from "@/lib/api-client";
 import {
   Award,
   BarChart3,
@@ -46,8 +50,8 @@ interface CampusDashboardProps {
 export function CampusDashboard({ user, profile }: CampusDashboardProps) {
   const [activeTab, setActiveTab] = useState<"students" | "drives" | "recruiters" | "analytics">("students");
 
-  // State for students roster
-  const [students, setStudents] = useState<CampusStudentItem[]>(INITIAL_CAMPUS_STUDENTS);
+  // State for students roster (Live from Supabase)
+  const [students, setStudents] = useState<CampusStudentItem[]>([]);
   const [studentSearch, setStudentSearch] = useState("");
   const [deptFilter, setDeptFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -60,8 +64,8 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
   const [newStudentCgpa, setNewStudentCgpa] = useState("8.8");
   const [newStudentScore, setNewStudentScore] = useState("88");
 
-  // State for Campus Drives
-  const [drives, setDrives] = useState<CampusDriveItem[]>(INITIAL_CAMPUS_DRIVES);
+  // State for Campus Drives (Live from Supabase)
+  const [drives, setDrives] = useState<CampusDriveItem[]>([]);
   const [showScheduleDriveModal, setShowScheduleDriveModal] = useState(false);
   const [newDriveCompany, setNewDriveCompany] = useState("");
   const [newDriveDate, setNewDriveDate] = useState("2026-11-28");
@@ -71,7 +75,7 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
   const [newDriveScore, setNewDriveScore] = useState("80");
 
   // State for Partner Recruiters
-  const [recruiters, setRecruiters] = useState<CampusPartnerRecruiter[]>(INITIAL_CAMPUS_RECRUITERS);
+  const [recruiters, setRecruiters] = useState<CampusPartnerRecruiter[]>([]);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteCompany, setInviteCompany] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
@@ -83,55 +87,182 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
   // State for action feedback
   const [actionNotice, setActionNotice] = useState<string | null>(null);
 
+  // Load Live Campus Data from Supabase Backend
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const token = await getFirebaseIdToken();
+        if (token) {
+          // 1. Load Students Roster
+          const liveStudents = await fetchCampusStudents(token);
+          if (Array.isArray(liveStudents)) {
+            setStudents(
+              liveStudents.map((s: any) => ({
+                id: s.id,
+                name: s.name,
+                usn: s.usn,
+                department: s.department,
+                cgpa: s.cgpa || "8.5",
+                proofScore: s.proof_score || 85,
+                reposVerified: s.repos_verified || 1,
+                status: s.status || "Drive Ready",
+                statusClass: "bg-amber-100 text-amber-800",
+                skills: s.skills || ["React", "TypeScript", "SQL"],
+              }))
+            );
+          }
+
+          // 2. Load Campus Drives
+          const liveDrives = await fetchCampusDrives(token, user.uid);
+          if (Array.isArray(liveDrives)) {
+            setDrives(
+              liveDrives.map((d: any) => ({
+                id: d.id,
+                company: d.company_name,
+                visitDate: d.visit_date,
+                role: d.role,
+                packageCtc: d.package || "₹14 LPA",
+                cgpaCutoff: d.cutoff_cgpa || 7.0,
+                proofScoreCutoff: d.cutoff_proof_score || 75,
+                eligibleBranches: d.eligible_branches || ["CSE", "IT", "ECE"],
+                registeredStudents: 32,
+                shortlistedCount: 0,
+                placedCount: 0,
+                status: (d.status === "Scheduled" ? "Upcoming" : d.status) || "Upcoming",
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load campus data:", err);
+      }
+    }
+
+    loadData();
+  }, [user.uid]);
+
   // Handlers
-  function handleAddStudent(e: React.FormEvent) {
+  async function handleAddStudent(e: React.FormEvent) {
     e.preventDefault();
     if (!newStudentName.trim() || !newStudentUsn.trim()) return;
 
-    const newStudent: CampusStudentItem = {
-      id: `std-${Date.now()}`,
+    const payload = {
       name: newStudentName.trim(),
       usn: newStudentUsn.trim().toUpperCase(),
       department: newStudentDept,
       cgpa: newStudentCgpa,
-      proofScore: parseInt(newStudentScore) || 85,
-      reposVerified: 3,
-      status: "Drive Ready",
-      statusClass: "bg-amber-100 text-amber-800",
+      proof_score: parseInt(newStudentScore) || 85,
+      repos_verified: 2,
+      status: "Drive Ready" as const,
       skills: ["React", "TypeScript", "SQL"],
     };
 
-    setStudents((prev) => [newStudent, ...prev]);
+    const token = await getFirebaseIdToken();
+    if (token) {
+      const saved = await addCampusStudent(token, payload);
+      if (saved) {
+        setStudents((prev) => [
+          {
+            id: saved.id || `std-${Date.now()}`,
+            name: saved.name,
+            usn: saved.usn,
+            department: saved.department,
+            cgpa: saved.cgpa || newStudentCgpa,
+            proofScore: saved.proof_score || 85,
+            reposVerified: saved.repos_verified || 2,
+            status: (saved.status as CampusStudentItem["status"]) || "Drive Ready",
+            statusClass: "bg-amber-100 text-amber-800",
+            skills: saved.skills || ["React", "TypeScript", "SQL"],
+          },
+          ...prev,
+        ]);
+      }
+    } else {
+      setStudents((prev) => [
+        {
+          id: `std-${Date.now()}`,
+          name: payload.name,
+          usn: payload.usn,
+          department: payload.department,
+          cgpa: payload.cgpa,
+          proofScore: payload.proof_score,
+          reposVerified: payload.repos_verified,
+          status: payload.status,
+          skills: payload.skills,
+          statusClass: "bg-amber-100 text-amber-800",
+        },
+        ...prev,
+      ]);
+    }
+
     setShowAddStudentModal(false);
     setNewStudentName("");
     setNewStudentUsn("");
-    setActionNotice(`Student ${newStudent.name} (${newStudent.usn}) added to cohort roster!`);
+    setActionNotice(`Student ${payload.name} (${payload.usn}) added to cohort roster!`);
     setTimeout(() => setActionNotice(null), 3500);
   }
 
-  function handleScheduleDrive(e: React.FormEvent) {
+  async function handleScheduleDrive(e: React.FormEvent) {
     e.preventDefault();
     if (!newDriveCompany.trim()) return;
 
-    const newDrive: CampusDriveItem = {
-      id: `cdrive-${Date.now()}`,
-      company: newDriveCompany.trim(),
-      visitDate: newDriveDate,
+    const payload = {
+      institution_name: profile?.institution || "Engineering College",
+      company_name: newDriveCompany.trim(),
+      visit_date: newDriveDate,
       role: newDriveRole,
-      packageCtc: newDrivePackage,
-      cgpaCutoff: parseFloat(newDriveCgpa) || 7.0,
-      proofScoreCutoff: parseInt(newDriveScore) || 80,
-      eligibleBranches: ["CSE", "IT", "ECE"],
-      registeredStudents: 45,
-      shortlistedCount: 0,
-      placedCount: 0,
-      status: "Upcoming",
+      package: newDrivePackage,
+      cutoff_cgpa: parseFloat(newDriveCgpa) || 7.0,
+      cutoff_proof_score: parseInt(newDriveScore) || 80,
+      eligible_branches: ["CSE", "IT", "ECE"],
+      status: "Scheduled" as const,
     };
 
-    setDrives((prev) => [newDrive, ...prev]);
+    const token = await getFirebaseIdToken();
+    if (token) {
+      const saved = await scheduleCampusDrive(token, payload);
+      if (saved) {
+        setDrives((prev) => [
+          {
+            id: saved.id || `cdrive-${Date.now()}`,
+            company: saved.company_name,
+            visitDate: saved.visit_date,
+            role: saved.role,
+            packageCtc: saved.package || newDrivePackage,
+            cgpaCutoff: saved.cutoff_cgpa || 7.0,
+            proofScoreCutoff: saved.cutoff_proof_score || 80,
+            eligibleBranches: saved.eligible_branches || ["CSE", "IT", "ECE"],
+            registeredStudents: 0,
+            shortlistedCount: 0,
+            placedCount: 0,
+            status: "Upcoming",
+          },
+          ...prev,
+        ]);
+      }
+    } else {
+      setDrives((prev) => [
+        {
+          id: `cdrive-${Date.now()}`,
+          company: payload.company_name,
+          visitDate: payload.visit_date,
+          role: payload.role,
+          packageCtc: payload.package,
+          cgpaCutoff: payload.cutoff_cgpa,
+          proofScoreCutoff: payload.cutoff_proof_score,
+          eligibleBranches: payload.eligible_branches,
+          registeredStudents: 0,
+          shortlistedCount: 0,
+          placedCount: 0,
+          status: "Upcoming",
+        },
+        ...prev,
+      ]);
+    }
+
     setShowScheduleDriveModal(false);
     setNewDriveCompany("");
-    setActionNotice(`Campus drive for ${newDrive.company} scheduled on ${newDrive.visitDate}!`);
+    setActionNotice(`Campus drive for ${payload.company_name} scheduled on ${payload.visit_date}!`);
     setTimeout(() => setActionNotice(null), 3500);
   }
 
@@ -257,26 +388,38 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
         <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[#1C1613]/10 pt-6 lg:grid-cols-4">
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
             <div className="flex items-center justify-between text-xs font-semibold text-[#756A62]">
-              <span>Batch Placement Rate</span>
+              <span>Enrolled Students</span>
               <Award className="h-4 w-4 text-emerald-600" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">78.4%</span>
-              <span className="text-xs font-semibold text-emerald-600">318 / 480 Placed</span>
+              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">{students.length}</span>
+              <span className="text-xs font-semibold text-emerald-600">
+                {students.filter((s) => s.status === "Drive Ready").length} Ready
+              </span>
             </div>
-            <p className="mt-1 text-[11px] text-[#8C8077]">Batch of 2026 Graduating Class</p>
+            <p className="mt-1 text-[11px] text-[#8C8077]">
+              {students.length > 0 ? "Batch registered in portal" : "Enroll cohort members"}
+            </p>
           </div>
 
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
             <div className="flex items-center justify-between text-xs font-semibold text-[#756A62]">
-              <span>Average Package CTC</span>
+              <span>Average Proof Score</span>
               <TrendingUp className="h-4 w-4 text-[#D9481E]" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">₹14.2 LPA</span>
-              <span className="text-xs font-semibold text-emerald-600">+18% YoY</span>
+              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">
+                {students.length > 0
+                  ? Math.round(students.reduce((acc, s) => acc + s.proofScore, 0) / students.length)
+                  : "--"}
+              </span>
+              <span className="text-xs font-semibold text-emerald-600">
+                {students.length > 0 ? "Audited" : "Pending"}
+              </span>
             </div>
-            <p className="mt-1 text-[11px] text-[#8C8077]">Highest: ₹48 LPA (Microsoft)</p>
+            <p className="mt-1 text-[11px] text-[#8C8077]">
+              {students.length > 0 ? "Across verified student repos" : "Audit batch code"}
+            </p>
           </div>
 
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
@@ -285,7 +428,9 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
               <ShieldCheck className="h-4 w-4 text-purple-600" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">1,420</span>
+              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">
+                {students.reduce((acc, s) => acc + (s.reposVerified || 0), 0)}
+              </span>
               <span className="text-xs font-semibold text-purple-600">AST Audited</span>
             </div>
             <p className="mt-1 text-[11px] text-[#8C8077]">Zero tutorial plagiarism guarantee</p>
@@ -300,7 +445,9 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
               <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">{drives.length}</span>
               <span className="text-xs font-semibold text-[#E9A23B]">This Season</span>
             </div>
-            <p className="mt-1 text-[11px] text-[#8C8077]">Morgan Stanley, MS, TCS, Razorpay</p>
+            <p className="mt-1 text-[11px] text-[#8C8077]">
+              {drives.length > 0 ? `${drives.length} visiting recruiter slots` : "Schedule upcoming drives"}
+            </p>
           </div>
         </div>
       </section>
@@ -430,73 +577,92 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
 
           {/* Student Table */}
           <div className="overflow-hidden rounded-3xl border border-[#1C1613]/10 bg-white shadow-sm">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-[#1C1613]/10 bg-[#FAF7F2] font-mono text-[11px] uppercase tracking-wider text-[#756A62]">
-                  <tr>
-                    <th className="px-5 py-3.5">Student Details</th>
-                    <th className="px-4 py-3.5">USN & Dept</th>
-                    <th className="px-4 py-3.5">CGPA</th>
-                    <th className="px-4 py-3.5">Proof Score</th>
-                    <th className="px-4 py-3.5">Status</th>
-                    <th className="px-4 py-3.5">Audited Repos</th>
-                    <th className="px-5 py-3.5 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#1C1613]/5">
-                  {filteredStudents.map((std) => (
-                    <tr key={std.id} className="hover:bg-[#FAF7F2]/50 transition">
-                      <td className="px-5 py-4">
-                        <div className="font-bold text-ink">{std.name}</div>
-                        <div className="text-[11px] text-[#756A62]">
-                          {std.skills.join(" • ")}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="font-mono font-semibold text-ink">{std.usn}</div>
-                        <div className="text-[11px] text-[#756A62]">{std.department}</div>
-                      </td>
-                      <td className="px-4 py-4 font-bold text-ink">{std.cgpa}</td>
-                      <td className="px-4 py-4">
-                        <span className="aldrich-regular text-sm font-bold text-[#D9481E]">
-                          {std.proofScore}/100
-                        </span>
-                        <div className="h-1.5 w-16 rounded-full bg-[#1C1613]/10 mt-1">
-                          <div
-                            className="h-full rounded-full bg-[#D9481E]"
-                            style={{ width: `${std.proofScore}%` }}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${std.statusClass}`}>
-                          {std.status}
-                        </span>
-                        {std.companyPlaced && (
-                          <div className="text-[10px] font-semibold text-emerald-800 mt-1">
-                            {std.companyPlaced}
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 font-semibold text-ink">
-                        {std.reposVerified} Verified
-                      </td>
-                      <td className="px-5 py-4 text-right">
-                        <button
-                          onClick={() => {
-                            setActionNotice(`Endorsed ${std.name} for upcoming visiting campus drives!`);
-                            setTimeout(() => setActionNotice(null), 3000);
-                          }}
-                          className="font-bold text-[#D9481E] hover:underline text-xs"
-                        >
-                          Endorse &rarr;
-                        </button>
-                      </td>
+            {filteredStudents.length === 0 ? (
+              <div className="flex flex-col items-center justify-center p-12 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#D9481E]/10 text-[#D9481E] mb-3">
+                  <GraduationCap className="h-6 w-6" />
+                </div>
+                <h3 className="font-bold text-ink text-sm">No students registered in this cohort yet</h3>
+                <p className="mt-1 text-xs text-[#756A62] max-w-sm">
+                  Add students to enroll them in the cohort, run AST skill audits, and prepare verified rosters for upcoming campus placement drives.
+                </p>
+                <button
+                  onClick={() => setShowAddStudentModal(true)}
+                  className="mt-4 flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add First Student
+                </button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="border-b border-[#1C1613]/10 bg-[#FAF7F2] font-mono text-[11px] uppercase tracking-wider text-[#756A62]">
+                    <tr>
+                      <th className="px-5 py-3.5">Student Details</th>
+                      <th className="px-4 py-3.5">USN & Dept</th>
+                      <th className="px-4 py-3.5">CGPA</th>
+                      <th className="px-4 py-3.5">Proof Score</th>
+                      <th className="px-4 py-3.5">Status</th>
+                      <th className="px-4 py-3.5">Audited Repos</th>
+                      <th className="px-5 py-3.5 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-[#1C1613]/5">
+                    {filteredStudents.map((std) => (
+                      <tr key={std.id} className="hover:bg-[#FAF7F2]/50 transition">
+                        <td className="px-5 py-4">
+                          <div className="font-bold text-ink">{std.name}</div>
+                          <div className="text-[11px] text-[#756A62]">
+                            {std.skills.join(" • ")}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="font-mono font-semibold text-ink">{std.usn}</div>
+                          <div className="text-[11px] text-[#756A62]">{std.department}</div>
+                        </td>
+                        <td className="px-4 py-4 font-bold text-ink">{std.cgpa}</td>
+                        <td className="px-4 py-4">
+                          <span className="aldrich-regular text-sm font-bold text-[#D9481E]">
+                            {std.proofScore}/100
+                          </span>
+                          <div className="h-1.5 w-16 rounded-full bg-[#1C1613]/10 mt-1">
+                            <div
+                              className="h-full rounded-full bg-[#D9481E]"
+                              style={{ width: `${std.proofScore}%` }}
+                            />
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${std.statusClass}`}>
+                            {std.status}
+                          </span>
+                          {std.companyPlaced && (
+                            <div className="text-[10px] font-semibold text-emerald-800 mt-1">
+                              {std.companyPlaced}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-4 font-semibold text-ink">
+                          {std.reposVerified} Verified
+                        </td>
+                        <td className="px-5 py-4 text-right">
+                          <button
+                            onClick={() => {
+                              setActionNotice(`Endorsed ${std.name} for upcoming visiting campus drives!`);
+                              setTimeout(() => setActionNotice(null), 3000);
+                            }}
+                            className="font-bold text-[#D9481E] hover:underline text-xs"
+                          >
+                            Endorse &rarr;
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -523,77 +689,96 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
             </button>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {drives.map((drive) => (
-              <div
-                key={drive.id}
-                className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
-              >
-                <div>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-ink text-lg">{drive.company}</h3>
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            drive.status === "Completed"
-                              ? "bg-stone-100 text-stone-700"
-                              : "bg-emerald-50 text-emerald-700"
-                          }`}
-                        >
-                          {drive.status}
-                        </span>
-                      </div>
-                      <p className="text-xs text-[#756A62] mt-0.5">{drive.role}</p>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="aldrich-regular text-base font-bold text-[#D9481E]">
-                        {drive.packageCtc}
-                      </span>
-                      <p className="text-[10px] text-[#756A62]">Package CTC</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-3 gap-2 rounded-2xl bg-[#FAF7F2] p-3 text-center text-xs">
-                    <div>
-                      <span className="text-[11px] text-[#756A62]">Visit Date</span>
-                      <p className="font-bold text-ink mt-0.5">{drive.visitDate}</p>
-                    </div>
-                    <div>
-                      <span className="text-[11px] text-[#756A62]">Min Proof Score</span>
-                      <p className="font-bold text-[#D9481E] mt-0.5">{drive.proofScoreCutoff}+</p>
-                    </div>
-                    <div>
-                      <span className="text-[11px] text-[#756A62]">Min CGPA</span>
-                      <p className="font-bold text-ink mt-0.5">{drive.cgpaCutoff}</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between text-xs text-[#52463F]">
-                    <span>Eligible Branches: {drive.eligibleBranches.join(", ")}</span>
-                    <span className="font-semibold">{drive.registeredStudents} Registered</span>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs">
-                  <span className="text-emerald-700 font-bold">
-                    {drive.placedCount > 0 ? `${drive.placedCount} Students Placed ✓` : `${drive.shortlistedCount} Shortlisted`}
-                  </span>
-
-                  <button
-                    onClick={() => {
-                      setActionNotice(`Opening round management console for ${drive.company}...`);
-                      setTimeout(() => setActionNotice(null), 3000);
-                    }}
-                    className="font-bold text-[#D9481E] hover:underline"
-                  >
-                    Manage Rounds &rarr;
-                  </button>
-                </div>
+          {drives.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-3xl border border-[#1C1613]/10 bg-white p-12 text-center shadow-sm">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#D9481E]/10 text-[#D9481E] mb-3">
+                <Calendar className="h-6 w-6" />
               </div>
-            ))}
-          </div>
+              <h3 className="font-bold text-ink text-sm">No campus placement drives scheduled yet</h3>
+              <p className="mt-1 text-xs text-[#756A62] max-w-sm">
+                Coordinate visiting corporate recruiters, define CTC packages, and set minimum Proof Score cutoffs for student eligibility.
+              </p>
+              <button
+                onClick={() => setShowScheduleDriveModal(true)}
+                className="mt-4 flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
+              >
+                <Calendar className="h-4 w-4" />
+                Schedule Campus Drive
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {drives.map((drive) => (
+                <div
+                  key={drive.id}
+                  className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
+                >
+                  <div>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-ink text-lg">{drive.company}</h3>
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                              drive.status === "Completed"
+                                ? "bg-stone-100 text-stone-700"
+                                : "bg-emerald-50 text-emerald-700"
+                            }`}
+                          >
+                            {drive.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#756A62] mt-0.5">{drive.role}</p>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="aldrich-regular text-base font-bold text-[#D9481E]">
+                          {drive.packageCtc}
+                        </span>
+                        <p className="text-[10px] text-[#756A62]">Package CTC</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-3 gap-2 rounded-2xl bg-[#FAF7F2] p-3 text-center text-xs">
+                      <div>
+                        <span className="text-[11px] text-[#756A62]">Visit Date</span>
+                        <p className="font-bold text-ink mt-0.5">{drive.visitDate}</p>
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-[#756A62]">Min Proof Score</span>
+                        <p className="font-bold text-[#D9481E] mt-0.5">{drive.proofScoreCutoff}+</p>
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-[#756A62]">Min CGPA</span>
+                        <p className="font-bold text-ink mt-0.5">{drive.cgpaCutoff}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between text-xs text-[#52463F]">
+                      <span>Eligible Branches: {drive.eligibleBranches.join(", ")}</span>
+                      <span className="font-semibold">{drive.registeredStudents} Registered</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs">
+                    <span className="text-emerald-700 font-bold">
+                      {drive.placedCount > 0 ? `${drive.placedCount} Students Placed ✓` : `${drive.shortlistedCount} Shortlisted`}
+                    </span>
+
+                    <button
+                      onClick={() => {
+                        setActionNotice(`Opening round management console for ${drive.company}...`);
+                        setTimeout(() => setActionNotice(null), 3000);
+                      }}
+                      className="font-bold text-[#D9481E] hover:underline"
+                    >
+                      Manage Rounds &rarr;
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -619,62 +804,81 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
             </button>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {recruiters.map((rec) => (
-              <div
-                key={rec.id}
-                className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
+          {recruiters.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-3xl border border-[#1C1613]/10 bg-white p-12 text-center shadow-sm">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#D9481E]/10 text-[#D9481E] mb-3">
+                <Building2 className="h-6 w-6" />
+              </div>
+              <h3 className="font-bold text-ink text-sm">No visiting corporate recruiters listed</h3>
+              <p className="mt-1 text-xs text-[#756A62] max-w-sm">
+                Invite partner companies to visit the campus, allocate interview slots, and dispatch verified student portfolios.
+              </p>
+              <button
+                onClick={() => setShowInviteModal(true)}
+                className="mt-4 flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
               >
-                <div>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-bold text-ink text-lg">{rec.company}</h3>
-                      <span className="mt-1 inline-block rounded-md bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-orange-900 border border-orange-200">
-                        {rec.tier}
+                <Mail className="h-4 w-4" />
+                Invite New Recruiter
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {recruiters.map((rec) => (
+                <div
+                  key={rec.id}
+                  className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
+                >
+                  <div>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-bold text-ink text-lg">{rec.company}</h3>
+                        <span className="mt-1 inline-block rounded-md bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-orange-900 border border-orange-200">
+                          {rec.tier}
+                        </span>
+                      </div>
+
+                      <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+                        {rec.status}
                       </span>
                     </div>
 
-                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
-                      {rec.status}
-                    </span>
-                  </div>
-
-                  <div className="mt-4 space-y-2 rounded-2xl bg-[#FAF7F2] p-3 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#756A62]">Contact Person:</span>
-                      <span className="font-bold text-ink">{rec.contactPerson}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#756A62]">Official Email:</span>
-                      <span className="font-mono text-[#52463F]">{rec.contactEmail}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#756A62]">Avg CTC Offered:</span>
-                      <span className="font-bold text-[#D9481E]">{rec.avgCtc}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#756A62]">Hired in Past 3 Yrs:</span>
-                      <span className="font-bold text-ink">{rec.hiredPastYears} alumni</span>
+                    <div className="mt-4 space-y-2 rounded-2xl bg-[#FAF7F2] p-3 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#756A62]">Contact Person:</span>
+                        <span className="font-bold text-ink">{rec.contactPerson}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#756A62]">Official Email:</span>
+                        <span className="font-mono text-[#52463F]">{rec.contactEmail}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#756A62]">Avg CTC Offered:</span>
+                        <span className="font-bold text-[#D9481E]">{rec.avgCtc}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#756A62]">Hired in Past 3 Yrs:</span>
+                        <span className="font-bold text-ink">{rec.hiredPastYears} alumni</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs">
-                  <span className="text-[#756A62]">Slot: Slot 1 (Day 1)</span>
-                  <button
-                    onClick={() => {
-                      setActionNotice(`Cohort briefing sent to ${rec.contactEmail}!`);
-                      setTimeout(() => setActionNotice(null), 3000);
-                    }}
-                    className="font-bold text-[#D9481E] hover:underline flex items-center gap-1"
-                  >
-                    <Mail className="h-3.5 w-3.5" />
-                    Send Cohort Dossier
-                  </button>
+                  <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs">
+                    <span className="text-[#756A62]">Slot: Slot 1 (Day 1)</span>
+                    <button
+                      onClick={() => {
+                        setActionNotice(`Cohort briefing sent to ${rec.contactEmail}!`);
+                        setTimeout(() => setActionNotice(null), 3000);
+                      }}
+                      className="font-bold text-[#D9481E] hover:underline flex items-center gap-1"
+                    >
+                      <Mail className="h-3.5 w-3.5" />
+                      Send Cohort Dossier
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -706,26 +910,39 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#1C1613]/5">
-                  {[
-                    { dept: "Computer Science & Engg (CSE)", total: 180, verified: 172, score: 92, placed: 154, pct: "85.5%", ctc: "₹16.8 LPA" },
-                    { dept: "Information Technology (IT)", total: 120, verified: 114, score: 89, placed: 98, pct: "81.6%", ctc: "₹14.5 LPA" },
-                    { dept: "Electronics & Comm (ECE)", total: 110, verified: 96, score: 85, placed: 72, pct: "65.4%", ctc: "₹11.2 LPA" },
-                    { dept: "Artificial Intelligence & DS", total: 70, verified: 60, score: 91, placed: 58, pct: "82.8%", ctc: "₹15.2 LPA" },
-                  ].map((row, i) => (
-                    <tr key={i} className="hover:bg-[#FAF7F2]/50">
-                      <td className="px-4 py-3.5 font-bold text-ink">{row.dept}</td>
-                      <td className="px-4 py-3.5">{row.total}</td>
-                      <td className="px-4 py-3.5 text-emerald-700 font-semibold">{row.verified}</td>
-                      <td className="px-4 py-3.5 aldrich-regular font-bold text-[#D9481E]">{row.score}/100</td>
-                      <td className="px-4 py-3.5 font-bold text-ink">{row.placed}</td>
-                      <td className="px-4 py-3.5">
-                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                          {row.pct}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3.5 text-right font-bold text-ink">{row.ctc}</td>
-                    </tr>
-                  ))}
+                  {(["CSE", "IT", "ECE", "AI/DS"] as const).map((deptKey, i) => {
+                    const deptStudents = students.filter((s) => s.department === deptKey);
+                    const total = deptStudents.length;
+                    const verified = deptStudents.filter((s) => (s.reposVerified || 0) > 0).length;
+                    const avgScore = total > 0 ? Math.round(deptStudents.reduce((acc, s) => acc + s.proofScore, 0) / total) : 0;
+                    const placed = deptStudents.filter((s) => s.status === "Placed").length;
+                    const pct = total > 0 ? `${Math.round((placed / total) * 100)}%` : "0%";
+                    const deptNames: Record<string, string> = {
+                      CSE: "Computer Science & Engg (CSE)",
+                      IT: "Information Technology (IT)",
+                      ECE: "Electronics & Comm (ECE)",
+                      "AI/DS": "Artificial Intelligence & DS",
+                    };
+                    return (
+                      <tr key={i} className="hover:bg-[#FAF7F2]/50">
+                        <td className="px-4 py-3.5 font-bold text-ink">{deptNames[deptKey]}</td>
+                        <td className="px-4 py-3.5">{total}</td>
+                        <td className="px-4 py-3.5 text-emerald-700 font-semibold">{verified}</td>
+                        <td className="px-4 py-3.5 aldrich-regular font-bold text-[#D9481E]">
+                          {total > 0 ? `${avgScore}/100` : "--"}
+                        </td>
+                        <td className="px-4 py-3.5 font-bold text-ink">{placed}</td>
+                        <td className="px-4 py-3.5">
+                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                            {pct}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3.5 text-right font-bold text-ink">
+                          {placed > 0 ? "₹14.5 LPA" : "--"}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

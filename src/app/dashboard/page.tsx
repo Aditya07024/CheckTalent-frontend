@@ -2,86 +2,98 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { ArrowRight, LogOut, ShieldCheck } from "lucide-react";
+import { getUserProfile } from "@/lib/user-role";
+import { DashboardRole, UserProfile } from "@/types/dashboard";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { StudentDashboard } from "@/components/dashboard/StudentDashboard";
+import { OffcampusDashboard } from "@/components/dashboard/OffcampusDashboard";
+import { CampusDashboard } from "@/components/dashboard/CampusDashboard";
+import { Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
 
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [currentRole, setCurrentRole] = useState<DashboardRole | null>(null);
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setChecking(false);
-
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (!currentUser) {
         router.replace("/signin");
+        return;
+      }
+
+      setUser(currentUser);
+
+      try {
+        const userProfile = await getUserProfile(currentUser.uid);
+        if (!userProfile?.role) {
+          // No role selected yet -> send to onboarding role selection
+          router.replace("/onboarding");
+          return;
+        }
+
+        setProfile(userProfile);
+        setCurrentRole(userProfile.role);
+      } catch (err) {
+        console.error("Error loading user profile:", err);
+        // Fallback: if cannot get profile, send to onboarding
+        router.replace("/onboarding");
+        return;
+      } finally {
+        setChecking(false);
       }
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, [router]);
 
-  async function handleSignOut() {
-    await signOut(auth);
-    router.replace("/signin");
+  function handleRoleChange(newRole: DashboardRole) {
+    setCurrentRole(newRole);
+    if (profile) {
+      setProfile({ ...profile, role: newRole });
+    }
   }
 
-  if (checking || !user) {
+  if (checking || !user || !currentRole) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#FAF7F2] text-[#1C1613]">
-        Checking your session...
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-[#D9481E]" />
+          <p className="text-sm font-medium text-[#756A62]">
+            Loading your personalized dashboard...
+          </p>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FAF7F2] px-6 py-8 text-[#1C1613]">
-      <header className="mx-auto flex max-w-7xl items-center justify-between">
-        <a href="/" className="aldrich-regular text-2xl font-bold">
-          CheckTalent<span className="text-[#D9481E]">.</span>
-        </a>
+    <main className="min-h-screen bg-[#FAF7F2] pb-16 text-[#1C1613]">
+      <DashboardHeader
+        user={user}
+        profile={profile}
+        currentRole={currentRole}
+        onRoleChange={handleRoleChange}
+      />
 
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-2 rounded-xl border border-[#1C1613]/15 px-4 py-2.5 text-sm font-semibold transition hover:bg-white"
-        >
-          <LogOut className="h-4 w-4" />
-          Sign out
-        </button>
-      </header>
+      <div className="mx-auto mt-6 max-w-7xl px-5 sm:px-8">
+        {currentRole === "student" && (
+          <StudentDashboard user={user} profile={profile} />
+        )}
 
-      <section className="mx-auto mt-16 max-w-7xl">
-        <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-8 shadow-sm sm:p-12">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9A23B]/20 text-[#D9481E]">
-            <ShieldCheck className="h-6 w-6" />
-          </div>
+        {currentRole === "offcampus" && (
+          <OffcampusDashboard user={user} profile={profile} />
+        )}
 
-          <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-[#D9481E]">
-            Your workspace
-          </p>
-
-          <h1 className="aldrich-regular mt-3 text-3xl font-bold sm:text-5xl">
-            Welcome, {user.displayName || user.email}.
-          </h1>
-
-          <p className="mt-5 max-w-2xl leading-7 text-[#756A62]">
-            Your CheckTalent account is authenticated. Next, we'll connect your
-            profile, repositories, skill evidence, and technical assessments.
-          </p>
-
-          <button
-            onClick={() => router.push("/")}
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#D9481E] px-5 py-3 font-semibold text-white transition hover:bg-[#B93615]"
-          >
-            Explore CheckTalent
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
-      </section>
+        {currentRole === "campus" && (
+          <CampusDashboard user={user} profile={profile} />
+        )}
+      </div>
     </main>
   );
 }

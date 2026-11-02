@@ -8,8 +8,9 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
-import { ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
+import { auth, googleProvider, githubProvider } from "@/lib/firebase";
+import { getUserProfile } from "@/lib/user-role";
+import { ArrowRight, Eye, EyeOff, Github, Loader2 } from "lucide-react";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -56,7 +57,8 @@ export default function SignUpPage() {
         displayName: normalizedName,
       });
 
-      router.replace("/dashboard");
+      // New signup -> route directly to choose dashboard type
+      router.replace("/onboarding");
     } catch (err) {
       const code = (err as { code?: string }).code;
 
@@ -79,10 +81,45 @@ export default function SignUpPage() {
     setLoading(true);
 
     try {
-      await signInWithPopup(auth, googleProvider);
-      router.replace("/dashboard");
+      const credential = await signInWithPopup(auth, googleProvider);
+      const existingProfile = await getUserProfile(credential.user.uid);
+
+      if (existingProfile?.role) {
+        router.replace("/dashboard");
+      } else {
+        router.replace("/onboarding");
+      }
     } catch {
       setError("Google registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGitHubSignUp() {
+    setError("");
+    setLoading(true);
+
+    try {
+      const credential = await signInWithPopup(auth, githubProvider);
+      const existingProfile = await getUserProfile(credential.user.uid);
+
+      if (existingProfile?.role) {
+        router.replace("/dashboard");
+      } else {
+        router.replace("/onboarding");
+      }
+    } catch (err) {
+      const code = (err as { code?: string }).code;
+      if (code === "auth/account-exists-with-different-credential") {
+        setError(
+          "An account already exists with this email using another sign-in method. Sign in with that method first."
+        );
+      } else if (code === "auth/popup-closed-by-user") {
+        setError("GitHub registration was cancelled.");
+      } else {
+        setError("GitHub registration failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -163,6 +200,16 @@ export default function SignUpPage() {
           >
             <GoogleIcon />
             Continue with Google
+          </button>
+
+          <button
+            type="button"
+            onClick={handleGitHubSignUp}
+            disabled={loading}
+            className="mt-3 flex w-full items-center justify-center gap-3 rounded-xl border border-[#1C1613]/15 bg-white px-4 py-3 text-sm font-semibold transition hover:bg-[#FAF7F2] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Github className="h-5 w-5" />
+            Continue with GitHub
           </button>
 
           <div className="my-6 flex items-center gap-4">

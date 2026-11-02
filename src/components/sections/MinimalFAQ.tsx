@@ -20,7 +20,7 @@ export function MinimalFAQ() {
     },
     {
       q: "What are the three dashboard options?",
-      a: "1) 'User / Student / Employee' for candidates proving skills; 2) 'Off-Campus Companies' for employers recruiting pre-verified talent; and 3) 'Campus' for colleges and placement cells managing batch cohorts.",
+      a: "1) 'Candidate Workspace' for job seekers, students and developers proving skills; 2) 'Off-Campus Companies' for employers recruiting pre-verified talent; and 3) 'Campus' for colleges and placement cells managing batch cohorts.",
     },
     {
       q: "Can users switch dashboards after selecting one?",

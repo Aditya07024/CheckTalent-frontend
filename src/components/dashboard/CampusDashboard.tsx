@@ -4,6 +4,14 @@ import { useState } from "react";
 import { User } from "firebase/auth";
 import { UserProfile } from "@/types/dashboard";
 import {
+  CampusStudentItem,
+  CampusDriveItem,
+  CampusPartnerRecruiter,
+  INITIAL_CAMPUS_STUDENTS,
+  INITIAL_CAMPUS_DRIVES,
+  INITIAL_CAMPUS_RECRUITERS,
+} from "@/data/dashboard-demo-data";
+import {
   Award,
   BarChart3,
   BookOpen,
@@ -12,6 +20,10 @@ import {
   CheckCircle2,
   Download,
   ExternalLink,
+  Eye,
+  FileSpreadsheet,
+  FileText,
+  Filter,
   GraduationCap,
   Mail,
   Plus,
@@ -20,8 +32,10 @@ import {
   Share2,
   ShieldCheck,
   TrendingUp,
+  Upload,
   UserCheck,
   Users,
+  X,
 } from "lucide-react";
 
 interface CampusDashboardProps {
@@ -33,183 +47,171 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
   const [activeTab, setActiveTab] = useState<"students" | "drives" | "recruiters" | "analytics">("students");
 
   // State for students roster
+  const [students, setStudents] = useState<CampusStudentItem[]>(INITIAL_CAMPUS_STUDENTS);
   const [studentSearch, setStudentSearch] = useState("");
   const [deptFilter, setDeptFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const [students, setStudents] = useState([
-    {
-      id: "std-1",
-      name: "Aditya Sharma",
-      usn: "1AP22CS042",
-      department: "CSE",
-      cgpa: "9.2",
-      proofScore: 94,
-      reposVerified: 4,
-      status: "Shortlisted - Morgan Stanley",
-      statusClass: "bg-blue-100 text-blue-800",
-      skills: ["React", "Go", "PostgreSQL"],
-    },
-    {
-      id: "std-2",
-      name: "Ananya Iyer",
-      usn: "1AP22CS018",
-      department: "CSE",
-      cgpa: "9.5",
-      proofScore: 96,
-      reposVerified: 5,
-      status: "Placed - Amazon (₹28 LPA)",
-      statusClass: "bg-emerald-100 text-emerald-800",
-      skills: ["Java", "Distributed Systems", "AWS"],
-    },
-    {
-      id: "std-3",
-      name: "Rohan Varma",
-      usn: "1AP22IT089",
-      department: "IT",
-      cgpa: "8.6",
-      proofScore: 89,
-      reposVerified: 3,
-      status: "In Process - TCS Digital",
-      statusClass: "bg-purple-100 text-purple-800",
-      skills: ["TypeScript", "Next.js", "Docker"],
-    },
-    {
-      id: "std-4",
-      name: "Sneha Kulkarni",
-      usn: "1AP22EC034",
-      department: "ECE",
-      cgpa: "8.8",
-      proofScore: 88,
+  // State for Add Student modal
+  const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+  const [newStudentName, setNewStudentName] = useState("");
+  const [newStudentUsn, setNewStudentUsn] = useState("");
+  const [newStudentDept, setNewStudentDept] = useState<"CSE" | "IT" | "ECE" | "AI/DS">("CSE");
+  const [newStudentCgpa, setNewStudentCgpa] = useState("8.8");
+  const [newStudentScore, setNewStudentScore] = useState("88");
+
+  // State for Campus Drives
+  const [drives, setDrives] = useState<CampusDriveItem[]>(INITIAL_CAMPUS_DRIVES);
+  const [showScheduleDriveModal, setShowScheduleDriveModal] = useState(false);
+  const [newDriveCompany, setNewDriveCompany] = useState("");
+  const [newDriveDate, setNewDriveDate] = useState("2026-11-28");
+  const [newDriveRole, setNewDriveRole] = useState("Associate Software Engineer");
+  const [newDrivePackage, setNewDrivePackage] = useState("₹18 LPA");
+  const [newDriveCgpa, setNewDriveCgpa] = useState("7.5");
+  const [newDriveScore, setNewDriveScore] = useState("80");
+
+  // State for Partner Recruiters
+  const [recruiters, setRecruiters] = useState<CampusPartnerRecruiter[]>(INITIAL_CAMPUS_RECRUITERS);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteCompany, setInviteCompany] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+
+  // State for NIRF / NAAC Export Modal
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportFormat, setExportFormat] = useState<"nirf" | "naac" | "csv">("nirf");
+
+  // State for action feedback
+  const [actionNotice, setActionNotice] = useState<string | null>(null);
+
+  // Handlers
+  function handleAddStudent(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newStudentName.trim() || !newStudentUsn.trim()) return;
+
+    const newStudent: CampusStudentItem = {
+      id: `std-${Date.now()}`,
+      name: newStudentName.trim(),
+      usn: newStudentUsn.trim().toUpperCase(),
+      department: newStudentDept,
+      cgpa: newStudentCgpa,
+      proofScore: parseInt(newStudentScore) || 85,
       reposVerified: 3,
       status: "Drive Ready",
       statusClass: "bg-amber-100 text-amber-800",
-      skills: ["C++", "Embedded Linux", "Python"],
-    },
-    {
-      id: "std-5",
-      name: "Karan Patel",
-      usn: "1AP22IT102",
-      department: "IT",
-      cgpa: "7.9",
-      proofScore: 78,
-      reposVerified: 2,
-      status: "Needs Skill Audit",
-      statusClass: "bg-stone-200 text-stone-700",
-      skills: ["Python", "Django", "SQL"],
-    },
-  ]);
+      skills: ["React", "TypeScript", "SQL"],
+    };
 
-  // State for campus drives
-  const [drives, setDrives] = useState([
-    {
-      id: "drv-1",
-      company: "Morgan Stanley",
-      ctc: "₹25.5 LPA",
-      date: "Nov 12, 2026",
-      eligibleBranches: "CSE, IT",
-      minCgpa: "8.0",
-      minProofScore: 85,
-      registeredStudents: 142,
-      shortlisted: 28,
-      currentRound: "Online Coding Assessment",
-      day: "Day 1 Drive",
-    },
-    {
-      id: "drv-2",
-      company: "TCS Digital / Prime",
-      ctc: "₹9 LPA - ₹12 LPA",
-      date: "Nov 18, 2026",
-      eligibleBranches: "All Branches",
-      minCgpa: "7.0",
-      minProofScore: 75,
-      registeredStudents: 420,
-      shortlisted: 110,
-      currentRound: "Technical Interview Schedule",
-      day: "Day 2 Drive",
-    },
-    {
-      id: "drv-3",
-      company: "Cisco Systems",
-      ctc: "₹21 LPA",
-      date: "Nov 24, 2026",
-      eligibleBranches: "CSE, IT, ECE",
-      minCgpa: "8.0",
-      minProofScore: 80,
-      registeredStudents: 198,
-      shortlisted: 34,
-      currentRound: "Pre-Placement Talk Completed",
-      day: "Day 1 Drive",
-    },
-  ]);
-
-  // Schedule Drive Modal
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [newCompanyName, setNewCompanyName] = useState("");
-  const [newCtc, setNewCtc] = useState("");
-  const [newDriveDate, setNewDriveDate] = useState("");
-  const [newMinScore, setNewMinScore] = useState("80");
+    setStudents((prev) => [newStudent, ...prev]);
+    setShowAddStudentModal(false);
+    setNewStudentName("");
+    setNewStudentUsn("");
+    setActionNotice(`Student ${newStudent.name} (${newStudent.usn}) added to cohort roster!`);
+    setTimeout(() => setActionNotice(null), 3500);
+  }
 
   function handleScheduleDrive(e: React.FormEvent) {
     e.preventDefault();
-    if (!newCompanyName.trim()) return;
+    if (!newDriveCompany.trim()) return;
 
-    setDrives((prev) => [
-      {
-        id: `drv-${Date.now()}`,
-        company: newCompanyName.trim(),
-        ctc: newCtc.trim() || "₹14 LPA",
-        date: newDriveDate || "Nov 28, 2026",
-        eligibleBranches: "CSE, IT, ECE",
-        minCgpa: "7.5",
-        minProofScore: parseInt(newMinScore, 10) || 75,
-        registeredStudents: 85,
-        shortlisted: 0,
-        currentRound: "Drive Scheduled",
-        day: "Upcoming Drive",
-      },
-      ...prev,
-    ]);
+    const newDrive: CampusDriveItem = {
+      id: `cdrive-${Date.now()}`,
+      company: newDriveCompany.trim(),
+      visitDate: newDriveDate,
+      role: newDriveRole,
+      packageCtc: newDrivePackage,
+      cgpaCutoff: parseFloat(newDriveCgpa) || 7.0,
+      proofScoreCutoff: parseInt(newDriveScore) || 80,
+      eligibleBranches: ["CSE", "IT", "ECE"],
+      registeredStudents: 45,
+      shortlistedCount: 0,
+      placedCount: 0,
+      status: "Upcoming",
+    };
 
-    setNewCompanyName("");
-    setNewCtc("");
-    setNewDriveDate("");
-    setShowScheduleModal(false);
+    setDrives((prev) => [newDrive, ...prev]);
+    setShowScheduleDriveModal(false);
+    setNewDriveCompany("");
+    setActionNotice(`Campus drive for ${newDrive.company} scheduled on ${newDrive.visitDate}!`);
+    setTimeout(() => setActionNotice(null), 3500);
   }
 
-  const institutionDisplay =
-    profile?.institution || user.displayName || "Apex Institute of Technology";
+  function handleInviteRecruiter(e: React.FormEvent) {
+    e.preventDefault();
+    if (!inviteCompany.trim()) return;
+
+    const newRecruiter: CampusPartnerRecruiter = {
+      id: `rec-${Date.now()}`,
+      company: inviteCompany.trim(),
+      contactPerson: "Recruiting Coordinator",
+      contactEmail: inviteEmail || "campus@company.com",
+      tier: "Tier 1 Dream",
+      avgCtc: "₹18 LPA - ₹25 LPA",
+      hiredPastYears: 0,
+      status: "Invited",
+    };
+
+    setRecruiters((prev) => [newRecruiter, ...prev]);
+    setShowInviteModal(false);
+    setInviteCompany("");
+    setInviteEmail("");
+    setActionNotice(`Campus placement invite sent to ${newRecruiter.company}!`);
+    setTimeout(() => setActionNotice(null), 3500);
+  }
+
+  function handleDownloadExport() {
+    let filename = `CheckTalent_${exportFormat.toUpperCase()}_Placement_Report_2026.csv`;
+    let content =
+      "USN,StudentName,Department,CGPA,ProofScore,VerifiedRepos,Status,CompanyPlaced\n" +
+      students
+        .map(
+          (s) =>
+            `"${s.usn}","${s.name}","${s.department}",${s.cgpa},${s.proofScore},${s.reposVerified},"${s.status}","${s.companyPlaced || "N/A"}"`
+        )
+        .join("\n");
+
+    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + content);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setShowExportModal(false);
+    setActionNotice(`Downloaded official ${exportFormat.toUpperCase()} placement dossier!`);
+    setTimeout(() => setActionNotice(null), 3500);
+  }
 
   const filteredStudents = students.filter((s) => {
     const matchesSearch =
       s.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
-      s.usn.toLowerCase().includes(studentSearch.toLowerCase());
+      s.usn.toLowerCase().includes(studentSearch.toLowerCase()) ||
+      s.skills.some((sk) => sk.toLowerCase().includes(studentSearch.toLowerCase()));
     const matchesDept = deptFilter === "all" || s.department === deptFilter;
-    const matchesStatus =
-      statusFilter === "all" ||
-      (statusFilter === "placed" && s.status.includes("Placed")) ||
-      (statusFilter === "process" && (s.status.includes("Shortlisted") || s.status.includes("In Process"))) ||
-      (statusFilter === "ready" && s.status.includes("Ready"));
+    const matchesStatus = statusFilter === "all" || s.status === statusFilter;
     return matchesSearch && matchesDept && matchesStatus;
   });
 
+  const institutionDisplay =
+    profile?.institution || user.displayName || "Apex Institute of Technology";
+
   return (
     <div className="space-y-8">
-      {/* Campus Hero Banner */}
+      {/* College TPO Hero Banner */}
       <section className="relative overflow-hidden rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm sm:p-8">
-        <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-red-600/10 blur-3xl pointer-events-none" />
 
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
           <div>
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-600/30 bg-blue-600/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-red-600/30 bg-red-600/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-700">
                 <School className="h-3.5 w-3.5" />
-                Campus Dashboard (Placement Cell / TPO)
+                Campus & Placement Cell Workspace
               </span>
 
               <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700">
                 <CheckCircle2 className="h-3.5 w-3.5" />
-                Batch of 2025–2026 Active
+                Verified Institutional Portal
               </span>
             </div>
 
@@ -218,314 +220,375 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#756A62]">
-              {profile?.department ? `${profile.department} • ` : "Training & Placement Cell • "}
-              Monitor student technical readiness, verify repository originality, schedule campus drives, and generate automated NIRF/NAAC placement audit reports.
+              Training & Placement Cell (TPO) • Batch of 2026. Monitor verified
+              student skill readiness, schedule visiting company drives, and export
+              NIRF/NAAC compliant technical placement dossiers.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <button
-              onClick={() => setShowScheduleModal(true)}
-              className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-blue-700"
+              onClick={() => setShowScheduleDriveModal(true)}
+              className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
             >
-              <Plus className="h-4 w-4" />
+              <Calendar className="h-4 w-4" />
               Schedule Campus Drive
             </button>
 
             <button
-              onClick={() => setActiveTab("analytics")}
+              onClick={() => setShowAddStudentModal(true)}
+              className="flex items-center gap-2 rounded-xl bg-[#1C1613] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black"
+            >
+              <Plus className="h-4 w-4" />
+              Add Student to Cohort
+            </button>
+
+            <button
+              onClick={() => setShowExportModal(true)}
               className="flex items-center gap-2 rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#1C1613] transition hover:bg-white"
             >
-              <BarChart3 className="h-4 w-4 text-blue-600" />
-              Placement Analytics
+              <Download className="h-4 w-4 text-[#D9481E]" />
+              Export NIRF / NAAC Report
             </button>
           </div>
         </div>
 
-        {/* 4 TPO Metrics */}
+        {/* 4 Core Quick Metrics */}
         <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[#1C1613]/10 pt-6 lg:grid-cols-4">
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
             <div className="flex items-center justify-between text-xs font-semibold text-[#756A62]">
-              <span>Eligible Students</span>
-              <Users className="h-4 w-4 text-blue-600" />
+              <span>Batch Placement Rate</span>
+              <Award className="h-4 w-4 text-emerald-600" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">
-                1,240
-              </span>
-              <span className="text-xs font-bold text-blue-600">Final Year</span>
+              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">78.4%</span>
+              <span className="text-xs font-semibold text-emerald-600">318 / 480 Placed</span>
             </div>
-            <p className="mt-1 text-[11px] text-[#8C8077]">CSE, IT, ECE, Mech</p>
+            <p className="mt-1 text-[11px] text-[#8C8077]">Batch of 2026 Graduating Class</p>
           </div>
 
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
             <div className="flex items-center justify-between text-xs font-semibold text-[#756A62]">
-              <span>Drive Ready (&gt;75 Score)</span>
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+              <span>Average Package CTC</span>
+              <TrendingUp className="h-4 w-4 text-[#D9481E]" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">
-                890
-              </span>
-              <span className="text-xs font-bold text-emerald-600">71.8%</span>
+              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">₹14.2 LPA</span>
+              <span className="text-xs font-semibold text-emerald-600">+18% YoY</span>
             </div>
-            <p className="mt-1 text-[11px] text-[#8C8077]">Audited against plagiarism</p>
+            <p className="mt-1 text-[11px] text-[#8C8077]">Highest: ₹48 LPA (Microsoft)</p>
           </div>
 
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
             <div className="flex items-center justify-between text-xs font-semibold text-[#756A62]">
-              <span>Students Placed</span>
-              <GraduationCap className="h-4 w-4 text-[#D9481E]" />
+              <span>Verified Repositories</span>
+              <ShieldCheck className="h-4 w-4 text-purple-600" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">
-                548
-              </span>
-              <span className="text-xs font-bold text-[#D9481E]">44.2%</span>
+              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">1,420</span>
+              <span className="text-xs font-semibold text-purple-600">AST Audited</span>
             </div>
-            <p className="mt-1 text-[11px] text-[#8C8077]">Avg CTC: ₹9.2 LPA</p>
+            <p className="mt-1 text-[11px] text-[#8C8077]">Zero tutorial plagiarism guarantee</p>
           </div>
 
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
             <div className="flex items-center justify-between text-xs font-semibold text-[#756A62]">
-              <span>Campus Drives</span>
-              <Building2 className="h-4 w-4 text-purple-600" />
+              <span>Campus Drives Scheduled</span>
+              <Building2 className="h-4 w-4 text-[#E9A23B]" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">
-                28
-              </span>
-              <span className="text-xs font-bold text-purple-600">This Season</span>
+              <span className="aldrich-regular text-2xl font-bold text-[#1C1613] sm:text-3xl">{drives.length}</span>
+              <span className="text-xs font-semibold text-[#E9A23B]">This Season</span>
             </div>
-            <p className="mt-1 text-[11px] text-[#8C8077]">12 Done, 16 Upcoming</p>
+            <p className="mt-1 text-[11px] text-[#8C8077]">Morgan Stanley, MS, TCS, Razorpay</p>
           </div>
         </div>
       </section>
 
-      {/* Tabs */}
+      {/* Action Notification Toast */}
+      {actionNotice && (
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-50 p-4 text-xs font-semibold text-emerald-800 flex items-center gap-2 shadow-xs">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+          <span>{actionNotice}</span>
+        </div>
+      )}
+
+      {/* Tabs Navigation */}
       <div className="flex flex-wrap items-center gap-2 border-b border-[#1C1613]/10 pb-2">
         <button
           onClick={() => setActiveTab("students")}
           className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
             activeTab === "students"
-              ? "bg-blue-600 text-white shadow-sm"
+              ? "bg-[#D9481E] text-white shadow-sm"
               : "bg-white text-[#756A62] hover:bg-[#FAF7F2] hover:text-[#1C1613]"
           }`}
         >
-          <Users className="h-4 w-4" />
-          Batch Students ({students.length})
+          <GraduationCap className="h-4 w-4" />
+          Student Cohort Directory ({students.length})
         </button>
 
         <button
           onClick={() => setActiveTab("drives")}
           className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
             activeTab === "drives"
-              ? "bg-blue-600 text-white shadow-sm"
+              ? "bg-[#D9481E] text-white shadow-sm"
               : "bg-white text-[#756A62] hover:bg-[#FAF7F2] hover:text-[#1C1613]"
           }`}
         >
-          <Building2 className="h-4 w-4" />
-          Campus Drives Schedule ({drives.length})
+          <Calendar className="h-4 w-4" />
+          Visiting Campus Drives ({drives.length})
         </button>
 
         <button
           onClick={() => setActiveTab("recruiters")}
           className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
             activeTab === "recruiters"
-              ? "bg-blue-600 text-white shadow-sm"
+              ? "bg-[#D9481E] text-white shadow-sm"
               : "bg-white text-[#756A62] hover:bg-[#FAF7F2] hover:text-[#1C1613]"
           }`}
         >
-          <UserCheck className="h-4 w-4" />
-          Recruiter Collaboration
+          <Building2 className="h-4 w-4" />
+          Corporate Recruiters ({recruiters.length})
         </button>
 
         <button
           onClick={() => setActiveTab("analytics")}
           className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
             activeTab === "analytics"
-              ? "bg-blue-600 text-white shadow-sm"
+              ? "bg-[#D9481E] text-white shadow-sm"
               : "bg-white text-[#756A62] hover:bg-[#FAF7F2] hover:text-[#1C1613]"
           }`}
         >
           <BarChart3 className="h-4 w-4" />
-          NIRF / NAAC Placement Reports
+          Branch & Skill Analytics
         </button>
       </div>
 
-      {/* Tab 1: Students Roster */}
+      {/* Tab 1: Student Cohort Directory */}
       {activeTab === "students" && (
         <div className="space-y-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h3 className="aldrich-regular text-2xl font-bold">
-                Student Directory & Verified Readiness
-              </h3>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                Batch of 2026 Student Directory ({filteredStudents.length})
+              </h2>
               <p className="text-xs text-[#756A62]">
-                Inspect student repository audits, AST scores, and placement milestones.
+                Filter students by department, CGPA, and verifiable Proof Score to assemble drive rosters.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#756A62]" />
-                <input
-                  type="text"
-                  placeholder="Search name or USN..."
-                  value={studentSearch}
-                  onChange={(e) => setStudentSearch(e.target.value)}
-                  className="rounded-xl border border-[#1C1613]/15 bg-white py-2 pl-9 pr-4 text-xs outline-none focus:border-blue-600"
-                />
-              </div>
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={() => setShowAddStudentModal(true)}
+                className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
+              >
+                <Plus className="h-4 w-4" />
+                Add Student
+              </button>
+            </div>
+          </div>
 
+          {/* Search & Filter Bar */}
+          <div className="flex flex-col gap-3 rounded-2xl border border-[#1C1613]/10 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#8C8077]" />
+              <input
+                type="text"
+                placeholder="Search by student name, USN (e.g. 1AP22CS042), or skill..."
+                value={studentSearch}
+                onChange={(e) => setStudentSearch(e.target.value)}
+                className="w-full rounded-xl border border-[#1C1613]/15 pl-9 pr-4 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
               <select
                 value={deptFilter}
                 onChange={(e) => setDeptFilter(e.target.value)}
-                className="rounded-xl border border-[#1C1613]/15 bg-white px-3 py-2 text-xs font-semibold outline-none"
+                className="rounded-xl border border-[#1C1613]/15 bg-white px-3 py-2 text-xs font-semibold text-ink"
               >
-                <option value="all">All Branches</option>
+                <option value="all">All Departments</option>
                 <option value="CSE">CSE</option>
                 <option value="IT">IT</option>
                 <option value="ECE">ECE</option>
+                <option value="AI/DS">AI/DS</option>
               </select>
 
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="rounded-xl border border-[#1C1613]/15 bg-white px-3 py-2 text-xs font-semibold outline-none"
+                className="rounded-xl border border-[#1C1613]/15 bg-white px-3 py-2 text-xs font-semibold text-ink"
               >
-                <option value="all">All Status</option>
-                <option value="placed">Placed</option>
-                <option value="process">In Process</option>
-                <option value="ready">Drive Ready</option>
+                <option value="all">All Statuses</option>
+                <option value="Placed">Placed</option>
+                <option value="Shortlisted">Shortlisted</option>
+                <option value="Drive Ready">Drive Ready</option>
+                <option value="Needs Skill Audit">Needs Skill Audit</option>
               </select>
             </div>
           </div>
 
+          {/* Student Table */}
           <div className="overflow-hidden rounded-3xl border border-[#1C1613]/10 bg-white shadow-sm">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#1C1613]/10 bg-[#FAF7F2] font-mono text-[11px] uppercase tracking-wider text-[#756A62]">
-                <tr>
-                  <th className="p-4 pl-6">Student & USN</th>
-                  <th className="p-4">Branch</th>
-                  <th className="p-4">CGPA</th>
-                  <th className="p-4">Proof Score</th>
-                  <th className="p-4">Repos</th>
-                  <th className="p-4">Placement Status</th>
-                  <th className="p-4 pr-6 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#1C1613]/5">
-                {filteredStudents.map((std) => (
-                  <tr key={std.id} className="hover:bg-[#FAF7F2]/50 transition">
-                    <td className="p-4 pl-6">
-                      <strong className="text-sm font-bold text-[#1C1613] block">
-                        {std.name}
-                      </strong>
-                      <span className="font-mono text-[11px] text-[#756A62]">{std.usn}</span>
-                    </td>
-                    <td className="p-4 font-bold text-[#1C1613]">{std.department}</td>
-                    <td className="p-4 font-mono font-bold text-[#1C1613]">{std.cgpa}</td>
-                    <td className="p-4">
-                      <span className="inline-flex items-center gap-1 font-bold text-blue-700">
-                        <ShieldCheck className="h-3.5 w-3.5 text-blue-600" />
-                        {std.proofScore}/100
-                      </span>
-                    </td>
-                    <td className="p-4 text-[#52463F]">{std.reposVerified} verified</td>
-                    <td className="p-4">
-                      <span className={`inline-block rounded-md px-2.5 py-1 text-[11px] font-bold ${std.statusClass}`}>
-                        {std.status}
-                      </span>
-                    </td>
-                    <td className="p-4 pr-6 text-right">
-                      <button
-                        onClick={() => alert(`Viewing verified dossier for ${std.name}`)}
-                        className="rounded-lg border border-[#1C1613]/15 bg-white px-2.5 py-1 text-xs font-semibold text-[#1C1613] hover:bg-[#FAF7F2]"
-                      >
-                        View Dossier
-                      </button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="border-b border-[#1C1613]/10 bg-[#FAF7F2] font-mono text-[11px] uppercase tracking-wider text-[#756A62]">
+                  <tr>
+                    <th className="px-5 py-3.5">Student Details</th>
+                    <th className="px-4 py-3.5">USN & Dept</th>
+                    <th className="px-4 py-3.5">CGPA</th>
+                    <th className="px-4 py-3.5">Proof Score</th>
+                    <th className="px-4 py-3.5">Status</th>
+                    <th className="px-4 py-3.5">Audited Repos</th>
+                    <th className="px-5 py-3.5 text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-[#1C1613]/5">
+                  {filteredStudents.map((std) => (
+                    <tr key={std.id} className="hover:bg-[#FAF7F2]/50 transition">
+                      <td className="px-5 py-4">
+                        <div className="font-bold text-ink">{std.name}</div>
+                        <div className="text-[11px] text-[#756A62]">
+                          {std.skills.join(" • ")}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="font-mono font-semibold text-ink">{std.usn}</div>
+                        <div className="text-[11px] text-[#756A62]">{std.department}</div>
+                      </td>
+                      <td className="px-4 py-4 font-bold text-ink">{std.cgpa}</td>
+                      <td className="px-4 py-4">
+                        <span className="aldrich-regular text-sm font-bold text-[#D9481E]">
+                          {std.proofScore}/100
+                        </span>
+                        <div className="h-1.5 w-16 rounded-full bg-[#1C1613]/10 mt-1">
+                          <div
+                            className="h-full rounded-full bg-[#D9481E]"
+                            style={{ width: `${std.proofScore}%` }}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${std.statusClass}`}>
+                          {std.status}
+                        </span>
+                        {std.companyPlaced && (
+                          <div className="text-[10px] font-semibold text-emerald-800 mt-1">
+                            {std.companyPlaced}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-4 font-semibold text-ink">
+                        {std.reposVerified} Verified
+                      </td>
+                      <td className="px-5 py-4 text-right">
+                        <button
+                          onClick={() => {
+                            setActionNotice(`Endorsed ${std.name} for upcoming visiting campus drives!`);
+                            setTimeout(() => setActionNotice(null), 3000);
+                          }}
+                          className="font-bold text-[#D9481E] hover:underline text-xs"
+                        >
+                          Endorse &rarr;
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Tab 2: Campus Drives */}
+      {/* Tab 2: Campus Placement Drives */}
       {activeTab === "drives" && (
         <div className="space-y-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h3 className="aldrich-regular text-2xl font-bold">
-                Campus Placement Drives Schedule
-              </h3>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                Visiting Campus Drives ({drives.length})
+              </h2>
               <p className="text-xs text-[#756A62]">
-                Round progression tracking, eligible candidate rosters, and company visit schedules.
+                Scheduled on-campus technical placement schedules, branch eligibility criteria, and candidate progression.
               </p>
             </div>
 
             <button
-              onClick={() => setShowScheduleModal(true)}
-              className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-700"
+              onClick={() => setShowScheduleDriveModal(true)}
+              className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
             >
-              <Plus className="h-4 w-4" />
-              Add Scheduled Drive
+              <Calendar className="h-4 w-4" />
+              Schedule Drive
             </button>
           </div>
 
-          <div className="space-y-4">
-            {drives.map((drv) => (
+          <div className="grid gap-4 md:grid-cols-2">
+            {drives.map((drive) => (
               <div
-                key={drv.id}
-                className="flex flex-col justify-between gap-5 rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm transition hover:shadow-md lg:flex-row lg:items-center"
+                key={drive.id}
+                className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
               >
-                <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h4 className="aldrich-regular text-xl font-bold text-[#1C1613]">
-                      {drv.company}
-                    </h4>
-                    <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-bold text-blue-700">
-                      {drv.day}
-                    </span>
-                    <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700">
-                      Package: {drv.ctc}
-                    </span>
+                <div>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-ink text-lg">{drive.company}</h3>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                            drive.status === "Completed"
+                              ? "bg-stone-100 text-stone-700"
+                              : "bg-emerald-50 text-emerald-700"
+                          }`}
+                        >
+                          {drive.status}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#756A62] mt-0.5">{drive.role}</p>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="aldrich-regular text-base font-bold text-[#D9481E]">
+                        {drive.packageCtc}
+                      </span>
+                      <p className="text-[10px] text-[#756A62]">Package CTC</p>
+                    </div>
                   </div>
 
-                  <p className="text-xs text-[#756A62]">
-                    Drive Date: <strong className="text-[#1C1613]">{drv.date}</strong> • Eligible: {drv.eligibleBranches} (Min CGPA: {drv.minCgpa}, Min Proof: {drv.minProofScore}+)
-                  </p>
+                  <div className="mt-4 grid grid-cols-3 gap-2 rounded-2xl bg-[#FAF7F2] p-3 text-center text-xs">
+                    <div>
+                      <span className="text-[11px] text-[#756A62]">Visit Date</span>
+                      <p className="font-bold text-ink mt-0.5">{drive.visitDate}</p>
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-[#756A62]">Min Proof Score</span>
+                      <p className="font-bold text-[#D9481E] mt-0.5">{drive.proofScoreCutoff}+</p>
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-[#756A62]">Min CGPA</span>
+                      <p className="font-bold text-ink mt-0.5">{drive.cgpaCutoff}</p>
+                    </div>
+                  </div>
 
-                  <div className="flex items-center gap-2 pt-1 text-xs text-[#52463F]">
-                    <span className="font-semibold text-blue-600">Active Stage:</span>
-                    <span>{drv.currentRound}</span>
+                  <div className="mt-4 flex items-center justify-between text-xs text-[#52463F]">
+                    <span>Eligible Branches: {drive.eligibleBranches.join(", ")}</span>
+                    <span className="font-semibold">{drive.registeredStudents} Registered</span>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-6 border-t border-[#1C1613]/10 pt-4 lg:border-t-0 lg:pt-0">
-                  <div className="text-center">
-                    <p className="text-xs text-[#756A62]">Registered</p>
-                    <p className="aldrich-regular mt-0.5 text-2xl font-bold text-[#1C1613]">
-                      {drv.registeredStudents}
-                    </p>
-                  </div>
-
-                  <div className="text-center">
-                    <p className="text-xs text-[#756A62]">Shortlisted</p>
-                    <p className="aldrich-regular mt-0.5 text-2xl font-bold text-emerald-600">
-                      {drv.shortlisted}
-                    </p>
-                  </div>
+                <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs">
+                  <span className="text-emerald-700 font-bold">
+                    {drive.placedCount > 0 ? `${drive.placedCount} Students Placed ✓` : `${drive.shortlistedCount} Shortlisted`}
+                  </span>
 
                   <button
-                    onClick={() => alert(`Exporting candidate list for ${drv.company}`)}
-                    className="flex items-center gap-1.5 rounded-xl bg-blue-50 px-4 py-2.5 text-xs font-bold text-blue-700 hover:bg-blue-100 transition"
+                    onClick={() => {
+                      setActionNotice(`Opening round management console for ${drive.company}...`);
+                      setTimeout(() => setActionNotice(null), 3000);
+                    }}
+                    className="font-bold text-[#D9481E] hover:underline"
                   >
-                    <Download className="h-3.5 w-3.5" />
-                    Export Candidates
+                    Manage Rounds &rarr;
                   </button>
                 </div>
               </div>
@@ -534,74 +597,79 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
         </div>
       )}
 
-      {/* Tab 3: Recruiter Collaboration */}
+      {/* Tab 3: Corporate Recruiters */}
       {activeTab === "recruiters" && (
         <div className="space-y-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h3 className="aldrich-regular text-2xl font-bold">
-                Visiting Recruiters & Corporate Partnerships
-              </h3>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                Visiting Corporate Recruiters ({recruiters.length})
+              </h2>
               <p className="text-xs text-[#756A62]">
-                Companies invited to interview your college batch using verified CheckTalent skill dossiers.
+                Manage relationships and send verified student cohort portfolios to enterprise hiring teams.
               </p>
             </div>
 
             <button
-              onClick={() => alert("Invite link copied to clipboard for visiting employers!")}
-              className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-700"
+              onClick={() => setShowInviteModal(true)}
+              className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
             >
               <Mail className="h-4 w-4" />
               Invite New Recruiter
             </button>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              {
-                name: "Microsoft",
-                slot: "Day 0 Campus Visit",
-                roles: "SDE 1 (Azure Core)",
-                status: "Slot Confirmed",
-                color: "text-emerald-700 bg-emerald-50",
-              },
-              {
-                name: "Amazon AWS",
-                slot: "Day 1 Drive",
-                roles: "Cloud Support & SDE Intern",
-                status: "Completed (18 Offers)",
-                color: "text-blue-700 bg-blue-50",
-              },
-              {
-                name: "Cisco Systems",
-                slot: "Day 1 Drive",
-                roles: "Network Software Engineer",
-                status: "Slot Confirmed",
-                color: "text-purple-700 bg-purple-50",
-              },
-            ].map((rec, idx) => (
+          <div className="grid gap-4 md:grid-cols-2">
+            {recruiters.map((rec) => (
               <div
-                key={idx}
-                className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm flex flex-col justify-between"
+                key={rec.id}
+                className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-[#756A62]">{rec.slot}</span>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${rec.color}`}>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-bold text-ink text-lg">{rec.company}</h3>
+                      <span className="mt-1 inline-block rounded-md bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-orange-900 border border-orange-200">
+                        {rec.tier}
+                      </span>
+                    </div>
+
+                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
                       {rec.status}
                     </span>
                   </div>
 
-                  <h4 className="aldrich-regular mt-3 text-xl font-bold text-[#1C1613]">
-                    {rec.name}
-                  </h4>
-                  <p className="mt-1 text-xs text-[#756A62]">Roles: {rec.roles}</p>
+                  <div className="mt-4 space-y-2 rounded-2xl bg-[#FAF7F2] p-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#756A62]">Contact Person:</span>
+                      <span className="font-bold text-ink">{rec.contactPerson}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#756A62]">Official Email:</span>
+                      <span className="font-mono text-[#52463F]">{rec.contactEmail}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#756A62]">Avg CTC Offered:</span>
+                      <span className="font-bold text-[#D9481E]">{rec.avgCtc}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#756A62]">Hired in Past 3 Yrs:</span>
+                      <span className="font-bold text-ink">{rec.hiredPastYears} alumni</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mt-6 border-t border-[#1C1613]/10 pt-4 flex items-center justify-between">
-                  <span className="text-xs text-[#52463F]">Dossier Access: Granted</span>
-                  <button className="text-xs font-bold text-blue-600 hover:underline">
-                    Manage Slot
+                <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs">
+                  <span className="text-[#756A62]">Slot: Slot 1 (Day 1)</span>
+                  <button
+                    onClick={() => {
+                      setActionNotice(`Cohort briefing sent to ${rec.contactEmail}!`);
+                      setTimeout(() => setActionNotice(null), 3000);
+                    }}
+                    className="font-bold text-[#D9481E] hover:underline flex items-center gap-1"
+                  >
+                    <Mail className="h-3.5 w-3.5" />
+                    Send Cohort Dossier
                   </button>
                 </div>
               </div>
@@ -610,177 +678,426 @@ export function CampusDashboard({ user, profile }: CampusDashboardProps) {
         </div>
       )}
 
-      {/* Tab 4: Analytics & Accreditation */}
+      {/* Tab 4: Branch & Skill Analytics */}
       {activeTab === "analytics" && (
         <div className="space-y-6">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 sm:p-8 shadow-sm space-y-6">
             <div>
-              <h3 className="aldrich-regular text-2xl font-bold">
-                NIRF & NAAC Placement Accreditation Metrics
-              </h3>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                Departmental Placement & Skill Analytics
+              </h2>
               <p className="text-xs text-[#756A62]">
-                Real-time verified placement stats ready for institutional accreditation submissions.
+                Aggregated statistics compliant with NAAC Criterion 5 and NIRF student progression standards.
               </p>
             </div>
 
-            <button
-              onClick={() => alert("Downloading verified accreditation report (PDF)...")}
-              className="flex items-center gap-2 rounded-xl bg-[#1C1613] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-black"
-            >
-              <Download className="h-4 w-4" />
-              Download Audit PDF
-            </button>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm">
-              <h4 className="aldrich-regular text-lg font-bold">
-                Department Placement Progression
-              </h4>
-
-              <div className="mt-6 space-y-4">
-                {[
-                  { dept: "Computer Science & Engineering", placed: 84, total: 320, pct: "84%" },
-                  { dept: "Information Technology", placed: 79, total: 240, pct: "79%" },
-                  { dept: "Electronics & Communication", placed: 64, total: 280, pct: "64%" },
-                  { dept: "Electrical / Mechanical", placed: 48, total: 400, pct: "48%" },
-                ].map((d, i) => (
-                  <div key={i} className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-semibold">
-                      <span>{d.dept}</span>
-                      <strong className="text-blue-700">{d.pct} ({d.placed * 2} students)</strong>
-                    </div>
-                    <div className="h-2.5 w-full rounded-full bg-[#1C1613]/10 overflow-hidden">
-                      <div className="h-full bg-blue-600 rounded-full" style={{ width: `${d.placed}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {/* Department Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="border-b border-[#1C1613]/10 bg-[#FAF7F2] font-mono text-[11px] uppercase tracking-wider text-[#756A62]">
+                  <tr>
+                    <th className="px-4 py-3">Department</th>
+                    <th className="px-4 py-3">Total Batch</th>
+                    <th className="px-4 py-3">Verified Skills</th>
+                    <th className="px-4 py-3">Avg Proof Score</th>
+                    <th className="px-4 py-3">Placed Count</th>
+                    <th className="px-4 py-3">Placement %</th>
+                    <th className="px-4 py-3 text-right">Avg Package</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#1C1613]/5">
+                  {[
+                    { dept: "Computer Science & Engg (CSE)", total: 180, verified: 172, score: 92, placed: 154, pct: "85.5%", ctc: "₹16.8 LPA" },
+                    { dept: "Information Technology (IT)", total: 120, verified: 114, score: 89, placed: 98, pct: "81.6%", ctc: "₹14.5 LPA" },
+                    { dept: "Electronics & Comm (ECE)", total: 110, verified: 96, score: 85, placed: 72, pct: "65.4%", ctc: "₹11.2 LPA" },
+                    { dept: "Artificial Intelligence & DS", total: 70, verified: 60, score: 91, placed: 58, pct: "82.8%", ctc: "₹15.2 LPA" },
+                  ].map((row, i) => (
+                    <tr key={i} className="hover:bg-[#FAF7F2]/50">
+                      <td className="px-4 py-3.5 font-bold text-ink">{row.dept}</td>
+                      <td className="px-4 py-3.5">{row.total}</td>
+                      <td className="px-4 py-3.5 text-emerald-700 font-semibold">{row.verified}</td>
+                      <td className="px-4 py-3.5 aldrich-regular font-bold text-[#D9481E]">{row.score}/100</td>
+                      <td className="px-4 py-3.5 font-bold text-ink">{row.placed}</td>
+                      <td className="px-4 py-3.5">
+                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                          {row.pct}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-bold text-ink">{row.ctc}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
-            <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm">
-              <h4 className="aldrich-regular text-lg font-bold">
-                Batch Skill Competency Audit
-              </h4>
-              <p className="text-xs text-[#756A62]">
-                Synthesized across all 1,240 enrolled student repositories:
-              </p>
-
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center justify-between rounded-xl bg-[#FAF7F2] p-3 text-xs">
-                  <div>
-                    <strong className="text-[#1C1613]">High-Demand Competencies</strong>
-                    <p className="text-[#756A62]">React/Next.js, Go, TypeScript, PostgreSQL</p>
-                  </div>
-                  <span className="font-bold text-emerald-600">82% Verified</span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-xl bg-[#FAF7F2] p-3 text-xs">
-                  <div>
-                    <strong className="text-[#1C1613]">Recommended Training Focus</strong>
-                    <p className="text-[#756A62]">Docker containers, Kubernetes, Rust concurrency</p>
-                  </div>
-                  <span className="font-bold text-amber-600">38% Verified</span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-xl bg-[#FAF7F2] p-3 text-xs">
-                  <div>
-                    <strong className="text-[#1C1613]">Anti-Plagiarism Batch Score</strong>
-                    <p className="text-[#756A62]">Audited against 1.2M public repositories</p>
-                  </div>
-                  <span className="font-bold text-emerald-600">99.4% Original</span>
-                </div>
+            {/* Quick Export CTA */}
+            <div className="rounded-2xl border border-orange-200 bg-orange-50/50 p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h4 className="text-sm font-bold text-orange-950">
+                  Ready to submit annual institutional placement filings?
+                </h4>
+                <p className="text-xs text-[#52463F]">
+                  Download one-click NIRF and NAAC formatted reports with all student roll numbers and verified proof scores.
+                </p>
               </div>
+              <button
+                onClick={() => setShowExportModal(true)}
+                className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615] shrink-0"
+              >
+                <Download className="h-4 w-4" />
+                Generate Official Dossier
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Schedule Drive Modal */}
-      {showScheduleModal && (
+      {/* MODAL 1: Add Student */}
+      {showAddStudentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl sm:p-8">
-            <h3 className="aldrich-regular text-2xl font-bold text-[#1C1613]">
-              Schedule Campus Placement Drive
-            </h3>
-            <p className="mt-1 text-xs text-[#756A62]">
-              Set company visit date, package offered, and minimum skill proof threshold.
-            </p>
+          <div className="w-full max-w-md rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-3">
+              <div className="flex items-center gap-2">
+                <GraduationCap className="h-5 w-5 text-[#D9481E]" />
+                <h3 className="aldrich-regular text-lg font-bold text-ink">Add Student to Cohort</h3>
+              </div>
+              <button
+                onClick={() => setShowAddStudentModal(false)}
+                className="rounded-lg p-1 text-[#756A62] hover:bg-[#FAF7F2]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-            <form onSubmit={handleScheduleDrive} className="mt-6 space-y-4">
+            <form onSubmit={handleAddStudent} className="mt-4 space-y-3.5">
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase text-[#1C1613]">
-                  Company Name
-                </label>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">Student Full Name</label>
                 <input
                   type="text"
+                  placeholder="e.g. Arjun Sharma"
+                  value={newStudentName}
+                  onChange={(e) => setNewStudentName(e.target.value)}
+                  className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
                   required
-                  value={newCompanyName}
-                  onChange={(e) => setNewCompanyName(e.target.value)}
-                  placeholder="e.g. Google, Cisco, Razorpay"
-                  className="w-full rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2]/50 px-4 py-2.5 text-sm outline-none focus:border-blue-600"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-xs font-bold uppercase text-[#1C1613]">
-                    CTC Package Offered
-                  </label>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">USN / Roll Number</label>
                   <input
                     type="text"
-                    value={newCtc}
-                    onChange={(e) => setNewCtc(e.target.value)}
-                    placeholder="e.g. ₹18 LPA"
-                    className="w-full rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2]/50 px-4 py-2.5 text-sm outline-none focus:border-blue-600"
+                    placeholder="1AP22CS105"
+                    value={newStudentUsn}
+                    onChange={(e) => setNewStudentUsn(e.target.value)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                    required
                   />
                 </div>
-
                 <div>
-                  <label className="mb-1 block text-xs font-bold uppercase text-[#1C1613]">
-                    Drive Date
-                  </label>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">Department</label>
+                  <select
+                    value={newStudentDept}
+                    onChange={(e) => setNewStudentDept(e.target.value as any)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  >
+                    <option value="CSE">CSE</option>
+                    <option value="IT">IT</option>
+                    <option value="ECE">ECE</option>
+                    <option value="AI/DS">AI/DS</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">CGPA</label>
                   <input
-                    type="date"
-                    value={newDriveDate}
-                    onChange={(e) => setNewDriveDate(e.target.value)}
-                    className="w-full rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2]/50 px-4 py-2.5 text-sm outline-none focus:border-blue-600"
+                    type="text"
+                    value={newStudentCgpa}
+                    onChange={(e) => setNewStudentCgpa(e.target.value)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">Initial Proof Score</label>
+                  <input
+                    type="number"
+                    min="50"
+                    max="99"
+                    value={newStudentScore}
+                    onChange={(e) => setNewStudentScore(e.target.value)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="mb-1 block text-xs font-bold uppercase text-[#1C1613]">
-                  Minimum CheckTalent Proof Score Required
-                </label>
-                <select
-                  value={newMinScore}
-                  onChange={(e) => setNewMinScore(e.target.value)}
-                  className="w-full rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2]/50 px-4 py-2.5 text-sm outline-none focus:border-blue-600"
-                >
-                  <option value="70">70+ (Standard)</option>
-                  <option value="75">75+ (High Package)</option>
-                  <option value="80">80+ (Tier 1 Super Dream)</option>
-                  <option value="85">85+ (Elite Research & Systems)</option>
-                </select>
-              </div>
+              <p className="text-[11px] text-[#756A62]">
+                Student will receive an automated invitation to link their GitHub profile for continuous AST and plagiarism audits.
+              </p>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#1C1613]/10">
+              <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowScheduleModal(false)}
-                  className="rounded-xl border border-[#1C1613]/15 px-4 py-2.5 text-xs font-bold uppercase text-[#756A62] hover:bg-[#FAF7F2]"
+                  onClick={() => setShowAddStudentModal(false)}
+                  className="rounded-xl border border-[#1C1613]/15 px-4 py-2 text-xs font-semibold text-[#52463F] hover:bg-[#FAF7F2]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-bold uppercase text-white hover:bg-blue-700"
+                  className="rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
                 >
-                  Confirm & Schedule
+                  Add Student
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: Schedule Campus Drive */}
+      {showScheduleDriveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-[#D9481E]" />
+                <h3 className="aldrich-regular text-lg font-bold text-ink">Schedule Campus Drive</h3>
+              </div>
+              <button
+                onClick={() => setShowScheduleDriveModal(false)}
+                className="rounded-lg p-1 text-[#756A62] hover:bg-[#FAF7F2]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleScheduleDrive} className="mt-4 space-y-3.5">
+              <div>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">Company Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Goldman Sachs"
+                  value={newDriveCompany}
+                  onChange={(e) => setNewDriveCompany(e.target.value)}
+                  className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">Visit Date</label>
+                  <input
+                    type="date"
+                    value={newDriveDate}
+                    onChange={(e) => setNewDriveDate(e.target.value)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">Package CTC</label>
+                  <input
+                    type="text"
+                    value={newDrivePackage}
+                    onChange={(e) => setNewDrivePackage(e.target.value)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">Role Title</label>
+                <input
+                  type="text"
+                  value={newDriveRole}
+                  onChange={(e) => setNewDriveRole(e.target.value)}
+                  className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">Min CGPA Cutoff</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="5"
+                    max="10"
+                    value={newDriveCgpa}
+                    onChange={(e) => setNewDriveCgpa(e.target.value)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#52463F] mb-1">Min Proof Score</label>
+                  <input
+                    type="number"
+                    min="50"
+                    max="99"
+                    value={newDriveScore}
+                    onChange={(e) => setNewDriveScore(e.target.value)}
+                    className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowScheduleDriveModal(false)}
+                  className="rounded-xl border border-[#1C1613]/15 px-4 py-2 text-xs font-semibold text-[#52463F] hover:bg-[#FAF7F2]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
+                >
+                  Confirm Drive Schedule
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: Invite Corporate Recruiter */}
+      {showInviteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-[#D9481E]" />
+                <h3 className="aldrich-regular text-lg font-bold text-ink">Invite Corporate Recruiter</h3>
+              </div>
+              <button
+                onClick={() => setShowInviteModal(false)}
+                className="rounded-lg p-1 text-[#756A62] hover:bg-[#FAF7F2]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleInviteRecruiter} className="mt-4 space-y-3.5">
+              <div>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">Company Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Atlassian"
+                  value={inviteCompany}
+                  onChange={(e) => setInviteCompany(e.target.value)}
+                  className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">Recruiter / HR Contact Email</label>
+                <input
+                  type="email"
+                  placeholder="university.hiring@atlassian.com"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <p className="text-[11px] leading-relaxed text-[#756A62]">
+                An invitation with your institution's verified technical cohort portfolio and Day 1 slot booking calendar will be dispatched.
+              </p>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowInviteModal(false)}
+                  className="rounded-xl border border-[#1C1613]/15 px-4 py-2 text-xs font-semibold text-[#52463F]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
+                >
+                  Dispatch Invitation
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: Export NIRF / NAAC Report */}
+      {showExportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-3">
+              <div className="flex items-center gap-2">
+                <FileSpreadsheet className="h-5 w-5 text-[#D9481E]" />
+                <h3 className="aldrich-regular text-lg font-bold text-ink">Generate Official Report</h3>
+              </div>
+              <button
+                onClick={() => setShowExportModal(false)}
+                className="rounded-lg p-1 text-[#756A62] hover:bg-[#FAF7F2]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">Select Report Filing Format:</label>
+                <div className="space-y-2">
+                  {[
+                    { id: "nirf", label: "NIRF Student Progression Report (Table 5)", desc: "Compliant with National Institutional Ranking Framework" },
+                    { id: "naac", label: "NAAC Criterion 5.2 (Placement of Outgoing Students)", desc: "Official metric breakdown for NAAC accreditation" },
+                    { id: "csv", label: "Complete Student Placement Roster (Raw CSV)", desc: "All columns including verified repository proof scores" },
+                  ].map((fmt) => (
+                    <label
+                      key={fmt.id}
+                      className={`flex items-start gap-3 rounded-2xl border p-3 cursor-pointer transition ${
+                        exportFormat === fmt.id ? "border-[#D9481E] bg-[#D9481E]/5" : "border-[#1C1613]/10"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="exportFormat"
+                        checked={exportFormat === fmt.id}
+                        onChange={() => setExportFormat(fmt.id as any)}
+                        className="mt-0.5"
+                      />
+                      <div>
+                        <p className="text-xs font-bold text-ink">{fmt.label}</p>
+                        <p className="text-[11px] text-[#756A62]">{fmt.desc}</p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowExportModal(false)}
+                  className="rounded-xl border border-[#1C1613]/15 px-4 py-2 text-xs font-semibold text-[#52463F]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadExport}
+                  className="flex items-center gap-1.5 rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Download Report File
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

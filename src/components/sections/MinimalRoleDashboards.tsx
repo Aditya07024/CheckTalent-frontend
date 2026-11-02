@@ -72,7 +72,7 @@ export function MinimalRoleDashboards() {
                 </div>
 
                 <h3 className="aldrich-regular mt-5 text-2xl font-bold text-ink">
-                  User / Student / Employee
+                  Candidate Workspace
                 </h3>
 
                 <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-ink-secondary">

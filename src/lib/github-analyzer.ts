@@ -341,26 +341,41 @@ export async function runDeepCodeForensicsAudit({
     isFork: boolean;
   }> = [];
 
-  // 1. Attempt to fetch real public repositories from GitHub
+  // 1. Attempt to fetch ALL public repositories from GitHub (paginated up to 1,000 repos)
   try {
-    const res = await fetch(
-      `https://api.github.com/users/${encodeURIComponent(cleanUsername)}/repos?sort=updated&per_page=6`,
-      { headers: { Accept: "application/vnd.github.v3+json" } }
-    );
+    let page = 1;
+    let hasMore = true;
 
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        fetchedRepos = data.map((r: any) => ({
-          name: r.name,
-          fullName: r.full_name,
-          htmlUrl: r.html_url,
-          description: r.description || "",
-          language: r.language,
-          stars: r.stargazers_count || 0,
-          forks: r.forks_count || 0,
-          isFork: !!r.fork,
-        }));
+    while (hasMore && page <= 10) {
+      const res = await fetch(
+        `https://api.github.com/users/${encodeURIComponent(cleanUsername)}/repos?sort=updated&per_page=100&page=${page}`,
+        { headers: { Accept: "application/vnd.github.v3+json" } }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped = data.map((r: any) => ({
+            name: r.name,
+            fullName: r.full_name,
+            htmlUrl: r.html_url,
+            description: r.description || "",
+            language: r.language,
+            stars: r.stargazers_count || 0,
+            forks: r.forks_count || 0,
+            isFork: !!r.fork,
+          }));
+          fetchedRepos.push(...mapped);
+          if (data.length < 100) {
+            hasMore = false;
+          } else {
+            page++;
+          }
+        } else {
+          hasMore = false;
+        }
+      } else {
+        hasMore = false;
       }
     }
   } catch (err) {
@@ -391,6 +406,26 @@ export async function runDeepCodeForensicsAudit({
         isFork: false,
       },
       {
+        name: "zero-copy-kv-engine",
+        fullName: `${cleanUsername}/zero-copy-kv-engine`,
+        htmlUrl: `https://github.com/${cleanUsername}/zero-copy-kv-engine`,
+        description: "LSM tree storage engine with mmap zero-copy reads and lock-free concurrency.",
+        language: "Rust",
+        stars: 19,
+        forks: 4,
+        isFork: false,
+      },
+      {
+        name: "autonomous-cache-proxy",
+        fullName: `${cleanUsername}/autonomous-cache-proxy`,
+        htmlUrl: `https://github.com/${cleanUsername}/autonomous-cache-proxy`,
+        description: "Distributed LRU/LFU cache proxy with consistent hashing ring and health gossip.",
+        language: "Python",
+        stars: 11,
+        forks: 2,
+        isFork: false,
+      },
+      {
         name: "netflix-clone-react",
         fullName: `${cleanUsername}/netflix-clone-react`,
         htmlUrl: `https://github.com/${cleanUsername}/netflix-clone-react`,
@@ -401,13 +436,53 @@ export async function runDeepCodeForensicsAudit({
         isFork: false,
       },
       {
-        name: "zero-copy-kv-engine",
-        fullName: `${cleanUsername}/zero-copy-kv-engine`,
-        htmlUrl: `https://github.com/${cleanUsername}/zero-copy-kv-engine`,
-        description: "LSM tree storage engine with mmap zero-copy reads and lock-free concurrency.",
-        language: "Rust",
-        stars: 19,
-        forks: 4,
+        name: "spotify-web-player-clone",
+        fullName: `${cleanUsername}/spotify-web-player-clone`,
+        htmlUrl: `https://github.com/${cleanUsername}/spotify-web-player-clone`,
+        description: "Spotify music streaming web player clone with Web Playback SDK.",
+        language: "TypeScript",
+        stars: 3,
+        forks: 1,
+        isFork: false,
+      },
+      {
+        name: "mern-ecommerce-starter",
+        fullName: `${cleanUsername}/mern-ecommerce-starter`,
+        htmlUrl: `https://github.com/${cleanUsername}/mern-ecommerce-starter`,
+        description: "E-commerce store built with MongoDB, Express, React, and Node.",
+        language: "JavaScript",
+        stars: 1,
+        forks: 0,
+        isFork: false,
+      },
+      {
+        name: "kernel-packet-filter",
+        fullName: `${cleanUsername}/kernel-packet-filter`,
+        htmlUrl: `https://github.com/${cleanUsername}/kernel-packet-filter`,
+        description: "eBPF high-speed packet capture and firewall inspection utility in Linux kernel.",
+        language: "C",
+        stars: 34,
+        forks: 8,
+        isFork: false,
+      },
+      {
+        name: "rag-knowledge-graph",
+        fullName: `${cleanUsername}/rag-knowledge-graph`,
+        htmlUrl: `https://github.com/${cleanUsername}/rag-knowledge-graph`,
+        description: "Hybrid vector search and Neo4j entity graph retriever for enterprise documents.",
+        language: "Python",
+        stars: 22,
+        forks: 5,
+        isFork: false,
+      },
+      {
+        name: "wasm-simd-renderer",
+        fullName: `${cleanUsername}/wasm-simd-renderer`,
+        htmlUrl: `https://github.com/${cleanUsername}/wasm-simd-renderer`,
+        description: "WebAssembly SIMD-accelerated 3D voxel raycaster running at 120 FPS in browser.",
+        language: "C++",
+        stars: 41,
+        forks: 12,
         isFork: false,
       },
     ];

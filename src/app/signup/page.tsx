@@ -1,10 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
@@ -21,7 +22,30 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // Cached auth token found! Auto-redirect to assigned dashboard or onboarding
+        try {
+          const profile = await getUserProfile(currentUser.uid);
+          if (profile?.role) {
+            router.replace("/dashboard");
+          } else {
+            router.replace("/onboarding");
+          }
+        } catch {
+          router.replace("/dashboard");
+        }
+      } else {
+        setCheckingSession(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   async function handleSignUp(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -123,6 +147,19 @@ export default function SignUpPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (checkingSession) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#FAF7F2] text-[#1C1613]">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-7 w-7 animate-spin text-[#D9481E]" />
+          <p className="text-sm font-medium text-[#756A62]">
+            Verifying your session...
+          </p>
+        </div>
+      </main>
+    );
   }
 
   return (

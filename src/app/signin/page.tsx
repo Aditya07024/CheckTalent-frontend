@@ -9,6 +9,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from "@/lib/firebase";
+import { getUserProfile } from "@/lib/user-role";
 import { ArrowRight, Eye, EyeOff, Github, Loader2 } from "lucide-react";
 
 export default function SignInPage() {
@@ -28,8 +29,14 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
-      router.replace("/dashboard");
+      const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const userProfile = await getUserProfile(credential.user.uid);
+
+      if (userProfile?.role) {
+        router.replace("/dashboard");
+      } else {
+        router.replace("/onboarding");
+      }
     } catch (err) {
       const code = (err as { code?: string }).code;
 
@@ -55,8 +62,14 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
-      await signInWithPopup(auth, googleProvider);
-      router.replace("/dashboard");
+      const credential = await signInWithPopup(auth, googleProvider);
+      const userProfile = await getUserProfile(credential.user.uid);
+
+      if (userProfile?.role) {
+        router.replace("/dashboard");
+      } else {
+        router.replace("/onboarding");
+      }
     } catch {
       setError("Google sign-in failed. Please try again.");
     } finally {
@@ -64,29 +77,35 @@ export default function SignInPage() {
     }
   }
   async function handleGitHubSignIn() {
-  setError("");
-  setMessage("");
-  setLoading(true);
+    setError("");
+    setMessage("");
+    setLoading(true);
 
-  try {
-    await signInWithPopup(auth, githubProvider);
-    router.replace("/dashboard");
-  } catch (err) {
-    const code = (err as { code?: string }).code;
+    try {
+      const credential = await signInWithPopup(auth, githubProvider);
+      const userProfile = await getUserProfile(credential.user.uid);
 
-    if (code === "auth/account-exists-with-different-credential") {
-      setError(
-        "An account already exists with this email using another sign-in method. Sign in with that method first."
-      );
-    } else if (code === "auth/popup-closed-by-user") {
-      setError("GitHub sign-in was cancelled.");
-    } else {
-      setError("GitHub sign-in failed. Please try again.");
+      if (userProfile?.role) {
+        router.replace("/dashboard");
+      } else {
+        router.replace("/onboarding");
+      }
+    } catch (err) {
+      const code = (err as { code?: string }).code;
+
+      if (code === "auth/account-exists-with-different-credential") {
+        setError(
+          "An account already exists with this email using another sign-in method. Sign in with that method first."
+        );
+      } else if (code === "auth/popup-closed-by-user") {
+        setError("GitHub sign-in was cancelled.");
+      } else {
+        setError("GitHub sign-in failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
   }
-}
 
   async function handleForgotPassword() {
     setError("");

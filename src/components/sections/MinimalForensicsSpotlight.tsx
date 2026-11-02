@@ -12,145 +12,178 @@ import {
   ShieldCheck,
   XCircle,
 } from "lucide-react";
+import { AnimatedSection } from "@/components/animations/AnimatedSection";
+import { GridBackground } from "@/components/visuals/GridBackground";
+import { Floating3DCube } from "@/components/three/Floating3DCube";
 
 export function MinimalForensicsSpotlight() {
   return (
-    <section id="forensics" className="border-b border-[#1C1613]/10 bg-white py-16 lg:py-24">
-      <div className="container">
-        {/* Header */}
-        <div className="mx-auto max-w-3xl text-center space-y-3">
-          <span className="font-mono text-xs uppercase tracking-widest text-[#D9481E] font-bold">
-            CODE FORENSICS & AUTHENTICITY
-          </span>
+    <AnimatedSection
+      id="forensics"
+      className="relative border-b border-orange-200/70 bg-gradient-to-b from-yellow-50/45 via-transparent to-red-50/35 py-16 lg:py-24 overflow-hidden"
+    >
+      <GridBackground density="fine" />
 
-          <h2 className="aldrich-regular text-3xl font-bold tracking-tight text-[#1C1613] sm:text-4xl lg:text-5xl">
-            Separating True Builders from Tutorial Clones.
+      <div className="container relative z-10 w-full">
+        {/* Left-Aligned Header */}
+        <div data-animate-header className="max-w-2xl lg:max-w-3xl space-y-4">
+          <div className="flex items-center gap-3">
+            <Floating3DCube label="AST" tone="crimson" size={44} />
+            <div className="inline-flex items-center gap-2.5 rounded-full border-2 border-orange-300 bg-white/90 px-3.5 py-1.5 shadow-sm">
+              <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 ring-4 ring-amber-200/80 animate-pulse" />
+              <span className="font-mono text-[11px] font-bold tracking-wider text-orange-900 uppercase">
+                CODE FORENSICS & AUTHENTICITY
+              </span>
+            </div>
+          </div>
+
+          <h2 className="aldrich-regular font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-ink leading-[1.12]">
+            Separating True Builders from{" "}
+            <span className="bg-gradient-to-r from-orange-600 via-red-600 to-amber-600 bg-clip-text text-transparent">
+              Tutorial Clones.
+            </span>
           </h2>
 
-          <p className="text-sm sm:text-base leading-relaxed text-[#756A62]">
-            Our AST analyzer inspects repository commits to distinguish authentic developers from copied YouTube projects and unedited AI prompt dumps.
+          <p className="text-base sm:text-lg leading-relaxed text-ink-secondary font-quantico italic quantico-regular-italic">
+            Our AST analyzer inspects repository commits to distinguish
+            authentic software developers from copied YouTube projects and
+            unedited AI prompt dumps.
           </p>
         </div>
 
-        {/* 2-Column Comparison */}
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {/* Box 1: What We Flag (Red/Amber) */}
-          <div className="rounded-3xl border-2 border-red-200 bg-red-50/40 p-7 sm:p-8 space-y-5">
-            <div className="flex items-center gap-2 text-red-700">
-              <ShieldAlert className="h-6 w-6 shrink-0" />
-              <h3 className="aldrich-regular text-xl font-bold">
-                What CheckTalent Flags
-              </h3>
-            </div>
-
-            <p className="text-xs sm:text-sm text-[#756A62]">
-              Superficial signals that fool simple keyword ATS resume scanners:
-            </p>
-
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 rounded-2xl border border-red-200/80 bg-white p-3.5 text-xs text-[#52463F]">
-                <XCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-red-900 block font-bold">
-                    YouTube & Course Tutorial Clones
-                  </strong>
-                  <span>
-                    Exact variable and syntax matches with popular Netflix, Spotify, and standard MERN tutorial templates.
-                  </span>
+        {/* 2-Column Comparison Cards */}
+        <div data-animate-item className="mt-12 grid gap-6 md:grid-cols-2">
+          {/* Box 1: What We Flag (Red/Crimson Tone) */}
+          <div className="flex flex-col justify-between rounded-3xl border-2 border-red-400 bg-gradient-to-br from-red-50/90 via-white to-orange-50/60 p-7 sm:p-8 shadow-[0_12px_32px_rgba(220,38,38,0.12)]">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5 text-red-700">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-300 bg-red-100 shadow-xs">
+                    <ShieldAlert className="h-5 w-5" />
+                  </div>
+                  <h3 className="aldrich-regular text-xl font-bold text-ink">
+                    What CheckTalent Flags
+                  </h3>
                 </div>
+                <span className="rounded-full border border-red-300 bg-red-100/90 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-red-900">
+                  REJECTED SIGNALS
+                </span>
               </div>
 
-              <div className="flex items-start gap-3 rounded-2xl border border-red-200/80 bg-white p-3.5 text-xs text-[#52463F]">
-                <XCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-red-900 block font-bold">
-                    Single-Commit Bulk Dumps
-                  </strong>
-                  <span>
-                    15,000 lines committed in a single snapshot without natural iterative evolution or branch history.
-                  </span>
+              <p className="text-xs sm:text-sm text-ink-secondary">
+                Superficial patterns that fool keyword ATS scanners but fail deep
+                code inspection:
+              </p>
+
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-white/80 p-3.5">
+                  <XCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-ink">
+                      Internet Tutorial & Course Clones
+                    </p>
+                    <p className="text-[11px] text-ink-secondary mt-0.5">
+                      Identical AST structures matched against 1.8M public
+                      YouTube & FreeCodeCamp tutorials.
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-start gap-3 rounded-2xl border border-red-200/80 bg-white p-3.5 text-xs text-[#52463F]">
-                <XCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-red-900 block font-bold">
-                    Raw AI Prompt Dumps
-                  </strong>
-                  <span>
-                    Unaltered LLM boilerplate code with generic placeholder comments and lack of custom domain architecture.
-                  </span>
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-white/80 p-3.5">
+                  <Bot className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-ink">
+                      Raw AI Prompt Dumps
+                    </p>
+                    <p className="text-[11px] text-ink-secondary mt-0.5">
+                      100% boilerplate generation without iterative human edits
+                      or test defenses.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Box 2: What We Verify (Emerald/Green) */}
-          <div className="rounded-3xl border-2 border-emerald-200 bg-emerald-50/40 p-7 sm:p-8 space-y-5">
-            <div className="flex items-center gap-2 text-emerald-700">
-              <ShieldCheck className="h-6 w-6 shrink-0" />
-              <h3 className="aldrich-regular text-xl font-bold">
-                What CheckTalent Verifies
-              </h3>
-            </div>
-
-            <p className="text-xs sm:text-sm text-[#756A62]">
-              Genuine engineering depth that proves true technical competency:
-            </p>
-
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 rounded-2xl border border-emerald-200/80 bg-white p-3.5 text-xs text-[#52463F]">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-emerald-900 block font-bold">
-                    Organic Commit Timestamps
-                  </strong>
-                  <span>
-                    Continuous multi-week/month development with bugfixes, refactoring, and authentic author identity.
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 rounded-2xl border border-emerald-200/80 bg-white p-3.5 text-xs text-[#52463F]">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-emerald-900 block font-bold">
-                    Original Domain Architecture
-                  </strong>
-                  <span>
-                    Clean modular boundaries, custom state management, and algorithmic complexity unique to the candidate.
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 rounded-2xl border border-emerald-200/80 bg-white p-3.5 text-xs text-[#52463F]">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-emerald-900 block font-bold">
-                    AI vs Human Ratio Transparency
-                  </strong>
-                  <span>
-                    Separates helpful AI scaffolding (configs, test mocks) from original human problem-solving logic.
-                  </span>
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-white/80 p-3.5">
+                  <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-ink">
+                      Single-Commit Mass Dumps
+                    </p>
+                    <p className="text-[11px] text-ink-secondary mt-0.5">
+                      Large repositories uploaded in a single commit with zero
+                      organic git development history.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Action Link */}
-        <div className="mt-10 text-center">
-          <Link
-            href="/dashboard/test"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#1C1613] px-6 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition"
-          >
-            <Bot className="h-4 w-4 text-[#E9A23B]" />
-            Test AI & Plagiarism Detector in Demo Suite
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          {/* Box 2: What We Verify (Emerald/Warm Verified Tone) */}
+          <div className="flex flex-col justify-between rounded-3xl border-2 border-emerald-500 bg-gradient-to-br from-emerald-50/90 via-white to-teal-50/60 p-7 sm:p-8 shadow-[0_12px_32px_rgba(16,185,129,0.12)]">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5 text-emerald-800">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-300 bg-emerald-100 shadow-xs">
+                    <ShieldCheck className="h-5 w-5 text-emerald-700" />
+                  </div>
+                  <h3 className="aldrich-regular text-xl font-bold text-ink">
+                    What CheckTalent Verifies
+                  </h3>
+                </div>
+                <span className="rounded-full border border-emerald-300 bg-emerald-100/90 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-900">
+                  VERIFIED SIGNALS
+                </span>
+              </div>
+
+              <p className="text-xs sm:text-sm text-ink-secondary">
+                Concrete engineering signals proving candidate ownership and
+                technical competence:
+              </p>
+
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-white/80 p-3.5">
+                  <GitBranch className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-ink">
+                      Organic Commit Chronology
+                    </p>
+                    <p className="text-[11px] text-ink-secondary mt-0.5">
+                      Realistic branch progression, bug fixes, refactoring
+                      patterns, and author commit consistency.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-white/80 p-3.5">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-ink">
+                      Human Architecture & Modular Boundary
+                    </p>
+                    <p className="text-[11px] text-ink-secondary mt-0.5">
+                      Custom domain logic, API design patterns, and test suites
+                      proving intentional system architecture.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-white/80 p-3.5">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-ink">
+                      Interactive Code Viva Defense
+                    </p>
+                    <p className="text-[11px] text-ink-secondary mt-0.5">
+                      Targeted AI-generated oral and written defense questions
+                      anchored to exact lines in their repository.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 }

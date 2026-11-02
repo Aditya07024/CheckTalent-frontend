@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { RepoShowcaseSection } from "@/components/sections/RepoShowcaseSection";
 import { MinimalRoleDashboards } from "@/components/sections/MinimalRoleDashboards";
 import { MinimalHowItWorks } from "@/components/sections/MinimalHowItWorks";
 import { MinimalForensicsSpotlight } from "@/components/sections/MinimalForensicsSpotlight";
@@ -21,28 +22,31 @@ export default function HomePage() {
       <Navbar />
 
       <main id="main-content" className="relative z-[2] flex-1">
-        {/* 1. Hero with minimal punchy statement & direct CTAs */}
+        {/* Page 1: Hero with minimal punchy statement, CTAs & 3D Language Orbit */}
         <HeroSection />
 
-        {/* 2. 3D Marquee */}
+        {/* 3D Extruded Polyglot Stack Ribbon */}
         <PolyglotMarquee3D />
 
-        {/* 3. The Three Tailored Dashboards */}
+        {/* Page 2: Shifted Repository Intelligence & Live Viva Preview */}
+        <RepoShowcaseSection />
+
+        {/* Page 3: The Three Tailored Workspaces (Candidate, Recruiter, Campus) */}
         <MinimalRoleDashboards />
 
-        {/* 4. Simple 3-Step Verification Pipeline */}
+        {/* Page 4: Simple 3-Step Verification Pipeline */}
         <MinimalHowItWorks />
 
-        {/* 5. AI Detection & Tutorial Plagiarism Forensics Spotlight */}
+        {/* Page 5: AI Detection & Tutorial Plagiarism Forensics Spotlight */}
         <MinimalForensicsSpotlight />
 
-        {/* 6. Interactive Verifiable Skill Proof Card */}
+        {/* Page 6: Interactive Verifiable Skill Proof Card */}
         <ProofCardSection />
 
-        {/* 7. Concise Minimal FAQs */}
+        {/* Page 7: Concise Minimal FAQs */}
         <MinimalFAQ />
 
-        {/* 8. Clean Final Action Banner */}
+        {/* Page 8: Clean Final Action Banner */}
         <MinimalCTA />
       </main>
 

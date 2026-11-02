@@ -6,9 +6,9 @@ import { AnimationProvider } from "@/components/animations/AnimationProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-  ),
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    : undefined,
   title: `${PRODUCT_METADATA.name} — ${PRODUCT_METADATA.tagline}`,
   description: PRODUCT_METADATA.supportingMessage,
   icons: {

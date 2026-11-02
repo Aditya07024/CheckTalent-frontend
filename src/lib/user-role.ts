@@ -1,5 +1,3 @@
-import { db, auth } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 import type { DashboardRole, UserProfile } from "@/types/dashboard";
 import {
   fetchUserProfileFromBackend,
@@ -12,21 +10,32 @@ const PROFILE_STORAGE_KEY_PREFIX = "checktalent_profile_";
 
 /**
  * Get user profile and assigned dashboard role.
- * Multi-tier: Instant local cache -> Backend API (Supabase) -> Firestore.
+ * Queries instant localStorage cache -> Backend API (Supabase PostgreSQL).
  */
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   if (!uid) return null;
 
-  // 1. Check instant localStorage cache for zero-latency UI rendering
+  // 1. Instant local cache for fast UI rendering
   if (typeof window !== "undefined") {
     try {
       const cached = localStorage.getItem(`${PROFILE_STORAGE_KEY_PREFIX}${uid}`);
       if (cached) {
         const parsed = JSON.parse(cached) as UserProfile;
         if (parsed.role) {
-          // Refresh in background if token available
+          // Asynchronously sync with Supabase in the background
           getFirebaseIdToken().then((token) => {
-            if (token) fetchUserProfileFromBackend(token).catch(() => {});
+            if (token) {
+              fetchUserProfileFromBackend(token)
+                .then((fresh) => {
+                  if (fresh && typeof window !== "undefined") {
+                    localStorage.setItem(
+                      `${PROFILE_STORAGE_KEY_PREFIX}${uid}`,
+                      JSON.stringify(fresh)
+                    );
+                  }
+                })
+                .catch(() => {});
+            }
           });
           return parsed;
         }
@@ -47,13 +56,12 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
     }
   }
 
-  // 2. Try Backend API (Supabase PostgreSQL)
+  // 2. Fetch from Backend API (Supabase Database)
   try {
     const token = await getFirebaseIdToken();
     if (token) {
       const backendProfile = await fetchUserProfileFromBackend(token);
       if (backendProfile?.role) {
-        // Sync local cache
         if (typeof window !== "undefined") {
           localStorage.setItem(`${ROLE_STORAGE_KEY_PREFIX}${uid}`, backendProfile.role);
           localStorage.setItem(
@@ -65,33 +73,7 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
       }
     }
   } catch (error) {
-    console.warn("Backend API read skipped, checking fallback:", error);
-  }
-
-  // 3. Fallback to Firestore (with safe offline handling)
-  try {
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      const data = userSnap.data() as UserProfile;
-      // Sync local cache
-      if (typeof window !== "undefined") {
-        if (data.role) {
-          localStorage.setItem(`${ROLE_STORAGE_KEY_PREFIX}${uid}`, data.role);
-        }
-        localStorage.setItem(
-          `${PROFILE_STORAGE_KEY_PREFIX}${uid}`,
-          JSON.stringify(data)
-        );
-      }
-      return data;
-    }
-  } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : String(error);
-    if (!msg.includes("client is offline") && !msg.includes("unavailable")) {
-      console.warn("Firestore read failed:", msg);
-    }
+    console.warn("Backend API read skipped:", error);
   }
 
   return null;
@@ -100,7 +82,7 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 /**
  * Assigns user dashboard role once upon onboarding.
  * Once assigned, the dashboard is permanently locked to that account ID and cannot be switched.
- * Synchronizes with Supabase database (via backend) and Firebase Firestore.
+ * Synchronizes with Supabase database (via backend) and persists locally.
  */
 export async function assignUserRole(
   uid: string,
@@ -163,31 +145,17 @@ export async function assignUserRole(
         ...details,
       });
       if (backendSaved) {
+        if (typeof window !== "undefined") {
+          localStorage.setItem(
+            `${PROFILE_STORAGE_KEY_PREFIX}${uid}`,
+            JSON.stringify(backendSaved)
+          );
+        }
         return backendSaved;
       }
     }
   } catch (err) {
     console.warn("Backend Supabase role assignment sync error:", err);
-  }
-
-  // 3. Synchronize with Firestore (if available)
-  try {
-    const userRef = doc(db, "users", uid);
-    await setDoc(
-      userRef,
-      {
-        uid,
-        role,
-        ...details,
-        updatedAt: now,
-      },
-      { merge: true }
-    );
-  } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : String(error);
-    if (!msg.includes("client is offline") && !msg.includes("unavailable")) {
-      console.warn("Firestore sync skipped:", msg);
-    }
   }
 
   return profile;

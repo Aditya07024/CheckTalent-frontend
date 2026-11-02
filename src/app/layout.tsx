@@ -62,6 +62,17 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(regs) {
+                  for (var reg of regs) { reg.unregister(); }
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
         <a

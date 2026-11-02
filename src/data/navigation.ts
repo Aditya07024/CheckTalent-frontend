@@ -2,6 +2,7 @@ import type { FooterLinkGroup, NavItem } from "@/types/platform";
 import { SECTION_IDS } from "@/lib/constants";
 
 export const PRIMARY_NAV_ITEMS: ReadonlyArray<NavItem> = [
+  { label: "Inspect Repo", href: "#repository-preview" },
   { label: "3 Dashboards", href: "#dashboards" },
   { label: "How It Works", href: "#how-it-works" },
   { label: "AI Forensics", href: "#forensics" },

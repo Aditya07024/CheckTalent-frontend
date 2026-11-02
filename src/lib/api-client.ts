@@ -1,8 +1,17 @@
 import { auth } from "./firebase";
 import type { DashboardRole, UserProfile } from "@/types/dashboard";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+export function getApiBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    const protocol = window.location.protocol;
+    // If the browser visits via IP or non-localhost, match the host on backend port 4000
+    if (hostname && hostname !== "localhost") {
+      return `${protocol}//${hostname}:4000/api`;
+    }
+  }
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+}
 
 /**
  * Helper to obtain the active Firebase ID token for authentication
@@ -37,7 +46,8 @@ export async function fetchUserProfileFromBackend(
   token: string
 ): Promise<UserProfile | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/users/profile`, {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/users/profile`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -81,7 +91,8 @@ export async function assignUserRoleOnBackend(
   payload: AssignRolePayload
 ): Promise<UserProfile | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/users/assign-role`, {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/users/assign-role`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -129,7 +140,8 @@ export async function assignUserRoleOnBackend(
  */
 export async function fetchDashboardDataFromBackend(token: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/dashboard`, {
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/dashboard`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -153,7 +165,8 @@ export async function fetchDashboardDataFromBackend(token: string) {
  */
 export async function checkBackendHealth() {
   try {
-    const res = await fetch(`${API_BASE_URL}/health`);
+    const baseUrl = getApiBaseUrl();
+    const res = await fetch(`${baseUrl}/health`);
     if (!res.ok) return null;
     return await res.json();
   } catch {

@@ -2,11 +2,11 @@ import type { FooterLinkGroup, NavItem } from "@/types/platform";
 import { SECTION_IDS } from "@/lib/constants";
 
 export const PRIMARY_NAV_ITEMS: ReadonlyArray<NavItem> = [
-  { label: "Platform", href: `#${SECTION_IDS.solution}` },
+  { label: "3 Dashboards", href: "#dashboards" },
+  { label: "How It Works", href: "#how-it-works" },
+  { label: "AI Forensics", href: "#forensics" },
   { label: "Proof Card", href: `#${SECTION_IDS.proofCard}` },
-  { label: "For Candidates", href: `#${SECTION_IDS.candidates}` },
-  { label: "For Recruiters", href: `#${SECTION_IDS.recruiters}` },
-  { label: "Trust & Ethics", href: `#${SECTION_IDS.trust}` },
+  { label: "FAQs", href: "#faq" },
 ];
 
 export const FOOTER_LINK_GROUPS: ReadonlyArray<FooterLinkGroup> = [

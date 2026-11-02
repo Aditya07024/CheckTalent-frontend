@@ -104,13 +104,12 @@ export function HeroSection() {
 
             <p
               data-hero-copy
-              className="max-w-xl text-base sm:text-lg lg:text-[19px] leading-relaxed text-ink-secondary font-quantico italic quantico-regular-italic tracking-wide"
+              className="max-w-xl text-base sm:text-lg leading-relaxed text-ink-secondary"
             >
-              Inspect real repositories, run adaptive AI technical vivas, and
-              share evidence-backed Skill Proof Cards with human oversight.
+              CheckTalent automatically analyzes GitHub repositories, detects AI code usage, catches tutorial clones, and gives candidates cryptographically verifiable proof that recruiters and colleges trust.
             </p>
 
-            {/* Primary & Secondary 3D CTAs */}
+            {/* Primary & Secondary Action CTAs */}
             <div
               data-hero-copy
               className="flex flex-col gap-3.5 pt-1 sm:flex-row sm:items-center"
@@ -118,9 +117,9 @@ export function HeroSection() {
               <Button
                 type="button"
                 size="xl"
-                onClick={() => scrollToSection(HERO_CONTENT.primaryCta.href)}
+                onClick={() => window.location.href = "/signup"}
               >
-                {HERO_CONTENT.primaryCta.label}
+                Get Started Free
                 <ArrowRight className="h-4 w-4" />
               </Button>
 
@@ -128,26 +127,26 @@ export function HeroSection() {
                 type="button"
                 variant="outline"
                 size="xl"
-                onClick={() => scrollToSection(HERO_CONTENT.secondaryCta.href)}
+                onClick={() => window.location.href = "/dashboard/test"}
               >
-                {HERO_CONTENT.secondaryCta.label}
+                Explore 3-in-1 Test Demo
                 <ChevronRight className="h-4 w-4 text-orange-700" />
               </Button>
             </div>
 
-            {/* Stacked 3D Extruded Pillar Chips */}
-            <div data-hero-copy className="flex flex-col items-start gap-2.5 pt-2">
-              <span className="inline-flex items-center gap-1.5 rounded-xl border-2 border-yellow-400 bg-yellow-50/90 px-3 py-1.5 font-mono text-xs font-bold text-amber-950 shadow-sm">
+            {/* Core Capability Chips */}
+            <div data-hero-copy className="flex flex-wrap items-center gap-2 pt-2">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-yellow-400 bg-yellow-50/90 px-3 py-1.5 font-mono text-xs font-bold text-amber-950 shadow-xs">
                 <TerminalSquare className="h-3.5 w-3.5 text-amber-600" />
-                Repo Intelligence
+                AI Code Detection
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-xl border-2 border-orange-400 bg-orange-50/90 px-3 py-1.5 font-mono text-xs font-bold text-orange-950 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-orange-400 bg-orange-50/90 px-3 py-1.5 font-mono text-xs font-bold text-orange-950 shadow-xs">
                 <Sparkles className="h-3.5 w-3.5 text-orange-600" />
-                AI Technical Viva
+                Tutorial Clone Filter
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-xl border-2 border-red-400 bg-red-50/90 px-3 py-1.5 font-mono text-xs font-bold text-red-950 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-red-400 bg-red-50/90 px-3 py-1.5 font-mono text-xs font-bold text-red-950 shadow-xs">
                 <ShieldCheck className="h-3.5 w-3.5 text-red-600" />
-                Human Oversight
+                Verifiable Proof Cards
               </span>
             </div>
           </div>

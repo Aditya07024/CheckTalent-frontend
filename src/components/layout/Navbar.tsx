@@ -17,6 +17,8 @@ import { PRIMARY_NAV_ITEMS } from "@/data/navigation";
 import { SECTION_IDS } from "@/lib/constants";
 import { cn, scrollToSection } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 
 export function Navbar() {
@@ -24,6 +26,14 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signInModalOpen, setSignInModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setIsLoggedIn(!!currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -107,12 +117,12 @@ export function Navbar() {
           <div className="hidden lg:flex items-center gap-2.5">
             <Button
               type="button"
-              variant="ghost"
+              variant={isLoggedIn ? "default" : "ghost"}
               size="sm"
-              onClick={() => router.push("/signin")}
-              className="text-[13px]"
+              onClick={() => router.push(isLoggedIn ? "/dashboard" : "/signin")}
+              className={`text-[13px] ${isLoggedIn ? "bg-[#D9481E] text-white hover:bg-[#B93615]" : ""}`}
             >
-              Sign In
+              {isLoggedIn ? "My Dashboard" : "Sign In"}
             </Button>
             <Button
               type="button"
@@ -170,16 +180,16 @@ export function Navbar() {
 
             <div className="mt-4 flex flex-col gap-2.5 border-t border-hairline pt-4">
               <Button
-  type="button"
-  variant="secondary"
-  onClick={() => {
-    setMobileMenuOpen(false);
-    router.push("/signin");
-  }}
-  className="w-full justify-center"
->
-  Sign In
-</Button>
+                type="button"
+                variant={isLoggedIn ? "default" : "secondary"}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  router.push(isLoggedIn ? "/dashboard" : "/signin");
+                }}
+                className={`w-full justify-center ${isLoggedIn ? "bg-[#D9481E] text-white hover:bg-[#B93615]" : ""}`}
+              >
+                {isLoggedIn ? "My Dashboard" : "Sign In"}
+              </Button>
               <Button
                 type="button"
                 onClick={handleEarlyAccessClick}

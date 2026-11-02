@@ -166,7 +166,7 @@ export default function TestDashboardsPage() {
               }`}
             >
               <GraduationCap className="h-3.5 w-3.5" />
-              1. User / Student / Employee
+              1. Candidate Workspace
             </button>
 
             <button
@@ -185,7 +185,7 @@ export default function TestDashboardsPage() {
               onClick={() => setSelectedRole("campus")}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                 selectedRole === "campus"
-                  ? "bg-blue-600 text-white shadow-sm"
+                  ? "bg-red-600 text-white shadow-sm"
                   : "text-white/70 hover:bg-white/10 hover:text-white"
               }`}
             >

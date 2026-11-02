@@ -4,8 +4,19 @@ import { useState } from "react";
 import { User } from "firebase/auth";
 import { UserProfile } from "@/types/dashboard";
 import { StudentRepoAiForensics } from "./StudentRepoAiForensics";
-import { ForensicsAuditResult } from "@/lib/github-analyzer";
+import { SkillProofCard } from "@/components/product-demo/SkillProofCard";
 import {
+  CandidateRepoItem,
+  CandidateApplicationItem,
+  OpenDriveItem,
+  MockVivaQuestion,
+  INITIAL_CANDIDATE_REPOS,
+  INITIAL_CANDIDATE_APPLICATIONS,
+  INITIAL_OPEN_DRIVES,
+  MOCK_VIVA_QUESTIONS,
+} from "@/data/dashboard-demo-data";
+import {
+  AlertTriangle,
   ArrowRight,
   ArrowUpRight,
   Award,
@@ -18,11 +29,14 @@ import {
   Code2,
   Copy,
   ExternalLink,
+  FileCode2,
+  Filter,
   GitBranch,
   Github,
   GraduationCap,
+  Play,
   Plus,
-  School,
+  RefreshCw,
   Search,
   Share2,
   ShieldAlert,
@@ -31,7 +45,7 @@ import {
   Terminal,
   TrendingUp,
   UploadCloud,
-  UserCheck,
+  X,
 } from "lucide-react";
 
 interface StudentDashboardProps {
@@ -44,135 +58,150 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
     "overview" | "forensics" | "repos" | "drives" | "assessments" | "proofcard"
   >("overview");
 
-  // State for Add Repo modal
+  // Repositories State
+  const [repos, setRepos] = useState<CandidateRepoItem[]>(INITIAL_CANDIDATE_REPOS);
   const [showAddRepo, setShowAddRepo] = useState(false);
   const [newRepoUrl, setNewRepoUrl] = useState("");
   const [newRepoName, setNewRepoName] = useState("");
-  const [repos, setRepos] = useState([
-    {
-      id: "1",
-      name: "distributed-event-mesh",
-      language: "Go / Redis",
-      commits: 342,
-      lastAudit: "2 hours ago",
-      score: 95,
-      status: "Verified Clean Architecture",
-      authorship: "100% Original Commits",
-      description: "High-throughput pub/sub broker handling 80k msgs/sec with Raft consensus.",
-    },
-    {
-      id: "2",
-      name: "talentlens-evaluator",
-      language: "TypeScript / Next.js",
-      commits: 184,
-      lastAudit: "Yesterday",
-      score: 92,
-      status: "Production Standard",
-      authorship: "Verified Commits",
-      description: "Explainable candidate evaluation system through AST parsing and AST code analysis.",
-    },
-    {
-      id: "3",
-      name: "zero-copy-kv-engine",
-      language: "Rust / C++",
-      commits: 98,
-      lastAudit: "3 days ago",
-      score: 89,
-      status: "Memory-Safe & Audited",
-      authorship: "98% Original Commits",
-      description: "LSM tree storage engine with mmap zero-copy reads and lock-free concurrency.",
-    },
-  ]);
+  const [selectedRepoForDetail, setSelectedRepoForDetail] = useState<CandidateRepoItem | null>(null);
+  const [scanningRepoId, setScanningRepoId] = useState<string | null>(null);
 
-  // State for Applications
+  // Applications & Drives State
+  const [applications, setApplications] = useState<CandidateApplicationItem[]>(INITIAL_CANDIDATE_APPLICATIONS);
   const [applicationFilter, setApplicationFilter] = useState<"all" | "offcampus" | "campus">("all");
-  const [applications, setApplications] = useState([
-    {
-      id: "app-1",
-      company: "Razorpay",
-      type: "offcampus",
-      role: "SDE-1 (Backend Core)",
-      status: "Technical Round Scheduled",
-      statusColor: "bg-emerald-500/15 text-emerald-700 border-emerald-500/20",
-      date: "Nov 8, 2026 - 11:30 AM",
-      matchScore: 94,
-      tag: "Off-Campus Direct",
-      location: "Bengaluru (Hybrid)",
-    },
-    {
-      id: "app-2",
-      company: "Morgan Stanley",
-      type: "campus",
-      role: "Technology Analyst 2026",
-      status: "Shortlisted for On-Campus OA",
-      statusColor: "bg-blue-500/15 text-blue-700 border-blue-500/20",
-      date: "Nov 12, 2026",
-      matchScore: 91,
-      tag: "Campus Placement Drive",
-      location: "Campus Day 1",
-    },
-    {
-      id: "app-3",
-      company: "Postman",
-      type: "offcampus",
-      role: "Frontend Performance Engineer",
-      status: "Code Evidence Under Review",
-      statusColor: "bg-amber-500/15 text-amber-700 border-amber-500/20",
-      date: "Applied 2 days ago",
-      matchScore: 96,
-      tag: "Off-Campus Direct",
-      location: "Remote (India)",
-    },
-    {
-      id: "app-4",
-      company: "TCS Digital",
-      type: "campus",
-      role: "Systems Engineer (High Package)",
-      status: "Interview Round Cleared",
-      statusColor: "bg-purple-500/15 text-purple-700 border-purple-500/20",
-      date: "Result Awaited",
-      matchScore: 88,
-      tag: "Campus Placement Drive",
-      location: "On-Campus",
-    },
-  ]);
+  const [showBrowseDrives, setShowBrowseDrives] = useState(false);
+  const [openDrives, setOpenDrives] = useState<OpenDriveItem[]>(INITIAL_OPEN_DRIVES);
+  const [appliedDriveNotice, setAppliedDriveNotice] = useState<string | null>(null);
 
+  // AI Viva Simulator State
+  const [vivaRepo, setVivaRepo] = useState<string>("distributed-event-mesh");
+  const [activeVivaQuestionIdx, setActiveVivaQuestionIdx] = useState<number>(0);
+  const [candidateDefenseText, setCandidateDefenseText] = useState<string>("");
+  const [isEvaluatingViva, setIsEvaluatingViva] = useState<boolean>(false);
+  const [vivaEvaluationResult, setVivaEvaluationResult] = useState<{
+    score: number;
+    depth: number;
+    tradeoff: number;
+    originality: number;
+    feedback: string;
+  } | null>(null);
+
+  // Proof Card Share State
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedEmbed, setCopiedEmbed] = useState(false);
 
+  // Handlers
   function handleAddRepoSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!newRepoName.trim()) return;
 
-    setRepos((prev) => [
-      {
-        id: Date.now().toString(),
-        name: newRepoName.trim(),
-        language: "TypeScript / Node",
-        commits: 46,
-        lastAudit: "Just now",
-        score: 91,
-        status: "Verification In-Progress",
-        authorship: "Auditing authorship commits...",
-        description: newRepoUrl || "Connected repository pending AST verification pipeline.",
-      },
-      ...prev,
-    ]);
+    const newRepo: CandidateRepoItem = {
+      id: `repo-${Date.now()}`,
+      name: newRepoName.trim(),
+      language: "TypeScript / Node.js",
+      commits: 54,
+      linesOfCode: 4210,
+      lastAudit: "Just now",
+      score: 91,
+      status: "Verified Clean Architecture",
+      authorship: "98% Original Commits",
+      aiPercent: 5,
+      tutorialMatchPercent: 0,
+      description: newRepoUrl ? `Connected repository: ${newRepoUrl}` : "Custom verified engineering project.",
+      primaryFiles: ["src/index.ts", "src/service.ts", "tests/unit.test.ts"],
+    };
 
+    setRepos((prev) => [newRepo, ...prev]);
     setNewRepoName("");
     setNewRepoUrl("");
     setShowAddRepo(false);
   }
 
+  function handleRescanRepo(repoId: string) {
+    setScanningRepoId(repoId);
+    setTimeout(() => {
+      setRepos((prev) =>
+        prev.map((r) =>
+          r.id === repoId ? { ...r, lastAudit: "Just now", score: Math.min(99, r.score + 1) } : r
+        )
+      );
+      setScanningRepoId(null);
+    }, 1500);
+  }
+
+  function handleApplyToDrive(drive: OpenDriveItem) {
+    if (applications.some((app) => app.company.toLowerCase() === drive.company.toLowerCase())) {
+      setAppliedDriveNotice(`You have already applied to ${drive.company}!`);
+      setTimeout(() => setAppliedDriveNotice(null), 3000);
+      return;
+    }
+
+    const newApp: CandidateApplicationItem = {
+      id: `app-${Date.now()}`,
+      company: drive.company,
+      logoText: drive.company.slice(0, 2).toUpperCase(),
+      type: drive.type,
+      role: drive.role,
+      status: "Proof Card Submitted",
+      statusColor: "bg-emerald-500/15 text-emerald-800 border-emerald-500/20",
+      date: "Just now",
+      matchScore: 95,
+      tag: drive.type === "campus" ? "Campus Placement Drive" : "Off-Campus Direct",
+      location: drive.location,
+      ctc: drive.ctc,
+    };
+
+    setApplications((prev) => [newApp, ...prev]);
+    setAppliedDriveNotice(`Successfully applied to ${drive.company} for ${drive.role}!`);
+    setTimeout(() => setAppliedDriveNotice(null), 3500);
+  }
+
+  function handleSubmitVivaDefense(e: React.FormEvent) {
+    e.preventDefault();
+    if (!candidateDefenseText.trim()) return;
+
+    setIsEvaluatingViva(true);
+    setTimeout(() => {
+      setIsEvaluatingViva(false);
+      setVivaEvaluationResult({
+        score: 94,
+        depth: 95,
+        tradeoff: 92,
+        originality: 98,
+        feedback:
+          "Exceptional technical depth. Correctly articulated quorum lease renewal and split-brain protection without generic AI boilerplate phrasing.",
+      });
+    }, 1400);
+  }
+
   function handleCopyProofUrl() {
-    navigator.clipboard?.writeText("https://checktalent.dev/proof/aditya-2026");
+    navigator.clipboard?.writeText(`https://checktalent.dev/proof/${user.displayName || "candidate-2026"}`);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
+  }
+
+  function handleCopyEmbed() {
+    navigator.clipboard?.writeText(
+      `<iframe src="https://checktalent.dev/embed/${user.displayName || "candidate-2026"}" width="480" height="320" frameborder="0"></iframe>`
+    );
+    setCopiedEmbed(true);
+    setTimeout(() => setCopiedEmbed(false), 2000);
   }
 
   const filteredApps =
     applicationFilter === "all"
       ? applications
       : applications.filter((app) => app.type === applicationFilter);
+
+  const activeVivaQuestion =
+    MOCK_VIVA_QUESTIONS[activeVivaQuestionIdx] || MOCK_VIVA_QUESTIONS[0] || {
+      id: "q-default",
+      repoName: "distributed-event-mesh",
+      fileAnchor: "broker.go:142",
+      question: "In broker.go line 142, explain your Raft quorum handling when network partitions occur.",
+      concept: "Consensus",
+      suggestedPoints: [],
+    };
 
   return (
     <div className="space-y-8">
@@ -185,7 +214,7 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D9481E]/20 bg-[#D9481E]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#D9481E]">
                 <GraduationCap className="h-3.5 w-3.5" />
-                User / Student / Employee Dashboard
+                Candidate Workspace
               </span>
 
               <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700">
@@ -194,7 +223,7 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
               </span>
             </div>
 
-            <h1 className="aldrich-regular mt-3 text-3xl font-bold sm:text-4xl">
+            <h1 className="aldrich-regular mt-3 text-3xl font-bold sm:text-4xl text-[#1C1613]">
               Welcome back, {user.displayName || user.email?.split("@")[0] || "Candidate"}!
             </h1>
 
@@ -260,7 +289,7 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
 
           <div className="rounded-2xl border border-[#1C1613]/5 bg-[#FAF7F2] p-4">
             <div className="flex items-center justify-between text-xs font-semibold text-[#756A62]">
-              <span>Active Drives</span>
+              <span>Active Applications</span>
               <Building2 className="h-4 w-4 text-[#E9A23B]" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
@@ -309,7 +338,7 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
           <Bot className="h-4 w-4" />
           <span>Resume & AI Forensics</span>
           <span className="rounded-full bg-emerald-500 px-1.5 py-0.2 text-[9px] font-extrabold text-white">
-            NEW
+            AI Scanner
           </span>
         </button>
 
@@ -375,7 +404,7 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
             <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="aldrich-regular text-lg font-bold">
+                  <h3 className="aldrich-regular text-lg font-bold text-ink">
                     Verified Competencies Matrix
                   </h3>
                   <p className="text-xs text-[#756A62]">
@@ -448,314 +477,350 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
               </div>
             </div>
 
-            {/* Upcoming Interview Reminders */}
+            {/* Recent Activity Timeline */}
             <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm">
-              <h3 className="aldrich-regular text-lg font-bold">
-                Upcoming Rounds & Schedules
-              </h3>
+              <h3 className="aldrich-regular text-lg font-bold text-ink">Recent Verification Timeline</h3>
+              <p className="text-xs text-[#756A62]">Automated events logged across git activity and recruiter actions.</p>
 
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-emerald-50/50 p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white">
-                      <Calendar className="h-5 w-5" />
+              <div className="mt-5 space-y-4">
+                {[
+                  {
+                    time: "2 hours ago",
+                    event: "Audited repository 'distributed-event-mesh'",
+                    detail: "Raft consensus module passed AST syntax inspection. AI code ratio: 4%.",
+                    icon: GitBranch,
+                    color: "text-emerald-600 bg-emerald-50",
+                  },
+                  {
+                    time: "Yesterday",
+                    event: "Shortlisted by Morgan Stanley for Campus Drive",
+                    detail: "Cleared proof score cutoff of 85+. OA scheduled for Nov 12.",
+                    icon: Building2,
+                    color: "text-blue-600 bg-blue-50",
+                  },
+                  {
+                    time: "2 days ago",
+                    event: "Completed AI Technical Viva on LSM Engine",
+                    detail: "Evaluated 3 questions on memory-mapped file buffers. Score: 94/100.",
+                    icon: Bot,
+                    color: "text-purple-600 bg-purple-50",
+                  },
+                  {
+                    time: "Nov 1, 2026",
+                    event: "Generated SHA-256 Proof Card Signature",
+                    detail: "Cryptographic credential signed and published for external verification.",
+                    icon: ShieldCheck,
+                    color: "text-orange-600 bg-orange-50",
+                  },
+                ].map((act, i) => {
+                  const Icon = act.icon;
+                  return (
+                    <div key={i} className="flex items-start gap-3.5 border-b border-[#1C1613]/5 pb-3.5 last:border-0 last:pb-0">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${act.color}`}>
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-bold text-ink">{act.event}</p>
+                          <span className="text-[10px] font-mono text-[#8C8077]">{act.time}</span>
+                        </div>
+                        <p className="text-[11px] text-[#756A62] mt-0.5">{act.detail}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-[#1C1613]">
-                        Razorpay — Live Technical Architecture Round
-                      </h4>
-                      <p className="text-xs text-[#756A62]">
-                        Off-Campus Direct • Friday, Nov 8 • 11:30 AM IST
-                      </p>
-                    </div>
-                  </div>
-                  <button className="rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700">
-                    Join Room
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between rounded-2xl border border-blue-500/20 bg-blue-50/50 p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
-                      <School className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-[#1C1613]">
-                        Morgan Stanley — On-Campus Assessment Day
-                      </h4>
-                      <p className="text-xs text-[#756A62]">
-                        Campus Placement • Wednesday, Nov 12 • College Lab 4
-                      </p>
-                    </div>
-                  </div>
-                  <span className="rounded-lg bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-700">
-                    Slot Confirmed
-                  </span>
-                </div>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          {/* Right Col: Live Activity Feed & Audit Status */}
+          {/* Right Col: Candidate Profile & Quick Actions */}
           <div className="space-y-6">
             <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm">
-              <h3 className="aldrich-regular text-lg font-bold">
-                Verification Pipeline Status
-              </h3>
-              <p className="text-xs text-[#756A62]">
-                Automated continuous evaluation checks
-              </p>
-
-              <div className="mt-5 space-y-3">
-                <div className="flex items-center gap-3 rounded-xl border border-[#1C1613]/5 bg-[#FAF7F2] p-3 text-xs">
-                  <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <div>
-                    <span className="font-bold text-[#1C1613]">AST Code Hygiene</span>
-                    <p className="text-[#756A62]">Clean architecture, modular boundaries</p>
-                  </div>
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D9481E]/15 text-2xl font-bold text-[#D9481E]">
+                  {(user.displayName || user.email || "C").charAt(0).toUpperCase()}
                 </div>
-
-                <div className="flex items-center gap-3 rounded-xl border border-[#1C1613]/5 bg-[#FAF7F2] p-3 text-xs">
-                  <GitBranch className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <div>
-                    <span className="font-bold text-[#1C1613]">Git Commit Lineage</span>
-                    <p className="text-[#756A62]">Verified multi-month author progression</p>
-                  </div>
+                <div>
+                  <h3 className="font-bold text-ink">{user.displayName || "Aditya Sharma"}</h3>
+                  <p className="text-xs text-[#756A62]">{user.email}</p>
+                  <span className="mt-1 inline-block rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                    Active Job Seeker
+                  </span>
                 </div>
+              </div>
 
-                <div className="flex items-center gap-3 rounded-xl border border-[#1C1613]/5 bg-[#FAF7F2] p-3 text-xs">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <div>
-                    <span className="font-bold text-[#1C1613]">Anti-Plagiarism Score</span>
-                    <p className="text-[#756A62]">0% public mirror collisions detected</p>
-                  </div>
+              <div className="mt-6 space-y-3 border-t border-[#1C1613]/10 pt-4 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-[#756A62]">Target Role</span>
+                  <span className="font-semibold text-ink">
+                    {profile?.targetRole || "Full-Stack Engineer"}
+                  </span>
                 </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[#756A62]">Institution</span>
+                  <span className="font-semibold text-ink">
+                    {profile?.institution || "Apex Institute of Tech"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[#756A62]">Passing Batch</span>
+                  <span className="font-semibold text-ink">{profile?.batchYear || "Class of 2026"}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[#756A62]">Verified USN / ID</span>
+                  <span className="font-mono font-semibold text-ink">1AP22CS042</span>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-2.5">
+                <button
+                  onClick={() => setActiveTab("forensics")}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#D9481E] py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#B93615]"
+                >
+                  <UploadCloud className="h-4 w-4" />
+                  Run AI Forensics Scanner
+                </button>
+                <button
+                  onClick={() => setActiveTab("assessments")}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#1C1613]/15 bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ink transition hover:bg-[#FAF7F2]"
+                >
+                  <BrainCircuit className="h-4 w-4 text-[#D9481E]" />
+                  Practice Code Defense Viva
+                </button>
               </div>
             </div>
 
-            {/* Recruiter Visibility */}
-            <div className="rounded-3xl border border-[#1C1613]/10 bg-[#FAF7F2] p-6">
-              <div className="flex items-center gap-2">
+            {/* Quick Share Card */}
+            <div className="rounded-3xl border border-orange-300/80 bg-gradient-to-br from-yellow-50/80 via-white to-orange-50/60 p-6 shadow-xs">
+              <div className="flex items-center gap-2 text-orange-900 font-bold text-xs uppercase tracking-wider">
                 <Sparkles className="h-4 w-4 text-[#D9481E]" />
-                <h3 className="aldrich-regular text-base font-bold">
-                  Who's Viewing Your Proof
-                </h3>
+                Public Verification Link
               </div>
-              <p className="mt-1 text-xs text-[#756A62]">
-                Verified recruiters who inspected your repository evidence:
+              <p className="mt-2 text-xs text-[#756A62]">
+                Include this verified credential in your resume header or LinkedIn to bypass keyword ATS screeners.
               </p>
 
-              <div className="mt-4 space-y-2.5">
-                {[
-                  { name: "Zepto Recruiter", time: "2 hours ago", role: "Backend Team" },
-                  { name: "Razorpay TA Lead", time: "5 hours ago", role: "Core Banking" },
-                  { name: "TPO Placement Office", time: "1 day ago", role: "Campus Tier 1" },
-                ].map((v, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-xl bg-white p-3 text-xs border border-[#1C1613]/5">
-                    <div>
-                      <strong className="text-[#1C1613]">{v.name}</strong>
-                      <p className="text-[11px] text-[#756A62]">{v.role}</p>
-                    </div>
-                    <span className="text-[10px] text-[#8C8077]">{v.time}</span>
-                  </div>
-                ))}
+              <div className="mt-4 flex items-center justify-between rounded-xl border border-orange-200 bg-white p-2.5 text-xs">
+                <span className="truncate font-mono text-[11px] text-[#52463F] max-w-[190px]">
+                  checktalent.dev/proof/{user.displayName || "candidate-2026"}
+                </span>
+                <button
+                  onClick={handleCopyProofUrl}
+                  className="flex items-center gap-1 font-bold text-[#D9481E] hover:underline"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  {copiedLink ? "Copied!" : "Copy"}
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Tab 2: Repositories */}
+      {/* Tab 2: Audited Repositories Management */}
       {activeTab === "repos" && (
         <div className="space-y-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h3 className="aldrich-regular text-2xl font-bold">
-                Connected & Audited Repositories
-              </h3>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                Audited GitHub Repositories ({repos.length})
+              </h2>
               <p className="text-xs text-[#756A62]">
-                Code analysis engine reviews git commits, AST syntax trees, and algorithmic complexity.
+                Every connected repository is continuously inspected for genuine authorship, AI code ratio, and tutorial template overlap.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => setActiveTab("forensics")}
-                className="flex items-center gap-1.5 rounded-xl border border-[#D9481E]/30 bg-[#D9481E]/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#D9481E] hover:bg-[#D9481E] hover:text-white transition"
-              >
-                <Bot className="h-4 w-4" />
-                Deep AI & Plagiarism Audit
-              </button>
-
-              <button
-                onClick={() => setShowAddRepo(true)}
-                className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
-              >
-                <Plus className="h-4 w-4" />
-                Connect Another Repository
-              </button>
-            </div>
+            <button
+              onClick={() => setShowAddRepo(true)}
+              className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
+            >
+              <Plus className="h-4 w-4" />
+              Connect Another Repo
+            </button>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {repos.map((repo) => (
-              <div
-                key={repo.id}
-                className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm transition hover:shadow-md"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-md bg-[#FAF7F2] px-2.5 py-1 font-mono text-[11px] font-bold text-[#D9481E]">
-                      {repo.language}
-                    </span>
-                    <div className="flex items-center gap-1 text-xs font-bold text-emerald-600">
-                      <ShieldCheck className="h-4 w-4" />
-                      <span>{repo.score}/100</span>
+          <div className="grid gap-4 md:grid-cols-2">
+            {repos.map((repo) => {
+              const isScanning = scanningRepoId === repo.id;
+              return (
+                <div
+                  key={repo.id}
+                  className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm transition hover:border-[#D9481E]/50"
+                >
+                  <div>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Github className="h-4 w-4 text-ink" />
+                          <h3 className="aldrich-regular text-lg font-bold text-ink">{repo.name}</h3>
+                        </div>
+                        <span className="mt-1 inline-block font-mono text-xs text-[#8C8077]">
+                          {repo.language} • {repo.commits} commits • {repo.linesOfCode.toLocaleString()} LOC
+                        </span>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="aldrich-regular text-xl font-bold text-[#D9481E]">
+                          {repo.score}/100
+                        </span>
+                        <p className="text-[10px] text-[#756A62]">Proof Score</p>
+                      </div>
+                    </div>
+
+                    <p className="mt-3 text-xs leading-relaxed text-[#756A62]">{repo.description}</p>
+
+                    {/* Forensics Metrics Grid */}
+                    <div className="mt-4 grid grid-cols-2 gap-2 rounded-2xl bg-[#FAF7F2] p-3 text-xs">
+                      <div>
+                        <span className="text-[11px] text-[#756A62]">AI Code Ratio</span>
+                        <p className="font-bold text-emerald-700">{repo.aiPercent}% (Human Driven)</p>
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-[#756A62]">Tutorial Match</span>
+                        <p className="font-bold text-emerald-700">{repo.tutorialMatchPercent}% Plagiarism</p>
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-[#756A62]">Authorship</span>
+                        <p className="font-bold text-ink">{repo.authorship}</p>
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-[#756A62]">Last Audited</span>
+                        <p className="font-bold text-ink">{repo.lastAudit}</p>
+                      </div>
                     </div>
                   </div>
 
-                  <h4 className="aldrich-regular mt-4 text-lg font-bold text-[#1C1613]">
-                    {repo.name}
-                  </h4>
+                  <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-4 text-xs">
+                    <button
+                      onClick={() => setSelectedRepoForDetail(repo)}
+                      className="font-bold text-[#D9481E] hover:underline flex items-center gap-1"
+                    >
+                      <FileCode2 className="h-3.5 w-3.5" />
+                      Inspect Code Breakdown &rarr;
+                    </button>
 
-                  <p className="mt-2 text-xs leading-relaxed text-[#756A62]">
-                    {repo.description}
-                  </p>
-
-                  <div className="mt-4 space-y-1.5 border-t border-[#1C1613]/10 pt-4 text-xs">
-                    <div className="flex items-center justify-between text-[#756A62]">
-                      <span>Authorship:</span>
-                      <strong className="text-emerald-700">{repo.authorship}</strong>
-                    </div>
-                    <div className="flex items-center justify-between text-[#756A62]">
-                      <span>Commit Volume:</span>
-                      <strong className="text-[#1C1613]">{repo.commits} commits</strong>
-                    </div>
-                    <div className="flex items-center justify-between text-[#756A62]">
-                      <span>Last Audited:</span>
-                      <span className="text-[#8C8077]">{repo.lastAudit}</span>
-                    </div>
+                    <button
+                      onClick={() => handleRescanRepo(repo.id)}
+                      disabled={isScanning}
+                      className="flex items-center gap-1.5 rounded-lg border border-[#1C1613]/15 bg-white px-3 py-1.5 font-semibold text-ink hover:bg-[#FAF7F2]"
+                    >
+                      <RefreshCw className={`h-3 w-3 ${isScanning ? "animate-spin text-[#D9481E]" : ""}`} />
+                      <span>{isScanning ? "Scanning..." : "Re-Scan"}</span>
+                    </button>
                   </div>
                 </div>
-
-                <div className="mt-6 flex items-center justify-between border-t border-[#1C1613]/10 pt-4">
-                  <span className="text-[11px] font-semibold text-[#D9481E]">
-                    {repo.status}
-                  </span>
-                  <a
-                    href={`https://github.com/aditya/${repo.name}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-1 text-xs font-bold text-[#1C1613] hover:text-[#D9481E]"
-                  >
-                    View Repo <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Tab 3: Drives & Applications */}
+      {/* Tab 3: Drives & Job Applications */}
       {activeTab === "drives" && (
         <div className="space-y-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h3 className="aldrich-regular text-2xl font-bold">
-                Drive Tracker: Campus & Off-Campus
-              </h3>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                Hiring Drives & Applications ({applications.length})
+              </h2>
               <p className="text-xs text-[#756A62]">
-                Your unified dashboard for both on-campus placement cell drives and off-campus corporate openings.
+                Track direct applications to off-campus tech employers and visiting campus placement drives.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 rounded-xl border border-[#1C1613]/10 bg-white p-1">
+            <div className="flex items-center gap-2.5">
               <button
-                onClick={() => setApplicationFilter("all")}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                  applicationFilter === "all"
-                    ? "bg-[#D9481E] text-white"
-                    : "text-[#756A62] hover:text-[#1C1613]"
-                }`}
+                onClick={() => setShowBrowseDrives(true)}
+                className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
               >
-                All ({applications.length})
-              </button>
-              <button
-                onClick={() => setApplicationFilter("offcampus")}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                  applicationFilter === "offcampus"
-                    ? "bg-[#D9481E] text-white"
-                    : "text-[#756A62] hover:text-[#1C1613]"
-                }`}
-              >
-                Off-Campus Companies
-              </button>
-              <button
-                onClick={() => setApplicationFilter("campus")}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                  applicationFilter === "campus"
-                    ? "bg-[#D9481E] text-white"
-                    : "text-[#756A62] hover:text-[#1C1613]"
-                }`}
-              >
-                Campus Drives
+                <Search className="h-4 w-4" />
+                Browse & Apply to Open Drives
               </button>
             </div>
           </div>
 
-          <div className="space-y-3">
+          {appliedDriveNotice && (
+            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-50 p-4 text-xs font-semibold text-emerald-800 flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <span>{appliedDriveNotice}</span>
+            </div>
+          )}
+
+          {/* Filter Pills */}
+          <div className="flex items-center gap-2">
+            {(["all", "offcampus", "campus"] as const).map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setApplicationFilter(filter)}
+                className={`rounded-xl px-3.5 py-1.5 text-xs font-bold capitalize transition ${
+                  applicationFilter === filter
+                    ? "bg-[#1C1613] text-white"
+                    : "bg-white border border-[#1C1613]/10 text-[#756A62] hover:bg-[#FAF7F2]"
+                }`}
+              >
+                {filter === "all" ? "All Drives" : filter === "offcampus" ? "Off-Campus Direct" : "Campus Drives"}
+              </button>
+            ))}
+          </div>
+
+          {/* Applications Grid */}
+          <div className="grid gap-4 md:grid-cols-2">
             {filteredApps.map((app) => (
               <div
                 key={app.id}
-                className="flex flex-col justify-between gap-4 rounded-2xl border border-[#1C1613]/10 bg-white p-5 shadow-sm transition hover:shadow-md md:flex-row md:items-center"
+                className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
               >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl font-bold ${
-                      app.type === "campus"
-                        ? "bg-blue-50 text-blue-600 border border-blue-200"
-                        : "bg-[#E9A23B]/15 text-[#B8710B] border border-[#E9A23B]/30"
-                    }`}
-                  >
-                    {app.type === "campus" ? (
-                      <School className="h-6 w-6" />
-                    ) : (
-                      <Building2 className="h-6 w-6" />
-                    )}
+                <div>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FAF7F2] font-mono text-sm font-bold text-[#D9481E] border border-[#1C1613]/10">
+                        {app.logoText}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-ink">{app.company}</h3>
+                        <p className="text-xs text-[#756A62]">{app.role}</p>
+                      </div>
+                    </div>
+                    <span className="rounded-full bg-[#D9481E]/10 px-2.5 py-1 text-[11px] font-bold text-[#D9481E]">
+                      {app.matchScore}% Match
+                    </span>
                   </div>
 
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h4 className="aldrich-regular text-lg font-bold text-[#1C1613]">
-                        {app.company}
-                      </h4>
-                      <span className="rounded-full bg-[#FAF7F2] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#756A62]">
-                        {app.tag}
-                      </span>
-                      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                        {app.matchScore}% Proof Match
+                  <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px]">
+                    <span className="rounded-md bg-[#FAF7F2] px-2 py-0.5 font-medium text-[#756A62]">
+                      {app.location}
+                    </span>
+                    <span className="rounded-md bg-[#FAF7F2] px-2 py-0.5 font-medium text-[#756A62]">
+                      {app.ctc}
+                    </span>
+                    <span className="rounded-md bg-stone-100 px-2 py-0.5 font-medium text-stone-700">
+                      {app.tag}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 rounded-xl border border-[#1C1613]/5 bg-[#FAF7F2] p-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#756A62]">Application Status:</span>
+                      <span className={`rounded-md px-2 py-0.5 font-bold ${app.statusColor}`}>
+                        {app.status}
                       </span>
                     </div>
-
-                    <p className="mt-1 text-xs font-semibold text-[#52463F]">
-                      {app.role} • <span className="font-normal text-[#756A62]">{app.location}</span>
-                    </p>
+                    <div className="mt-1 flex items-center justify-between text-[11px] text-[#8C8077]">
+                      <span>Timeline:</span>
+                      <span>{app.date}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="text-right">
-                    <span
-                      className={`inline-block rounded-lg border px-3 py-1 text-xs font-bold ${app.statusColor}`}
-                    >
-                      {app.status}
-                    </span>
-                    <p className="mt-1 text-[11px] text-[#8C8077]">{app.date}</p>
-                  </div>
-
-                  <button className="rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2] px-3.5 py-2 text-xs font-bold text-[#1C1613] hover:bg-white">
-                    View Dossier
+                <div className="mt-5 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs">
+                  <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                    <ShieldCheck className="h-3.5 w-3.5" /> Proof Card Attached
+                  </span>
+                  <button
+                    onClick={() => setActiveTab("assessments")}
+                    className="font-bold text-[#D9481E] hover:underline"
+                  >
+                    Prepare Technical Viva &rarr;
                   </button>
                 </div>
               </div>
@@ -764,234 +829,423 @@ export function StudentDashboard({ user, profile }: StudentDashboardProps) {
         </div>
       )}
 
-      {/* Tab 4: AI Mock Assessments */}
+      {/* Tab 4: AI Mock Technical Interview Simulator */}
       {activeTab === "assessments" && (
         <div className="space-y-6">
-          <div>
-            <h3 className="aldrich-regular text-2xl font-bold">
-              AI Technical Interview Simulator
-            </h3>
-            <p className="text-xs text-[#756A62]">
-              Interactive adaptive evaluations: explain your code, handle scale bottlenecks, and prove engineering depth.
-            </p>
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                AI Technical Code Viva Simulator
+              </h2>
+              <p className="text-xs text-[#756A62]">
+                Our AI inspects lines in your actual repositories and tests whether you can defend trade-offs, architecture, and edge cases.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-[#756A62]">Select Target Repository:</span>
+              <select
+                value={vivaRepo}
+                onChange={(e) => {
+                  setVivaRepo(e.target.value);
+                  setVivaEvaluationResult(null);
+                  setCandidateDefenseText("");
+                }}
+                className="rounded-xl border border-[#1C1613]/15 bg-white px-3 py-1.5 text-xs font-semibold text-ink"
+              >
+                <option value="distributed-event-mesh">distributed-event-mesh (Go)</option>
+                <option value="talentlens-evaluator">talentlens-evaluator (TypeScript)</option>
+                <option value="zero-copy-kv-engine">zero-copy-kv-engine (Rust)</option>
+              </select>
+            </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Distributed Systems & Scalability",
-                duration: "45 mins",
-                questions: "Raft consensus, Cache invalidation, Message queues",
-                score: "Last: 89/100",
-                badge: "High-Priority for Razorpay",
-              },
-              {
-                title: "Data Structures & Concurrency",
-                duration: "30 mins",
-                questions: "Lock-free structures, Thread sync, Memory layout",
-                score: "Last: 92/100",
-                badge: "High-Priority for Morgan Stanley",
-              },
-              {
-                title: "React 19 & Full-Stack Architecture",
-                duration: "35 mins",
-                questions: "Server Actions, RSC hydration, Optimistic UI",
-                score: "Last: 96/100",
-                badge: "High-Priority for Postman",
-              },
-            ].map((sim, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col justify-between rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-sm"
-              >
+          {/* Viva Stage Box */}
+          <div className="rounded-3xl border border-orange-300 bg-white p-6 sm:p-8 shadow-sm">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-800">
+                  <Bot className="h-5 w-5" />
+                </div>
                 <div>
-                  <span className="rounded-full bg-[#D9481E]/10 px-2.5 py-1 text-[10px] font-bold text-[#D9481E]">
-                    {sim.badge}
+                  <h3 className="font-bold text-ink text-sm sm:text-base">
+                    AI Code Defense Prompt (Line-Anchored)
+                  </h3>
+                  <span className="font-mono text-xs text-[#D9481E]">
+                    Anchor: {activeVivaQuestion.fileAnchor} • {activeVivaQuestion.concept}
                   </span>
-                  <h4 className="aldrich-regular mt-3 text-lg font-bold text-[#1C1613]">
-                    {sim.title}
-                  </h4>
-                  <p className="mt-2 text-xs text-[#756A62]">
-                    Focus: {sim.questions}
-                  </p>
+                </div>
+              </div>
 
-                  <div className="mt-4 flex items-center justify-between border-t border-[#1C1613]/10 pt-3 text-xs text-[#756A62]">
-                    <span>Duration: {sim.duration}</span>
-                    <strong className="text-emerald-600">{sim.score}</strong>
-                  </div>
+              <div className="flex items-center gap-1">
+                {MOCK_VIVA_QUESTIONS.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setActiveVivaQuestionIdx(idx);
+                      setVivaEvaluationResult(null);
+                      setCandidateDefenseText("");
+                    }}
+                    className={`h-7 w-7 rounded-lg text-xs font-bold transition ${
+                      activeVivaQuestionIdx === idx
+                        ? "bg-[#D9481E] text-white"
+                        : "bg-[#FAF7F2] text-[#756A62] hover:bg-stone-200"
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl bg-[#FAF7F2] p-4 text-sm font-medium text-ink leading-relaxed">
+              "{activeVivaQuestion.question}"
+            </div>
+
+            <form onSubmit={handleSubmitVivaDefense} className="mt-5 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-[#52463F] mb-1.5">
+                  Your Technical Defense & Architecture Explanation:
+                </label>
+                <textarea
+                  rows={4}
+                  value={candidateDefenseText}
+                  onChange={(e) => setCandidateDefenseText(e.target.value)}
+                  placeholder="Explain your trade-offs, how you avoided race conditions or split-brain states, and why this design choice was optimal..."
+                  className="w-full rounded-2xl border border-[#1C1613]/15 p-3.5 text-xs leading-relaxed focus:border-[#D9481E] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-[11px] text-[#8C8077]">
+                  <Sparkles className="h-3.5 w-3.5 text-[#D9481E]" />
+                  <span>Evaluates Trade-Off Reasoning, AST Depth, and Non-AI Authenticity</span>
                 </div>
 
-                <button
-                  onClick={() => alert(`Starting interactive simulation: ${sim.title}`)}
-                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#D9481E] py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
-                >
-                  <Bot className="h-4 w-4" />
-                  Launch AI Simulation
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCandidateDefenseText(
+                        "In this implementation, we enforce a strict majority quorum of (N/2)+1 nodes before accepting log commits. Split-brain is prevented because only one partition can ever assemble a majority. Stale leaders drop their lease as soon as a higher term counter is broadcasted over TCP."
+                      )
+                    }
+                    className="text-xs text-[#756A62] hover:underline"
+                  >
+                    Insert Sample Strong Defense
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isEvaluatingViva || !candidateDefenseText.trim()}
+                    className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615] disabled:opacity-50"
+                  >
+                    {isEvaluatingViva ? (
+                      <>
+                        <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                        Analyzing Defense...
+                      </>
+                    ) : (
+                      <>
+                        <Play className="h-3.5 w-3.5" />
+                        Submit for AI Evaluation
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-            ))}
+            </form>
+
+            {/* Viva Evaluation Results */}
+            {vivaEvaluationResult && (
+              <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-50/50 p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                    <h4 className="font-bold text-emerald-950 text-sm">
+                      AI Code Defense Evaluation: Verified Pass
+                    </h4>
+                  </div>
+                  <span className="aldrich-regular text-2xl font-bold text-emerald-700">
+                    {vivaEvaluationResult.score}/100
+                  </span>
+                </div>
+
+                <p className="text-xs leading-relaxed text-[#52463F]">
+                  {vivaEvaluationResult.feedback}
+                </p>
+
+                <div className="grid grid-cols-3 gap-3 border-t border-emerald-500/20 pt-3 text-center text-xs">
+                  <div>
+                    <span className="text-[#756A62]">Architecture Depth</span>
+                    <p className="font-bold text-emerald-800">{vivaEvaluationResult.depth}%</p>
+                  </div>
+                  <div>
+                    <span className="text-[#756A62]">Trade-Off Reasoning</span>
+                    <p className="font-bold text-emerald-800">{vivaEvaluationResult.tradeoff}%</p>
+                  </div>
+                  <div>
+                    <span className="text-[#756A62]">Originality Confidence</span>
+                    <p className="font-bold text-emerald-800">{vivaEvaluationResult.originality}%</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Tab 5: Public Proof Card */}
+      {/* Tab 5: Public Verifiable Skill Proof Card */}
       {activeTab === "proofcard" && (
         <div className="space-y-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h3 className="aldrich-regular text-2xl font-bold">
-                Your Verifiable Proof-of-Skill Card
-              </h3>
+              <h2 className="aldrich-regular text-2xl font-bold text-ink">
+                Cryptographic Skill Proof Card
+              </h2>
               <p className="text-xs text-[#756A62]">
-                Share this immutable cryptographic link with recruiters, TPO cells, or on LinkedIn and Twitter.
+                Your immutable, shareable credential cryptographically signed with SHA-256 for recruiter audits.
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5">
               <button
                 onClick={handleCopyProofUrl}
-                className="flex items-center gap-2 rounded-xl border border-[#1C1613]/15 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#1C1613] hover:bg-[#FAF7F2]"
+                className="flex items-center gap-2 rounded-xl border border-[#1C1613]/15 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ink transition hover:bg-[#FAF7F2]"
               >
-                {copiedLink ? (
-                  <>
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                    Copied URL!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4 text-[#D9481E]" />
-                    Copy Proof Link
-                  </>
-                )}
+                <Copy className="h-3.5 w-3.5" />
+                {copiedLink ? "Copied URL!" : "Copy Public Link"}
+              </button>
+
+              <button
+                onClick={handleCopyEmbed}
+                className="flex items-center gap-2 rounded-xl bg-[#D9481E] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#B93615]"
+              >
+                <Code2 className="h-3.5 w-3.5" />
+                {copiedEmbed ? "Copied Embed Code!" : "Embed in Portfolio"}
               </button>
             </div>
           </div>
 
-          {/* Render Proof Card Box */}
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border-2 border-[#1C1613] bg-white shadow-[0_20px_60px_rgba(28,22,19,0.1)]">
-            <div className="border-b-2 border-[#1C1613] bg-[#D9481E] p-6 text-white sm:p-8">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold uppercase tracking-widest text-white/80">
-                  CheckTalent Verifiable Skill Proof
-                </span>
-                <span className="rounded-full border border-white/40 bg-white/10 px-3 py-1 font-mono text-xs font-semibold">
-                  AUDIT ID: CT-2026-92A
-                </span>
-              </div>
-
-              <h2 className="aldrich-regular mt-4 text-3xl font-bold sm:text-4xl">
-                {user.displayName || user.email?.split("@")[0] || "Candidate"}
-              </h2>
-              <p className="mt-1 text-sm text-white/90">
-                {profile?.targetRole || "Full-Stack Software Engineer"} • {profile?.institution || "Verified Developer"}
-              </p>
-            </div>
-
-            <div className="p-6 sm:p-8 space-y-6">
-              <div className="grid grid-cols-3 gap-4 border-b border-[#1C1613]/10 pb-6 text-center">
-                <div>
-                  <p className="text-xs text-[#756A62]">Skill Proof Score</p>
-                  <p className="aldrich-regular mt-1 text-3xl font-bold text-[#D9481E]">92/100</p>
-                </div>
-                <div>
-                  <p className="text-xs text-[#756A62]">Audited Repositories</p>
-                  <p className="aldrich-regular mt-1 text-3xl font-bold text-[#1C1613]">4</p>
-                </div>
-                <div>
-                  <p className="text-xs text-[#756A62]">Plagiarism Index</p>
-                  <p className="aldrich-regular mt-1 text-3xl font-bold text-emerald-600">0.0%</p>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#1C1613]">
-                  Verified Technologies & Commits:
-                </h4>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {["React 19 (96%)", "Go (92%)", "TypeScript (94%)", "PostgreSQL (88%)", "Rust (85%)"].map(
-                    (tag, idx) => (
-                      <span
-                        key={idx}
-                        className="rounded-lg border border-[#1C1613]/10 bg-[#FAF7F2] px-3 py-1 text-xs font-bold text-[#1C1613]"
-                      >
-                        {tag}
-                      </span>
-                    )
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-dashed border-[#1C1613]/20 bg-[#FAF7F2] p-4 text-xs text-[#756A62]">
-                <p>
-                  <strong>Verification Signature:</strong>{" "}
-                  <code className="font-mono text-[11px] text-[#1C1613]">
-                    SHA256: 8f4a7c1b829e160a3d4f828bbcd191e48392ef
-                  </code>
-                </p>
-                <p className="mt-1">
-                  Issued by CheckTalent Code Integrity Service. Authenticated against GitHub commits.
-                </p>
-              </div>
-            </div>
+          {/* Proof Card Render */}
+          <div className="rounded-3xl border border-[#1C1613]/10 bg-white p-6 sm:p-8 shadow-sm">
+            <SkillProofCard />
           </div>
         </div>
       )}
 
-      {/* Add Repo Modal */}
+      {/* MODAL 1: Connect Repository Modal */}
       {showAddRepo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl sm:p-8">
-            <h3 className="aldrich-regular text-2xl font-bold text-[#1C1613]">
-              Connect Repository for Audit
-            </h3>
-            <p className="mt-1 text-xs text-[#756A62]">
-              CheckTalent will analyze git commits, architectural layers, and authorship patterns.
-            </p>
+          <div className="w-full max-w-md rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Github className="h-5 w-5 text-ink" />
+                <h3 className="aldrich-regular text-lg font-bold text-ink">Connect GitHub Repo</h3>
+              </div>
+              <button
+                onClick={() => setShowAddRepo(false)}
+                className="rounded-lg p-1 text-[#756A62] hover:bg-[#FAF7F2]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-            <form onSubmit={handleAddRepoSubmit} className="mt-6 space-y-4">
+            <form onSubmit={handleAddRepoSubmit} className="mt-4 space-y-4">
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase text-[#1C1613]">
-                  Repository Name
-                </label>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">Repository Name</label>
                 <input
                   type="text"
-                  required
+                  placeholder="e.g. distributed-kv-store"
                   value={newRepoName}
                   onChange={(e) => setNewRepoName(e.target.value)}
-                  placeholder="e.g. distributed-event-bus"
-                  className="w-full rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2]/50 px-4 py-2.5 text-sm outline-none focus:border-[#D9481E]"
+                  className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
+                  required
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase text-[#1C1613]">
-                  GitHub Repository URL
-                </label>
+                <label className="block text-xs font-bold text-[#52463F] mb-1">GitHub URL (Optional)</label>
                 <input
                   type="url"
+                  placeholder="https://github.com/username/repository"
                   value={newRepoUrl}
                   onChange={(e) => setNewRepoUrl(e.target.value)}
-                  placeholder="https://github.com/your-username/your-repo"
-                  className="w-full rounded-xl border border-[#1C1613]/15 bg-[#FAF7F2]/50 px-4 py-2.5 text-sm outline-none focus:border-[#D9481E]"
+                  className="w-full rounded-xl border border-[#1C1613]/15 px-3 py-2 text-xs focus:border-[#D9481E] focus:outline-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#1C1613]/10">
+              <p className="text-[11px] leading-relaxed text-[#756A62]">
+                Our engine will clone the repo in sandbox, parse AST syntax trees, calculate cyclomatic complexity, and check against tutorial clone templates.
+              </p>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowAddRepo(false)}
-                  className="rounded-xl border border-[#1C1613]/15 px-4 py-2.5 text-xs font-bold uppercase text-[#756A62] hover:bg-[#FAF7F2]"
+                  className="rounded-xl border border-[#1C1613]/15 px-4 py-2 text-xs font-semibold text-[#52463F] hover:bg-[#FAF7F2]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-xl bg-[#D9481E] px-5 py-2.5 text-xs font-bold uppercase text-white hover:bg-[#B93615]"
+                  className="rounded-xl bg-[#D9481E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B93615]"
                 >
-                  Start Verification Audit
+                  Index & Audit Repo
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: Browse & 1-Click Apply to Open Drives */}
+      {showBrowseDrives && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-3">
+              <div>
+                <h3 className="aldrich-regular text-lg font-bold text-ink">Browse Open Hiring Drives</h3>
+                <p className="text-xs text-[#756A62]">Apply directly with your cryptographically verified Proof Card.</p>
+              </div>
+              <button
+                onClick={() => setShowBrowseDrives(false)}
+                className="rounded-lg p-1 text-[#756A62] hover:bg-[#FAF7F2]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              {openDrives.map((drive) => {
+                const isAlreadyApplied = applications.some(
+                  (app) => app.company.toLowerCase() === drive.company.toLowerCase()
+                );
+                return (
+                  <div
+                    key={drive.id}
+                    className="flex flex-col justify-between rounded-2xl border border-[#1C1613]/10 bg-[#FAF7F2]/60 p-4 transition hover:border-[#D9481E]"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-ink">{drive.company}</span>
+                            <span className="rounded-full bg-[#D9481E]/10 px-2 py-0.2 text-[10px] font-bold text-[#D9481E]">
+                              {drive.type === "campus" ? "Campus Placement" : "Off-Campus Direct"}
+                            </span>
+                          </div>
+                          <p className="text-xs font-semibold text-[#52463F] mt-0.5">{drive.role}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className="aldrich-regular text-sm font-bold text-[#D9481E]">
+                            {drive.ctc}
+                          </span>
+                          <p className="text-[10px] text-[#756A62]">Min Score: {drive.minScore}</p>
+                        </div>
+                      </div>
+
+                      <p className="mt-2 text-xs text-[#756A62]">{drive.description}</p>
+
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {drive.requiredSkills.map((sk, i) => (
+                          <span
+                            key={i}
+                            className="rounded-md border border-[#1C1613]/10 bg-white px-2 py-0.5 text-[10px] font-medium text-[#52463F]"
+                          >
+                            {sk}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between border-t border-[#1C1613]/10 pt-3">
+                      <span className="text-[11px] text-[#8C8077]">Deadline: {drive.deadline}</span>
+                      <button
+                        onClick={() => handleApplyToDrive(drive)}
+                        disabled={isAlreadyApplied}
+                        className={`rounded-xl px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition ${
+                          isAlreadyApplied
+                            ? "bg-emerald-100 text-emerald-800 cursor-not-allowed"
+                            : "bg-[#D9481E] text-white hover:bg-[#B93615]"
+                        }`}
+                      >
+                        {isAlreadyApplied ? "Applied ✓" : "1-Click Apply with Proof Card"}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: Repo Deep Dive Breakdown Drawer */}
+      {selectedRepoForDetail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-xl rounded-3xl border border-[#1C1613]/10 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#1C1613]/10 pb-3">
+              <div className="flex items-center gap-2">
+                <FileCode2 className="h-5 w-5 text-[#D9481E]" />
+                <h3 className="aldrich-regular text-lg font-bold text-ink">
+                  Code Forensics Breakdown: {selectedRepoForDetail.name}
+                </h3>
+              </div>
+              <button
+                onClick={() => setSelectedRepoForDetail(null)}
+                className="rounded-lg p-1 text-[#756A62] hover:bg-[#FAF7F2]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              <div className="grid grid-cols-3 gap-3 rounded-2xl bg-[#FAF7F2] p-3 text-center text-xs">
+                <div>
+                  <span className="text-[#756A62]">Proof Score</span>
+                  <p className="aldrich-regular text-xl font-bold text-[#D9481E]">
+                    {selectedRepoForDetail.score}/100
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[#756A62]">AI Scaffolding</span>
+                  <p className="text-xl font-bold text-emerald-700">{selectedRepoForDetail.aiPercent}%</p>
+                </div>
+                <div>
+                  <span className="text-[#756A62]">Plagiarism</span>
+                  <p className="text-xl font-bold text-emerald-700">0.0% Clean</p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-bold text-ink mb-2">Primary Module Files Audited:</h4>
+                <div className="space-y-1.5 font-mono text-xs text-[#52463F]">
+                  {selectedRepoForDetail.primaryFiles.map((file, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between rounded-lg border border-[#1C1613]/5 bg-[#FAF7F2] px-3 py-1.5"
+                    >
+                      <span>{file}</span>
+                      <span className="text-[10px] font-bold text-emerald-600">Passed AST</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-50/50 p-3 text-xs leading-relaxed text-emerald-950">
+                <strong>AST Architecture Verification:</strong> Zero copied tutorial AST structures matched against 1.8M public repositories. Commits show progressive multi-week iterative development.
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  onClick={() => setSelectedRepoForDetail(null)}
+                  className="rounded-xl bg-[#1C1613] px-4 py-2 text-xs font-bold text-white hover:bg-black"
+                >
+                  Close Inspection
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

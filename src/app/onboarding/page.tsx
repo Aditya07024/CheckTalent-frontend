@@ -153,7 +153,7 @@ export default function OnboardingPage() {
                   For Candidates
                 </span>
                 <h3 className="aldrich-regular mt-2 text-2xl font-bold text-[#1C1613]">
-                  User / Student / Employee
+                  Candidate Workspace
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-[#756A62]">
                   {ROLE_CONFIGS.student.description}
@@ -249,18 +249,18 @@ export default function OnboardingPage() {
             onClick={() => setSelectedRole("campus")}
             className={`group relative flex cursor-pointer flex-col justify-between rounded-3xl border-2 p-7 transition-all duration-200 ${
               selectedRole === "campus"
-                ? "border-blue-600 bg-white shadow-[0_16px_40px_rgba(37,99,235,0.12)] ring-4 ring-blue-600/10"
-                : "border-[#1C1613]/10 bg-white/70 hover:border-blue-600/40 hover:bg-white"
+                ? "border-red-600 bg-white shadow-[0_16px_40px_rgba(220,38,38,0.12)] ring-4 ring-red-600/10"
+                : "border-[#1C1613]/10 bg-white/70 hover:border-red-600/40 hover:bg-white"
             }`}
           >
             {selectedRole === "campus" && (
-              <div className="absolute right-5 top-5 flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white">
+              <div className="absolute right-5 top-5 flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-white">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
             )}
 
             <div>
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10 text-red-600">
                 <School className="h-7 w-7" />
               </div>
 
@@ -269,7 +269,7 @@ export default function OnboardingPage() {
                   For Universities & TPO
                 </span>
                 <h3 className="aldrich-regular mt-2 text-2xl font-bold text-[#1C1613]">
-                  Campus
+                  Campus / TPO
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-[#756A62]">
                   {ROLE_CONFIGS.campus.description}
@@ -282,7 +282,7 @@ export default function OnboardingPage() {
                 </p>
                 {ROLE_CONFIGS.campus.highlights.map((item, idx) => (
                   <div key={idx} className="flex items-start gap-2 text-xs text-[#52463F]">
-                    <span className="mt-0.5 text-blue-600">✓</span>
+                    <span className="mt-0.5 text-red-600">✓</span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -293,8 +293,8 @@ export default function OnboardingPage() {
               <span
                 className={`block w-full rounded-xl py-2.5 text-center text-xs font-bold uppercase tracking-wider transition ${
                   selectedRole === "campus"
-                    ? "bg-blue-600 text-white"
-                    : "bg-[#FAF7F2] text-[#756A62] group-hover:bg-blue-50 group-hover:text-blue-600"
+                    ? "bg-red-600 text-white"
+                    : "bg-[#FAF7F2] text-[#756A62] group-hover:bg-red-50 group-hover:text-red-700"
                 }`}
               >
                 {selectedRole === "campus" ? "Selected" : "Select this role"}

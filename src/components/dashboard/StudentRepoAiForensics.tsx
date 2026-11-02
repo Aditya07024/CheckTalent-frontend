@@ -474,7 +474,7 @@ export function StudentRepoAiForensics({
             <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center border-b border-[#1C1613]/10 pb-5">
               <div>
                 <h4 className="aldrich-regular text-xl font-bold text-[#1C1613]">
-                  Scanned Repositories Breakdown
+                  All Repositories Scanned ({auditResult.repositories.length})
                 </h4>
                 <p className="text-xs text-[#756A62]">
                   Detailed AI content ratio, internet tutorial collision checks, and commit timeline analysis per repo.

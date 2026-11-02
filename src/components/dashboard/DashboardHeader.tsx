@@ -8,7 +8,6 @@ import { DashboardRole, ROLE_CONFIGS, UserProfile } from "@/types/dashboard";
 import {
   Building2,
   GraduationCap,
-  Lock,
   LogOut,
   School,
 } from "lucide-react";
@@ -36,7 +35,7 @@ export function DashboardHeader({
   return (
     <header className="sticky top-0 z-30 border-b border-[#1C1613]/10 bg-[#FAF7F2]/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-        {/* Left: Brand & Permanent Assigned Role Tag */}
+        {/* Left: Brand & Clean Role Tag */}
         <div className="flex items-center gap-4">
           <Link href="/" className="aldrich-regular text-2xl font-bold">
             CheckTalent<span className="text-[#D9481E]">.</span>
@@ -44,15 +43,12 @@ export function DashboardHeader({
 
           <span className="hidden h-5 w-px bg-[#1C1613]/15 sm:inline-block" />
 
-          {/* Locked Dashboard Badge */}
+          {/* Clean Dashboard Badge (No "Locked ID" or raw slashes) */}
           <div className="flex items-center gap-2">
             {currentRole === "student" && (
               <div className="flex items-center gap-2 rounded-xl border border-[#D9481E]/30 bg-[#D9481E]/10 px-3 py-1.5 text-xs font-bold text-[#D9481E]">
                 <GraduationCap className="h-4 w-4" />
-                <span>User / Student / Employee</span>
-                <span className="flex items-center gap-1 rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-[#756A62]">
-                  <Lock className="h-2.5 w-2.5" /> Locked ID
-                </span>
+                <span>Candidate Workspace</span>
               </div>
             )}
 
@@ -60,19 +56,13 @@ export function DashboardHeader({
               <div className="flex items-center gap-2 rounded-xl border border-[#E9A23B]/40 bg-[#E9A23B]/15 px-3 py-1.5 text-xs font-bold text-[#B8710B]">
                 <Building2 className="h-4 w-4" />
                 <span>Off-Campus Companies</span>
-                <span className="flex items-center gap-1 rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-[#756A62]">
-                  <Lock className="h-2.5 w-2.5" /> Locked ID
-                </span>
               </div>
             )}
 
             {currentRole === "campus" && (
-              <div className="flex items-center gap-2 rounded-xl border border-blue-600/30 bg-blue-600/10 px-3 py-1.5 text-xs font-bold text-blue-700">
+              <div className="flex items-center gap-2 rounded-xl border border-red-600/30 bg-red-600/10 px-3 py-1.5 text-xs font-bold text-red-700">
                 <School className="h-4 w-4" />
                 <span>Campus / TPO</span>
-                <span className="flex items-center gap-1 rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-[#756A62]">
-                  <Lock className="h-2.5 w-2.5" /> Locked ID
-                </span>
               </div>
             )}
           </div>

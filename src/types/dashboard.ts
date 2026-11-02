@@ -15,7 +15,7 @@ export interface RoleConfig {
 export const ROLE_CONFIGS: Record<DashboardRole, RoleConfig> = {
   student: {
     id: "student",
-    title: "User / Student / Employee",
+    title: "Candidate Workspace",
     badgeLabel: "Job Seeker / Student",
     subtitle: "Candidate & Developer Workspace",
     targetAudience: "College Students, Job Seekers, Working Professionals",
@@ -55,7 +55,7 @@ export const ROLE_CONFIGS: Record<DashboardRole, RoleConfig> = {
     targetAudience: "Universities, Engineering Colleges, Placement Officers",
     description:
       "Manage batch cohorts, track placement drive readiness, verify student technical skills at scale, and coordinate with visiting recruiters.",
-    accentColor: "#2563EB",
+    accentColor: "#DC2626",
     iconName: "School",
     highlights: [
       "Batch-wide skill audits and drive readiness scores",

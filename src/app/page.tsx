@@ -1,76 +1,49 @@
 import React from "react";
-import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { RepoShowcaseSection } from "@/components/sections/RepoShowcaseSection";
-import { ProblemSection } from "@/components/sections/ProblemSection";
-import { SolutionSection } from "@/components/sections/SolutionSection";
+import { MinimalRoleDashboards } from "@/components/sections/MinimalRoleDashboards";
+import { MinimalHowItWorks } from "@/components/sections/MinimalHowItWorks";
+import { MinimalForensicsSpotlight } from "@/components/sections/MinimalForensicsSpotlight";
 import { ProofCardSection } from "@/components/sections/ProofCardSection";
-import { CandidatesSection } from "@/components/sections/CandidatesSection";
-import { RecruitersSection } from "@/components/sections/RecruitersSection";
-import { TrustSection } from "@/components/sections/TrustSection";
-import { UseCasesSection } from "@/components/sections/UseCasesSection";
-import { RoadmapSection } from "@/components/sections/RoadmapSection";
+import { MinimalFAQ } from "@/components/sections/MinimalFAQ";
+import { MinimalCTA } from "@/components/sections/MinimalCTA";
 import { GlobalExperience3D } from "@/components/three/GlobalExperience3D";
 import { PolyglotMarquee3D } from "@/components/three/PolyglotMarquee3D";
-
-const FAQSection = dynamic(() =>
-  import("@/components/sections/FAQSection").then((mod) => mod.FAQSection)
-);
-
-const CTASection = dynamic(() =>
-  import("@/components/sections/CTASection").then((mod) => mod.CTASection)
-);
 
 export default function HomePage() {
   return (
     <div className="relative flex min-h-screen flex-col">
-      {/* Full-Viewport Scroll-Reactive Three.js 3D World + 3D Scroll HUD */}
+      {/* 3D Global Experience */}
       <GlobalExperience3D />
 
-      {/* Navigation Bar */}
+      {/* Navigation */}
       <Navbar />
 
       <main id="main-content" className="relative z-[2] flex-1">
-        {/* Page 1: Clean Hero + Floating Open-Air 3D Orbit */}
+        {/* 1. Hero with minimal punchy statement & direct CTAs */}
         <HeroSection />
 
-        {/* 3D Extruded Polyglot Stack Ribbon */}
+        {/* 2. 3D Marquee */}
         <PolyglotMarquee3D />
 
-        {/* Page 2: Shifted Repository Intelligence & Viva Preview */}
-        <RepoShowcaseSection />
+        {/* 3. The Three Tailored Dashboards */}
+        <MinimalRoleDashboards />
 
-        {/* The Problem */}
-        <ProblemSection />
+        {/* 4. Simple 3-Step Verification Pipeline */}
+        <MinimalHowItWorks />
 
-        {/* The Solution */}
-        <SolutionSection />
+        {/* 5. AI Detection & Tutorial Plagiarism Forensics Spotlight */}
+        <MinimalForensicsSpotlight />
 
-        {/* Interactive Skill Proof Card */}
+        {/* 6. Interactive Verifiable Skill Proof Card */}
         <ProofCardSection />
 
-        {/* For Candidates */}
-        <CandidatesSection />
+        {/* 7. Concise Minimal FAQs */}
+        <MinimalFAQ />
 
-        {/* For Recruiters */}
-        <RecruitersSection />
-
-        {/* Fairness, Privacy & Trust */}
-        <TrustSection />
-
-        {/* Use Cases */}
-        <UseCasesSection />
-
-        {/* Product Roadmap */}
-        <RoadmapSection />
-
-        {/* Frequently Asked Questions */}
-        <FAQSection />
-
-        {/* Final Call to Action */}
-        <CTASection />
+        {/* 8. Clean Final Action Banner */}
+        <MinimalCTA />
       </main>
 
       {/* Footer */}
